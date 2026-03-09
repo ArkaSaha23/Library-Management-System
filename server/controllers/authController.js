@@ -12,40 +12,51 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     //if the user didnt entered all the required fields
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
-      return new ErrorHandler("Please Enter all the fields", 400);
+      return next(new ErrorHandler("Please Enter all the fields", 400));
     }
 
     //already a registerred user
-    const isregistered = await User.findOne({ email, accountVerified: true });
+    const isregistered = await UserDataSchema.findOne({
+      email,
+      accountVerified: true,
+    });
     if (isregistered) {
-      return new ErrorHandler("User already exist", 400);
+      return next(new ErrorHandler("User already exist", 400));
     }
 
-    //if the user has constantly registering but coundn't verify the account then 
-    const registrationAttemptsCount = await User.find({
+    //if the user has constantly registering but coundn't verify the account then
+    const registrationAttemptsCount = await UserDataSchema.find({
       email,
       accountVerified: false,
     });
-    if (registrationAttemptsCount > 5) {
-      return new ErrorHandler(
-        "You have attempted more than 5 times.Please try after 30mins",
-        400,
+    if (registrationAttemptsCount.length > 5) {
+      return next(
+        new ErrorHandler(
+          "You have attempted more than 5 times.Please try after 30mins",
+          400,
+        ),
       );
     }
     //invalid password
-    if(password.length >= 8 && password.length <= 16 )
-    {
-      return (new ErrorHandler("Incorrect Password! Password must be Between 8 and 16 character",400));
+    if (password.length < 8 && password.length > 16) {
+      return next(
+        new ErrorHandler(
+          "Incorrect Password! Password must be Between 8 and 16 character",
+          400,
+        ),
+      );
     }
     //New User
-    const hashedPassword = await bcrypt.hash(password,10);
-    const userdata=await User.create({
-      name,email,password:hashedPassword,
-    })
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userdata = await UserDataSchema.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
 
-    const verificationCode=await userdata.generateVerificationCode();
+    const verificationCode = await userdata.generateVerificationCode();
     await userdata.save();
-    sendVerificationCode(verificationCode,email,res);
+    await sendVerificationCode(verificationCode, email, res);
   } catch (error) {
     next(error);
   }
