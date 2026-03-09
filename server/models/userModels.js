@@ -1,3 +1,4 @@
+import { genSaltSync } from "bcrypt";
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -14,7 +15,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    selsct: false,
+    select: false,
   },
   role: {
     type: String,
@@ -44,8 +45,8 @@ const userSchema = new mongoose.Schema({
     publicID: String,
     url: String,
   },//only for admin
-  verificatiionCode:Number,
-  verificatiionCodedate:Date,
+  verificationCode:Number,
+  verificationCodedate:Date,
   resetPasswordToken:String,
   resetPasswordExpire:Date,
 },
@@ -58,9 +59,8 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.generateVerificationCode = function () {
   const code = Math.floor(100000 + Math.random() * 900000).toString();//generate 6 digit
   this.verificationCode = code;
-  this.verificatiionCodedate = Date.now() + (10 * 60 * 1000) ; //10mins
+  this.verificationCodedate = Date.now() + (10 * 60 * 1000) ; //10mins
   return code;
 };
 
 export const UserDataSchema = mongoose.model("User",userSchema);
-
