@@ -7,13 +7,13 @@ export function generateVerificationOtpEmailTemplate(verificationCode) {
             Email Verification of Library Management System.
           </h1>
 
-          <p class="text-gray-600 text-base mb-6">
+          <p class="text-2xl text-gray-600 text-base mb-6">
             Use the following One Time Password (OTP) to verify your account.
           </p>
 
           <div class="bg-gray-100 border border-gray-200 rounded-lg py-4 px-6 inline-block">
-            <span class="text-3xl font-bold tracking-widest text-blue-600">
-              ${verificationCode}
+            <span class="text-2xl font-bold text-blue-600">
+              <b>${verificationCode}<b>
             </span>
           </div>
 

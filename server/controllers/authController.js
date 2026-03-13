@@ -1,7 +1,5 @@
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
-import ErrorHandler, {
-  errorMiddleware,
-} from "../middlewares/errorMiddleware.js";
+import ErrorHandler from "../middlewares/errorMiddleware.js";
 import { UserDataSchema } from "../models/userModels.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
