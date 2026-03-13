@@ -1,0 +1,13 @@
+export const sendTokens=(user,statusCode,message,res)=>{
+  const token=user.createTokens();
+  res.status(statusCode)
+  .cookie("token",token,{
+    expires: new Date(Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000)
+  })
+  .json({
+    success:true,
+    user,
+    message,
+    token,
+  });
+}
