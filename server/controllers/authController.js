@@ -4,16 +4,18 @@ import { UserDataSchema } from "../models/userModels.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { sendVerificationCode } from "../utils/sendverificationCode.js";
+import { sendTokens } from "../utils/sendTokens.js";
 
 export const register = catchAsyncErrors(async (req, res, next) => {
   try {
-    //if the user didnt entered all the required fields
     const { name, email, password } = req.body;
+
+    //Case 1: if the user didnt entered all the required fields
     if (!name || !email || !password) {
       return next(new ErrorHandler("Please Enter all the fields", 400));
     }
 
-    //already a registerred user
+    //Case 2: already a registerred user
     const isregistered = await UserDataSchema.findOne({
       email,
       accountVerified: true,
@@ -22,7 +24,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
       return next(new ErrorHandler("User already exist", 400));
     }
 
-    //if the user has constantly registering but coundn't verify the account then
+    //Case 3: if the user has constantly registering but coundn't verify the account then
     const registrationAttemptsCount = await UserDataSchema.find({
       email,
       accountVerified: false,
@@ -35,7 +37,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
         ),
       );
     }
-    //invalid password
+    //Case 4: invalid password
     if (password.length < 8 && password.length > 16) {
       return next(
         new ErrorHandler(
@@ -44,7 +46,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
         ),
       );
     }
-    //New User
+    //case 5: New User
     const hashedPassword = await bcrypt.hash(password, 10);
     const userdata = await UserDataSchema.create({
       name,
@@ -59,3 +61,61 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     next(error);
   }
 }); //it will call the catchAsync() function and will pass "async(req,res,next)=>{}"" as parameter
+
+export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const { email, OTP } = req.body;
+
+    //email or otp is missing
+    if (!email || !OTP) {
+      return next(new ErrorHandler("Email or OTP is missing", 400));
+    }
+
+    //finding the correct email
+    const userAllEntries = await UserDataSchema.find({
+      email,
+      accountVerified: false,
+    }).sort({ createdAt: -1 });
+
+    if (userAllEntries.length === 0) {
+      return next(new ErrorHandler("User not found!!!", 404));
+    }
+
+    //getting the lastest entry of that user who tried to login many times and deleting rest
+    let curUser;
+    if (userAllEntries.length > 1) {
+      curUser = userAllEntries[0];
+      await UserDataSchema.deleteMany({
+        _id: { $ne: curUser._id }, //"_id" is the field and "ne" is the "not equal"  operator
+        email,
+        accountVerified: false,
+      });
+    } else {
+      curUser = userAllEntries[0];
+    }
+
+    //If verification code of the user is not same as OTP
+    if (curUser.verificationCode !== Number(OTP)) {
+      return next(new ErrorHandler("Invalid OTP", 400));
+    }
+
+    //If verification Time exceeded,OTP expired
+    const currentTime = Date.now();
+    const verificationCodeExpireTime = new Date(
+      curUser.verificationCodeExpire,
+    ).getTime();
+    if (currentTime > verificationCodeExpireTime) {
+      return next(new ErrorHandler("OTP Expired"), 400);
+    }
+
+    // OTP correct and not expired
+    curUser.accountVerified = true;
+    curUser.verificationCode = null;
+    curUser.verificationCodeExpire = null;
+    await curUser.save({ validateModifiedOnly: true });
+
+    sendTokens(curUser, 200, "Account Verified", res);
+  } catch (error) {
+    return next(new ErrorHandler("Internal server error", 500));
+  }
+});
