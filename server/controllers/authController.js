@@ -119,3 +119,46 @@ export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Internal server error", 500));
   }
 });
+
+export const login = catchAsyncErrors(async (req,res,next) =>{
+  try{
+    const {email,password}=req.body;
+    //if email or password is not provided by user
+    if(!email || !password){
+      return next(new ErrorHandler("Fields are incomplete",400));
+    }
+
+    //find the user from database using email,
+    const user=await UserDataSchema.findOne({email,accountVerified:true}).select("+password");
+    if(!user){
+      return next(new ErrorHandler("Invalid email or password",400));
+    }
+
+    //compare the entered password with the user password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if(!isMatch){
+      return next(new ErrorHandler("Invalid Password",400));
+    }
+    sendTokens(user,200,"Login Successfull",res);
+
+
+  }catch(err){
+    next(new ErrorHandler("Internal server error",500));
+  }
+});
+
+export const logout = catchAsyncErrors(async (req,res,next) =>{
+  try{
+     res.cookie("token", null, {
+      httpOnly: true,
+      expires: new Date(Date.now()),
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  }catch(err){
+    next(new ErrorHandler("Internal server error",500));
+  }
+});
