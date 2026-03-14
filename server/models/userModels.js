@@ -65,9 +65,11 @@ userSchema.methods.generateVerificationCode = function () {
 
 //creating tokens
 userSchema.methods.createTokens = function(){
-  return jwt.sign({ id:this._id }, process.env.JWT_SECRET_KEY,{
-    expiresIn:process.env.JWT_EXPIRE,
-  });
+  return jwt.sign(
+    { id:this._id }, 
+    process.env.JWT_SECRET_KEY,
+    {expiresIn:process.env.JWT_EXPIRE,}
+  );
 }
 
 export const UserDataSchema = mongoose.model("User",userSchema);

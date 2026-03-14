@@ -129,17 +129,17 @@ export const login = catchAsyncErrors(async (req,res,next) =>{
     }
 
     //find the user from database using email,
-    const user=await UserDataSchema.findOne({email,accountVerified:true}).select("+password");
-    if(!user){
+    const curUser=await UserDataSchema.findOne({email,accountVerified:true}).select("+password");
+    if(!curUser){
       return next(new ErrorHandler("Invalid email or password",400));
     }
 
     //compare the entered password with the user password
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, curUser.password);
     if(!isMatch){
       return next(new ErrorHandler("Invalid Password",400));
     }
-    sendTokens(user,200,"Login Successfull",res);
+    sendTokens(curUser,200,"Login Successfull",res);
 
 
   }catch(err){
@@ -162,3 +162,13 @@ export const logout = catchAsyncErrors(async (req,res,next) =>{
     next(new ErrorHandler("Internal server error",500));
   }
 });
+
+export const getUser = catchAsyncErrors(async(req,res,next)=>{
+  //in authentication.js we used req.user=storing the user details using findById,so store it to curUser
+  const curUser=req.user;
+  res.status(200).json({
+    success:true,
+    curUser,
+  })
+})
+
