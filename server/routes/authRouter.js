@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { login, logout, register,verifyOTP } from "../controllers/authController.js";
+import { getUser, login, logout, register,verifyOTP } from "../controllers/authController.js";
+import { isAuthenticated } from "../middlewares/authentication.js";
 const router=Router();
 router.post('/register',register);
 router.post('/verifyOTP',verifyOTP);
 router.post('/login',login);
-router.get('/logout',logout);
+router.get('/logout', isAuthenticated, logout);
+router.get('/me', isAuthenticated, getUser);
 export default router;
