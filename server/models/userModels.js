@@ -1,6 +1,8 @@
 import { genSaltSync } from "bcrypt";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -59,7 +61,7 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.generateVerificationCode = function () {
   const code = Math.floor(100000 + Math.random() * 900000).toString();//generate 6 digit
   this.verificationCode = code;
-  this.verificationCodedate = Date.now() + (10 * 60 * 1000) ; //10mins
+  this.verificationCodeExpire = Date.now() + (10 * 60 * 1000) ; //10mins
   return code;
 };
 
@@ -70,6 +72,19 @@ userSchema.methods.createTokens = function(){
     process.env.JWT_SECRET_KEY,
     {expiresIn:process.env.JWT_EXPIRE,}
   );
+}
+
+userSchema.methods.generatePasswordResetToken=function(){
+  const resetToken = crypto.randomBytes(20).toString("hex");//creating random token
+
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");//hashing the token and stored in database
+
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
+
+  return resetToken;//original token is returned
 }
 
 export const UserDataSchema = mongoose.model("User",userSchema);
