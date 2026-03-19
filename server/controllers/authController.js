@@ -107,7 +107,7 @@ export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
       curUser.verificationCodeExpire,
     ).getTime();
     if (currentTime > verificationCodeExpireTime) {
-      return next(new ErrorHandler("OTP Expired"), 400);
+      return next(new ErrorHandler("OTP Expired", 400));
     }
 
     // OTP correct and not expired
@@ -211,7 +211,7 @@ export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
     curUser.resetPasswordExpire = undefined;
     curUser.resetPasswordToken = undefined;
     await curUser.save({ validateModifiedOnly: false });
-    return next(new ErrorHandler(err, 500));
+    return next(new ErrorHandler(err.message, 500));
   }
 });
 
@@ -266,7 +266,8 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
 
 export const updatePassword = catchAsyncErrors(async (req, res, next) => {
   try {
-    //const curUser = await UserDataSchema.findById(req.user._id);
+    //const curUser = await UserDataSchema.findById(req.user._id); 
+    //we have already get the user from "req.user._id" from isAuthentication
     const { currentPassword, newPassword, confirmNewPassword } = req.body;
 
     if (!currentPassword || !newPassword || !confirmNewPassword) {
@@ -307,7 +308,7 @@ export const updatePassword = catchAsyncErrors(async (req, res, next) => {
     await curUser.save();
     res.status(200).json({
       success: true,
-      message: "Password Updates Succesfully",
+      message: "Password Updated Succesfully",
     });
   } catch (error) {
     console.log(error);
