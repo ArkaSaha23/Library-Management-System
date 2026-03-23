@@ -30,14 +30,10 @@ const BookSchema=new mongoose.Schema({
     type:Number,
     required:true,
   },
+
   coverImage: {
     type: String, // URL (Cloudinary / storage)
   },
-
-  // fileUrl: {
-  //   type: String, // PDF / EPUB file link
-  //   required: true,
-  // },
 
   fileType: {
     type: String,
@@ -70,4 +66,4 @@ const BookSchema=new mongoose.Schema({
     timestamps:true,
 });
 export const BookData = mongoose.model("Book",BookSchema);
-
+//modelName="Book"
