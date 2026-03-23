@@ -88,3 +88,4 @@ userSchema.methods.generatePasswordResetToken=function(){
 }
 
 export const UserDataSchema = mongoose.model("User",userSchema);
+//modelName:"User"

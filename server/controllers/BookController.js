@@ -61,12 +61,23 @@ export const getAllBook = catchAsyncErrors(async (req, res, next) => {
   console.log(books);
 });
 
-// export const updateBook = catchAsyncErrors(async (req, res, next) => {
-//   try {
-//   } catch (err) {
-//     return next(new ErrorHandler(err, 500));
-//   }
-// });
+export const updateBook = catchAsyncErrors(async (req, res, next) => {
+  const id = req.params.id;
+  const book = await BookData.findById(id);
+  if (!book) {
+    console.log("Book Not Found");
+    return next(new ErrorHandler("Book not found", 404));
+  }
+  const updatedBook = await BookData.findByIdAndUpdate(id, req.body, {
+    returnDocument: "after", // return updated data
+    runValidators: true, // enforce schema rules
+  });
+  res.status(200).json({
+    success: true,
+    message: "Book is Updated successfully",
+    updatedBook,
+  });
+});
 
 export const deleteBook = catchAsyncErrors(async (req, res, next) => {
   //get the id of the book you want to delete

@@ -7,9 +7,15 @@ import {connectDB} from './database/db.js';
 import { errorMiddleware } from './middlewares/errorMiddleware.js';
 import authRouter from "./routes/authRouter.js";
 import bookRouter from "./routes/bookRouter.js";
+import borrowRouter from "./routes/borrowRouter.js";
 
 //we have to set up the path of config.env file in app.js..it loads the environment variables from config.env
 config({path:"./config/config.env"});
+
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 
 //CORS=Cross origin resource sharing
 app.use(
@@ -25,7 +31,9 @@ app.use(express.json());//Allows Express to read JSON data from request body
 app.use(express.urlencoded({extended:true}));//Reads form data submitted from HTML forms.
 app.use("/api/v1/auth",authRouter);
 app.use("/api/v1/books", bookRouter);
+app.use("/api/v1/borrow",borrowRouter);
 connectDB();
 
 
 app.use(errorMiddleware);
+
