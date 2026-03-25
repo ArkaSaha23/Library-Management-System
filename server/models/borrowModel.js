@@ -15,13 +15,13 @@ const BorrowBookSchema = new mongoose.Schema({
       required:true,
     },
   },
-  price:{
-    type:Number,
-    required:true,
-  },
   book:{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Book",
+    required:true,
+  },
+  price:{
+    type:Number,
     required:true,
   },
   borrowedDate:{
@@ -34,6 +34,7 @@ const BorrowBookSchema = new mongoose.Schema({
   },
   returnDate:{
     type: Date,
+    default:null,
   },
   fine:{
     type:Number,
@@ -46,4 +47,5 @@ const BorrowBookSchema = new mongoose.Schema({
 },
 {timestamps:true},
 );
+
 export const BorrowData = mongoose.model("Borrow", BorrowBookSchema);

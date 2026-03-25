@@ -4,77 +4,11 @@ import ErrorHandler from "../middlewares/errorMiddleware.js";
 import { BookData } from "../models/bookModel.js";
 import { BorrowData } from "../models/borrowModel.js";
 import { UserDataSchema } from "../models/userModels.js";
+import calculateFine from "../utils/calculateFine.js";
 
 //Issue book to user(User want this book)
-// export const borrowBook = catchAsyncErrors(async (req, res, next) => {
-//   console.log("STEP 1: Controller started");
-//   const id = req.params.id;
-//   const email = req.body.email;
-
-//   console.log(email)
-//   console.log(id)
-//   //finding the book user wants to borrow
-//   const bookWantsToBorrow = await BookData.findById(id);
-//   console.log(bookWantsToBorrow)
-//   if (!bookWantsToBorrow) {
-//     return next(new ErrorHandler("Book not found", 400));
-//   }
-
-//   //finding the user
-//   const curUser = await UserDataSchema.findOne({email});
-//    console.log("STEP 4: User fetched");
-//   if (!curUser) {
-//     return next(new ErrorHandler("User Not found", 400));
-//   }
-
-//   //check if the book's quantity is available
-//   if (bookWantsToBorrow.quantityAvailable === 0) {
-//     return next(new ErrorHandler("Book is currently Unavailable"));
-//   }
-
-//   //check if that book is already borrowed by user or not//
-//   // (he/she not borrow the same book twice at the same time)
-//   const bookalreadyBorrowedByUser = curUser.booksBorrowed.find(
-//     (b) => b.bookID.toString() === id && b.hasReturned === false,
-//   );
-//   if (bookalreadyBorrowedByUser) {
-//     return next(new ErrorHandler("Book is already Borrowed", 400));
-//   }
-
-//   bookWantsToBorrow.quantityAvailable =  bookWantsToBorrow.quantityAvailable - 1;
-//   bookWantsToBorrow.isFree = (bookWantsToBorrow.quantityAvailable > 0)? true : false;
-//   await bookWantsToBorrow.save();
-
-//   //pushing the book into user.borrowedBooks
-//   curUser.booksBorrowed.push({
-//     bookID : bookWantsToBorrow._id,
-//     bookTitle : bookWantsToBorrow.title,
-//     borrowedDate :new Date(),
-//     Duedate : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-//     hasReturned:false,
-//   })
-//   await curUser.save();
-
-//   await BorrowData.create({
-//     user:{
-//       id : curUser.id,
-//       name : curUser.name,
-//       email : curUser.email,
-//     },
-//     book : bookWantsToBorrow._id,
-//     price : bookWantsToBorrow.price,
-//     borrowedDate : new Date(),
-//     dueDate : new Date.now() + 14 * 24 * 60 * 60 * 1000,
-//   });
-//   res.status(200).json({
-//     success:true,
-//     message:"Borrowed book recorded successfully",
-//   });
-// });
 export const borrowBook = catchAsyncErrors(async (req, res, next) => {
-  console.log("STEP 1: Controller started");
-
-  const id = req.params.id;
+  const id = req.params.id; //gtting the id of the book he wants to borrow
   const email = req.body.email;
 
   const bookWantsToBorrow = await BookData.findById(id);
@@ -82,7 +16,10 @@ export const borrowBook = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Book not found", 400));
   }
 
-  const curUser = await UserDataSchema.findOne({ email });
+  const curUser = await UserDataSchema.findOne({
+    email,
+    accountVerified: true,
+  });
   if (!curUser) {
     return next(new ErrorHandler("User Not found", 400));
   }
@@ -91,12 +28,12 @@ export const borrowBook = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Book is currently Unavailable", 400));
   }
 
-  const borrowedBooks = curUser.booksBorrowed || [];
+  const borrowedBooks = curUser.booksBorrowed; //will get the array booksBorrowed from userModel
 
   const alreadyBorrowed = borrowedBooks.find(
-    (b) => b.bookID.toString() === id && b.hasReturned === false
+    (b) => b.bookID.toString() === id && b.hasReturned === false,
   );
-
+  //ifthe book is already borrowed by the user he cant borrow for the 2nd time
   if (alreadyBorrowed) {
     return next(new ErrorHandler("Book is already Borrowed", 400));
   }
@@ -107,7 +44,8 @@ export const borrowBook = catchAsyncErrors(async (req, res, next) => {
 
   // update book
   bookWantsToBorrow.quantityAvailable -= 1;
-  bookWantsToBorrow.isFree = bookWantsToBorrow.quantityAvailable > 0;
+  bookWantsToBorrow.isFree =
+    bookWantsToBorrow.quantityAvailable > 0 ? true : false;
   await bookWantsToBorrow.save();
 
   // update user
@@ -139,9 +77,68 @@ export const borrowBook = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-
 //return a book
-export const returnBook = catchAsyncErrors(async (req, res, next) => {});
+export const returnBook = catchAsyncErrors(async (req, res, next) => {
+  const id = req.params.id; //GETTING THE BOOK USER WANTS TO RETURN
+  const email = req.body.email;
+
+  //GETTING THE BOOK DATABASE
+  const bookWantsToReturn = await BookData.findById(id);
+  if (!bookWantsToReturn) {
+    return next(new ErrorHandler("Book not found", 400));
+  }
+
+  //GETTING THE USER FROM USER DATABASE
+  const curUser = await UserDataSchema.findOne({
+    email,
+    accountVerified: true,
+  });
+  if (!curUser) {
+    return next(new ErrorHandler("User Not found", 400));
+  }
+
+  //CHECK IF THE USER BORROWED THE BOOK AT ALL
+  const ListOfborrowedBooks = curUser.booksBorrowed;
+  console.log(ListOfborrowedBooks);
+  const returningBook = ListOfborrowedBooks.find(
+    (b) => b.bookID.toString() === id && b.hasReturned === false,
+  );
+  if (!returningBook) {
+    return next(new ErrorHandler("You have not Borrowed this Book", 400));
+  }
+
+  //UPDATE THE BOOK DATABASE
+  bookWantsToReturn.quantityAvailable += 1;
+  bookWantsToReturn.isFree =
+    bookWantsToReturn.quantityAvailable > 0 ? true : false;
+  await bookWantsToReturn.save();
+
+  //UPDATE THE BOOKS-BORROWED FROM USER DATABASE
+  returningBook.hasReturned = true;
+  await curUser.save();
+
+  //UPDATE THE BORROW DATABASE
+  const borrow = await BorrowData.findOne({
+    book: id,
+    "user.email": email,
+    returnDate: null,
+  });
+  if (!borrow) {
+    return next(new ErrorHandler("You have not Borrowed this Book", 400));
+  }
+  borrow.returnDate = new Date();
+
+  //CHECK FOR FINE CALCULATION
+  borrow.fine = calculateFine(borrow.dueDate, borrow.returnDate);
+  await borrow.save();
+  res.status(200).json({
+    success: true,
+    message:
+      borrow.fine === 0
+        ? `The book has been returned successfully.Total charges are ${bookWantsToReturn.price}`
+        : `The book has been returned successfully.Total charges including the late fine are ${bookWantsToReturn.price + borrow.fine}`,
+  });
+});
 
 //renew a book for a user
 export const renewBook = catchAsyncErrors(async (req, res, next) => {});
