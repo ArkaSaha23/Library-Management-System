@@ -141,14 +141,128 @@ export const returnBook = catchAsyncErrors(async (req, res, next) => {
 });
 
 //renew a book for a user
-export const renewBook = catchAsyncErrors(async (req, res, next) => {});
+export const renewBook = catchAsyncErrors(async (req, res, next) => {
+  const curUser = req.user;
+  const id = req.params.id;
+
+  //get the list of borrowed book of the user
+  const bookWantsToRenew = await BookData.findById(id);
+  if (!bookWantsToRenew) {
+    return next(new ErrorHandler("Book not found", 400));
+  } 
+
+  //get the book
+  let getbooktorenew = null;
+
+  const userborrowList = curUser.booksBorrowed;
+
+  userborrowList.forEach((element) => {
+    if (element.bookID.toString() === id && element.hasReturned === false) {
+      getbooktorenew = element;
+      console.log(getbooktorenew);
+    }
+  });
+   if (!getbooktorenew) {
+    return next(new ErrorHandler("No active borrow found for this book", 404));
+  }
+
+  //Actual renewal logic (example: extend 5 days)
+  const newDueDate = new Date(getbooktorenew.Duedate);
+  newDueDate.setDate(newDueDate.getDate() + 5);
+
+  getbooktorenew.Duedate = newDueDate;
+
+  await curUser.save();
+
+
+  res.status(200).json({
+    success: true,
+    message: "Book renewed successfully",
+    getbooktorenew,
+  });
+});
 
 //all books currently issued(Not returned) //ADMIN
-export const getAllBorrowedBooks = catchAsyncErrors(
-  async (req, res, next) => {},
-);
+export const getAllBorrowedBooks = catchAsyncErrors(async (req, res, next) => {
+  const AllBooksWhichAreBorrowed = await BorrowData.find().populate("book");
+  const borrowList = [];
+  AllBooksWhichAreBorrowed.map((curBook) => {
+    (console.log("--------------------------------------"),
+      console.log("User Email:", curBook.user.email),
+      console.log("User Name:", curBook.user.name),
+      console.log("Book Name", curBook.book.title),
+      console.log(
+        "Borrow Date:",
+        new Date(curBook.borrowedDate).toLocaleDateString("en-IN"),
+      ),
+      console.log(
+        "Due Date:",
+        new Date(curBook.dueDate).toLocaleDateString("en-IN"),
+      ),
+      console.log("--------------------------------------"));
+    borrowList.push({
+      UserEmail: curBook.user.email,
+      UserName: curBook.user.name,
+      BookName: curBook.book.title,
+      BorrowDate: new Date(curBook.borrowedDate).toLocaleDateString("en-IN"),
+      DueDate: new Date(curBook.dueDate).toLocaleDateString("en-IN"),
+    });
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "List of Books which are borrowed",
+    borrowList,
+  });
+});
 
 //book borrowed by a specific user //ADMIN
 export const getBorrowedBookByuser = catchAsyncErrors(
-  async (req, res, next) => {},
+  async (req, res, next) => {
+    const { email } = req.body;
+    if (!email) {
+      return next(new ErrorHandler("User not found", 400));
+    }
+    const curUser2 = await UserDataSchema.findOne({ email });
+    const books = curUser2.booksBorrowed;
+    console.log("currentUser", books);
+
+    res.status(200).json({
+      success: true,
+      message:
+        books.length === 0
+          ? "No books are borrowed by the user"
+          : "List of Books which are borrowed by the User",
+      bookBorrowed: books.length === 0 ? "[]" : books,
+    });
+  },
 );
+
+//when user wants to check which books he has borrowed
+export const seeBorrowedBook = catchAsyncErrors(async (req, res, next) => {
+  const { booksBorrowed } = req.user;
+  console.log(booksBorrowed);
+
+  //find the books which havent been returned
+  const books = [];
+  booksBorrowed.forEach((element) => {
+    if (element.hasReturned === false)
+      books.push({
+        UserName: req.user.name,
+        BookName: element.bookTitle,
+        borrowedDate: new Date(element.borrowedDate).toLocaleDateString(
+          "en-IN",
+        ),
+        Duedate: new Date(element.Duedate).toLocaleDateString("en-IN"),
+      });
+  });
+
+  res.status(200).json({
+    success: true,
+    message:
+      books.length === 0
+        ? "No books are borrowed by the user"
+        : "List of Books which are borrowed by the User",
+    bookBorrowed: books.length === 0 ? "[]" : books,
+  });
+});
