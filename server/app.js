@@ -8,6 +8,8 @@ import { errorMiddleware } from './middlewares/errorMiddleware.js';
 import authRouter from "./routes/authRouter.js";
 import bookRouter from "./routes/bookRouter.js";
 import borrowRouter from "./routes/borrowRouter.js";
+import userRouter from "./routes/userRouter.js";
+import expressFileupload from "express-fileupload"
 
 //we have to set up the path of config.env file in app.js..it loads the environment variables from config.env
 config({path:"./config/config.env"});
@@ -29,9 +31,16 @@ app.use(
 app.use(cookieParser());//Reads cookies from client request.
 app.use(express.json());//Allows Express to read JSON data from request body
 app.use(express.urlencoded({extended:true}));//Reads form data submitted from HTML forms.
+
+app.use(expressFileupload({
+  useTempFiles:true,
+  tempFileDir:"/tmp/",
+}));
+
 app.use("/api/v1/auth",authRouter);
 app.use("/api/v1/books", bookRouter);
 app.use("/api/v1/borrow",borrowRouter);
+app.use("/api/v1/user",userRouter);
 connectDB();
 
 
