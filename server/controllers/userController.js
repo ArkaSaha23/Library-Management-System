@@ -1,10 +1,9 @@
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/errorMiddleware.js";
 import { UserDataSchema } from "../models/userModels.js";
-// import { cloudinary } from "cloudinary";
 import bcrypt from "bcrypt";
-import pkg from 'cloudinary';
-const { v2:cloudinary } = pkg;
+import pkg from "cloudinary";
+const { v2: cloudinary } = pkg;
 
 //get all the registeresd user//ADMIN
 export const getallUsers = catchAsyncErrors(async (req, res, next) => {
@@ -21,9 +20,14 @@ export const getallUsers = catchAsyncErrors(async (req, res, next) => {
 
 //register a New Admin
 export const registerNewAdmin = catchAsyncErrors(async (req, res, next) => {
+  console.log("REQ BODY EMAIL:", req.body.email);
+  console.log("REQ USER Name:", req.body.name);
+  console.log("REQ USER EMAIL:", req.user?.email);
+  console.log("password length", req.body.password);
+  
   //check if admins profile pic is provided or not
   if (!req.files?.avatar) {
-    return next(new ErrorHandler("Profile Picture for Admin i Required", 400));
+    return next(new ErrorHandler("Profile Picture for Admin is Required", 400));
   }
   //check if all the fields are entered
   const { name, email, password } = req.body;
@@ -35,7 +39,6 @@ export const registerNewAdmin = catchAsyncErrors(async (req, res, next) => {
   const isRegistered = await UserDataSchema.findOne({
     email,
     accountVerified: true,
-    role: "Admin",
   });
   if (isRegistered) {
     return next(new ErrorHandler("Admin Already Registered", 400));
@@ -48,20 +51,36 @@ export const registerNewAdmin = catchAsyncErrors(async (req, res, next) => {
     );
   }
 
-  const { avatar } = req.files;
+  const { avatar } = req.files; //getting avatar of admin from req.files
+
+  //check if the uploaded avatar type is correct or not
   const allowedFormats = ["image/png", "image/jpeg", "image/webp"];
   if (!allowedFormats.includes(avatar.mimetype)) {
     return next(new ErrorHandler("File Format not supported", 400));
   }
 
+  //hashing password
   const hashedPassword = await bcrypt.hash(password, 10);
-  const cloudinaryResponse = await cloudinary.uploader.upload(
-    avatar.tempFilePath,
-    {
-      folder: "LIBRARY_MANAGEMENT_SYSTEM_AVATARS",
-    },
-  );
 
+  //Uploading image to Cloudinary
+  /**we get back
+    (i) result.secure_url   // image URL,use it for Show image in frontend,                 
+    //Send to client in API response ,Store in DB to display later
+
+    (ii) result.public_id    // unique ID, we use it for Delete image, Update image,    
+    // Transform image (resize, crop, etc.)   */
+  let cloudinaryResponse;
+
+  try {
+    cloudinaryResponse = await cloudinary.uploader.upload(avatar.tempFilePath, {
+      folder: "LIBRARY_MANAGEMENT_SYSTEM_AVATARS",
+    });
+  } catch (err) {
+    console.error("Cloudinary Error:", err);
+    return next(new ErrorHandler(err.message || "Failed to upload profile picture", 500));
+  }
+
+  //if cloudinaryResponse is some error then this will be executed
   if (!cloudinaryResponse || cloudinaryResponse.error) {
     console.error(
       "cloudinary Error:",
@@ -73,16 +92,16 @@ export const registerNewAdmin = catchAsyncErrors(async (req, res, next) => {
     name,
     email,
     password: hashedPassword,
-    role : "Admin",
-    accountVerified:true,
-    avatar:{
-      publicID:cloudinaryResponse.public_id,
-      url:cloudinaryResponse.secure_url,
-    }
+    role: "Admin",
+    accountVerified: true,
+    avatar: {
+      publicID: cloudinaryResponse.public_id,
+      url: cloudinaryResponse.secure_url,
+    },
   });
   res.status(201).json({
-    success:true,
-    message:"Admin registered successfully",
+    success: true,
+    message: "Admin registered successfully",
     admin,
   });
 });
