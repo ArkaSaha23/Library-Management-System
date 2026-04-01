@@ -80,6 +80,7 @@ export const borrowBook = catchAsyncErrors(async (req, res, next) => {
 //return a book
 export const returnBook = catchAsyncErrors(async (req, res, next) => {
   const id = req.params.id; //GETTING THE BOOK USER WANTS TO RETURN
+  console.log("req.params.id",id);
   const email = req.body.email;
 
   //GETTING THE BOOK DATABASE
@@ -100,9 +101,11 @@ export const returnBook = catchAsyncErrors(async (req, res, next) => {
   //CHECK IF THE USER BORROWED THE BOOK AT ALL
   const ListOfborrowedBooks = curUser.booksBorrowed;
   console.log(ListOfborrowedBooks);
-  const returningBook = ListOfborrowedBooks.find(
+
+  const returningBook = ListOfborrowedBooks.findLast(
     (b) => b.bookID.toString() === id && b.hasReturned === false,
   );
+  console.log(returningBook);
   if (!returningBook) {
     return next(new ErrorHandler("You have not Borrowed this Book", 400));
   }
