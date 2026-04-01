@@ -10,6 +10,7 @@ import bookRouter from "./routes/bookRouter.js";
 import borrowRouter from "./routes/borrowRouter.js";
 import userRouter from "./routes/userRouter.js";
 import expressFileupload from "express-fileupload"
+import { notifyUsersAfterDueDate, notifyUsersOneDayAgo } from './services/notifyUsers.js';
 
 //we have to set up the path of config.env file in app.js..it loads the environment variables from config.env
 config({path:"./config/config.env"});
@@ -41,6 +42,10 @@ app.use("/api/v1/auth",authRouter);
 app.use("/api/v1/books", bookRouter);
 app.use("/api/v1/borrow",borrowRouter);
 app.use("/api/v1/user",userRouter);
+notifyUsersOneDayAgo();
+notifyUsersAfterDueDate();
+
+
 connectDB();
 
 
