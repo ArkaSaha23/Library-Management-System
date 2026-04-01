@@ -40,10 +40,14 @@ const BorrowBookSchema = new mongoose.Schema({
     type:Number,
     default:0,
   },
-  notified:{
+  notifiedBeforeDueDate:{
     type:Boolean,
     default:false,
   },
+  lastNotifiedAt:{
+    type: Date,
+    default: null,
+  }
 },
 {timestamps:true},
 );
