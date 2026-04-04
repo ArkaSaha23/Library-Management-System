@@ -5,8 +5,7 @@ import { notifyUserAfterDueDateEmailTemplate, notifyUserBeforeDueDateEmailTempla
 import { BookData } from "../models/bookModel.js";
 
 export const notifyUsersOneDayAgo = () => {
-  cron.schedule("*/1 * * * *", async () => {
-    console.log("scheduling");
+  cron.schedule("0 10 * * *", async () => {
     try {
       const startTomorrowTime = new Date(); 
       startTomorrowTime.setDate(startTomorrowTime.getDate() + 1);
@@ -45,7 +44,7 @@ export const notifyUsersOneDayAgo = () => {
 };
 
 export const notifyUsersAfterDueDate = () => {
-  cron.schedule("*/10 * * * * *", async () => {
+  cron.schedule("0 9 * * *", async () => {
     try {
       const now = new Date();
       const onedayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
