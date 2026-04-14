@@ -331,3 +331,6 @@ export const updatePassword = (data) => async (dispatch) => {
       dispatch(AuthSlice.actions.updatePasswordError(err.response.data.message || "Something went wrong"));
     });
 };
+
+
+export default AuthSlice.reducer;
