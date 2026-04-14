@@ -193,7 +193,7 @@ export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
     await curUser.save({ validateModifiedOnly: true });
 
-    const resetUrl = `${process.env.FRONTEND_URL}//resetpassword/${resetToken}`; //Now the system prepares a link that will be emailed to the user:
+    const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`; //Now the system prepares a link that will be emailed to the user:
 
     const message = ForgetPasswordEmailTemplate(resetUrl);
 
