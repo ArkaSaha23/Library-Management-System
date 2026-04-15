@@ -24,9 +24,6 @@ const App = () => {
         </Routes>
         <ToastContainer theme="dark" />
       </BrowserRouter>
-      <div className="bg-blue-300 font-bold h-8 w-50">
-        <h1>Hello World</h1>
-      </div>
     </>
   );
 };
