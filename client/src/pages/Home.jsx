@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { RxCross1 } from "react-icons/rx";
 import { useSelector } from "react-redux";
 
+import Header from "../layout/Header";
 import SideBar from "../layout/SideBar";
 
 import AdminDashboard from "../components/AdminDashboard";
@@ -11,53 +10,40 @@ import Catalog from "../components/Catalog";
 import Users from "../components/Users";
 import UserDashboard from "../components/UserDashboard";
 import MyBorrowedBooks from "../components/MyBorrowedBooks";
+import HeroSection from "../layout/HeroSection";
+import Collections from "../layout/Collections";
+import AboutUs from "../layout/AboutUs";
+import Authors from "../layout/Authors";
+import Footer from "../layout/Footer";
 
 const Home = () => {
   const [isSideBarOpen, setSidebar] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState(""); //it will store "Dashboard","Users","Books","Catalog","MyBorrowedBooks"
 
-  function toggleSidebar() {
-    const newState = !isSideBarOpen;
-    setSidebar(newState);
-    console.log(newState);
-  }
-
   const user = useSelector((state) => state.auth.user);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  // if (!isAuthenticated) {
-  //   return <Login />;
-  // }
+
+  const toggleSidebar = () => {
+    setSidebar((prev) => !prev);
+  };
+
   return (
     <>
-      <div className="relative md:pl-64 flex min-h-screen bg-gray-100">
-        {/* Hamburger Menu */}
-        <div className="md:hidden absolute p-4">
-          <GiHamburgerMenu
-            className="h-10 w-10 cursor-pointer"
-            onClick={toggleSidebar}
-          />
-        </div>
-        {/* sidebar */}
-        <div
-          className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white transform transition-transform duration-300 
-          ${isSideBarOpen ? "translate-x-0" : "-translate-x-full"}`}
-        >
-          <div className="p-4 text-xl font-bold">Menu</div>
-          <ul className="p-4 space-y-4">
-            <li className="cursor-pointer">Home</li>
-            <li className="cursor-pointer">Profile</li>
-            <li className="cursor-pointer">Settings</li>
-          </ul>
+      <Header toggleSidebar={toggleSidebar}/>
+      <SideBar
+        isSideBarOpen={isSideBarOpen}
+        setSidebar={setSidebar}
+        SelectedComponent={selectedComponent}
+        setSelectedComponent={setSelectedComponent}
+      />
+      
+      <HeroSection/>
+      <Collections/>
+      <Authors/>
+      <AboutUs/>
+      <Footer/>
 
-          {/* Close Button */}
-          <button
-            className="absolute top-6 right-4 text-white cursor-pointer"
-            onClick={toggleSidebar}
-          >
-            <RxCross1 />
-          </button>
-        </div>
-        {/* Immediately invoked function expression */}
+      {/* <div className="relative md:pl-64 flex min-h-screen bg-gray-100 pt-16"> 
         {(() => {
           if (selectedComponent === "Dashboard") {
             if (user?.role === "User") {
@@ -94,7 +80,7 @@ const Home = () => {
             }
           }
         })()}
-      </div>
+      </div> */}
     </>
   );
 };
