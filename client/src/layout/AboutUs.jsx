@@ -53,7 +53,7 @@ export default function AboutUs() {
   ];
 
   return (
-    <div className="pt-10 py-5 bg-gradient-to-br from-indigo-50 to-blue-50">
+    <div id="aboutus" className="pt-10 py-5 bg-gradient-to-br from-indigo-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
