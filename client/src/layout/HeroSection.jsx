@@ -4,7 +4,7 @@ import logo from "../assets/logo.png";
 
 export default function HeroSection() {
   return (
-    <div className="mt-20 mb-10 h-[400px] flex justify-center">
+    <div id="home" className="mt-30 mb-10 h-100 flex justify-center">
       <div className="relative w-10/12 h-full rounded-3xl overflow-hidden">
         {/* Background Image */}
         <img
