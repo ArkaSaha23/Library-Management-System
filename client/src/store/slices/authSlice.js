@@ -180,55 +180,71 @@ export const register = (data) => async (dispatch) => {
       dispatch(AuthSlice.actions.regSuccess(res.data));
     })
     .catch((err) => {
-      dispatch(AuthSlice.actions.regError(err.response.data.message || "Something went wrong"));
+      dispatch(
+        AuthSlice.actions.regError(
+          err.response.data.message || "Something went wrong",
+        ),
+      );
     });
 };
 
-export const OTPverification = ({email, OTP}) => async (dispatch) => {
-  dispatch(AuthSlice.actions.OTPRequest());
-  //here loading=true,spinner starts
+export const OTPverification =
+  ({ email, OTP }) =>
+  async (dispatch) => {
+    dispatch(AuthSlice.actions.OTPRequest());
+    //here loading=true,spinner starts
 
-  await axios //API call
-    .post(
-      "http://localhost:3504/api/v1/auth/verifyOTP",
-      { email, OTP },
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
+    await axios //API call
+      .post(
+        "http://localhost:3504/api/v1/auth/verifyOTP",
+        { email, OTP },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      },
-    )
-    .then((res) => {
-      dispatch(AuthSlice.actions.OTPSuccess(res.data));
-    })
-    .catch((err) => {
-      dispatch(AuthSlice.actions.OTPError(err.response.data.message || "Something went wrong"));
-    });
-};
+      )
+      .then((res) => {
+        dispatch(AuthSlice.actions.OTPSuccess(res.data));
+      })
+      .catch((err) => {
+        dispatch(
+          AuthSlice.actions.OTPError(
+            err.response.data.message || "Something went wrong",
+          ),
+        );
+      });
+  };
 
-export const login = ({email, password}) => async (dispatch) => {
-  dispatch(AuthSlice.actions.loginRequest());
-  //here loading=true,spinner starts
+export const login =
+  ({ email, password }) =>
+  async (dispatch) => {
+    dispatch(AuthSlice.actions.loginRequest());
+    //here loading=true,spinner starts
 
-  await axios //API call
-    .post(
-      "http://localhost:3504/api/v1/auth/login",
-      { email, password },
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
+    await axios //API call
+      .post(
+        "http://localhost:3504/api/v1/auth/login",
+        { email, password },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      },
-    )
-    .then((res) => {
-      dispatch(AuthSlice.actions.loginSuccess(res.data)); //
-    })
-    .catch((err) => {
-      dispatch(AuthSlice.actions.loginError(err.response.data.message || "Something went wrong"));
-    });
-};
+      )
+      .then((res) => {
+        dispatch(AuthSlice.actions.loginSuccess(res.data)); 
+      })
+      .catch((err) => {
+        dispatch(
+          AuthSlice.actions.loginError(
+            err.response?.data?.message || err.message || "Something went wrong",
+          ),
+        );
+      });
+  };
 
 export const logout = () => async (dispatch) => {
   dispatch(AuthSlice.actions.logoutRequest());
@@ -246,7 +262,11 @@ export const logout = () => async (dispatch) => {
       dispatch(AuthSlice.actions.resetAuthSlice());
     })
     .catch((err) => {
-      dispatch(AuthSlice.actions.logoutError(err.response.data.message || "Something went wrong"));
+      dispatch(
+        AuthSlice.actions.logoutError(
+          err.response.data.message || "Something went wrong",
+        ),
+      );
     });
 };
 
@@ -265,34 +285,42 @@ export const getUser = () => async (dispatch) => {
       dispatch(AuthSlice.actions.getUserSuccess(res.data));
     })
     .catch((err) => {
-      dispatch(AuthSlice.actions.getUserError(err.response.data.message || "Something went wrong"));
-    });
-};
-
-export const forgetPassword = ({email}) => async (dispatch) => {
-  dispatch(AuthSlice.actions.forgotPasswordRequest());
-  //here loading=true,spinner starts
-
-  await axios //API call
-    .post(
-      "http://localhost:3504/api/v1/auth/forgotpassword",
-      { email },
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    )
-    .then((res) => {
-      dispatch(AuthSlice.actions.forgotPasswordSuccess(res.data));
-    })
-    .catch((err) => {
       dispatch(
-        AuthSlice.actions.forgotPasswordError(err.response.data.message || "Something went wrong"),
+        AuthSlice.actions.getUserError(
+          err.response.data.message || "Something went wrong",
+        ),
       );
     });
 };
+
+export const forgetPassword =
+  ({ email }) =>
+  async (dispatch) => {
+    dispatch(AuthSlice.actions.forgotPasswordRequest());
+    //here loading=true,spinner starts
+
+    await axios //API call
+      .post(
+        "http://localhost:3504/api/v1/auth/forgotpassword",
+        { email },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
+      .then((res) => {
+        dispatch(AuthSlice.actions.forgotPasswordSuccess(res.data));
+      })
+      .catch((err) => {
+        dispatch(
+          AuthSlice.actions.forgotPasswordError(
+            err.response.data.message || "Something went wrong",
+          ),
+        );
+      });
+  };
 
 export const resetPassword = (data, token) => async (dispatch) => {
   dispatch(AuthSlice.actions.resetPasswordRequest());
@@ -309,7 +337,11 @@ export const resetPassword = (data, token) => async (dispatch) => {
       dispatch(AuthSlice.actions.resetPasswordSuccess(res.data));
     })
     .catch((err) => {
-      dispatch(AuthSlice.actions.resetPasswordError(err.response.data.message || "Something went wrong"));
+      dispatch(
+        AuthSlice.actions.resetPasswordError(
+          err.response.data.message || "Something went wrong",
+        ),
+      );
     });
 };
 
@@ -328,9 +360,12 @@ export const updatePassword = (data) => async (dispatch) => {
       dispatch(AuthSlice.actions.updatePasswordSuccess(res.data));
     })
     .catch((err) => {
-      dispatch(AuthSlice.actions.updatePasswordError(err.response.data.message || "Something went wrong"));
+      dispatch(
+        AuthSlice.actions.updatePasswordError(
+          err.response.data.message || "Something went wrong",
+        ),
+      );
     });
 };
-
 
 export default AuthSlice.reducer;
