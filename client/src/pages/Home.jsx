@@ -20,30 +20,14 @@ const Home = () => {
   const [isSideBarOpen, setSidebar] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState(""); //it will store "Dashboard","Users","Books","Catalog","MyBorrowedBooks"
 
-  const user = useSelector((state) => state.auth.user);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const user = useSelector((state) => state.authReducer.user);
+  const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
 
-  const toggleSidebar = () => {
-    setSidebar((prev) => !prev);
-  };
+ 
 
   return (
     <>
-      <Header toggleSidebar={toggleSidebar}/>
-      <SideBar
-        isSideBarOpen={isSideBarOpen}
-        setSidebar={setSidebar}
-        SelectedComponent={selectedComponent}
-        setSelectedComponent={setSelectedComponent}
-      />
-      
-      <HeroSection/>
-      <Collections/>
-      <Authors/>
-      <AboutUs/>
-      <Footer/>
-
-      {/* <div className="relative md:pl-64 flex min-h-screen bg-gray-100 pt-16"> 
+      <div className="relative md:pl-64 flex min-h-screen bg-gray-100 pt-16"> 
         {(() => {
           if (selectedComponent === "Dashboard") {
             if (user?.role === "User") {
@@ -80,7 +64,7 @@ const Home = () => {
             }
           }
         })()}
-      </div> */}
+      </div>
     </>
   );
 };
