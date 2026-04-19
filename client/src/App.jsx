@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
+import LandingPage from "./Home/LandingPage"
 import Login from "./pages/Login";
 import OTPverification from "./pages/OTP";
 import ResetPassword from "./pages/ResetPassword";
@@ -15,7 +16,8 @@ const App = () => {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LandingPage/>}/>
+          <Route path="/Home" element={<Home />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/ResetPassword" element={<ResetPassword />} />
