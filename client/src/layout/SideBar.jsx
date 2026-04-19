@@ -13,17 +13,11 @@ const SideBar = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = useSelector(
+    (state) => state.authReducer.isAuthenticated,
+  );
+  const user = useSelector((state) => state.authReducer.user);
   const role = user?.role || "User";
-
-  const menuItems = [
-    { label: "Dashboard", value: "Dashboard" },
-    { label: "Books", value: "Books", adminOnly: true },
-    { label: "Catalog", value: "Catalog", adminOnly: true },
-    { label: "Users", value: "Users", adminOnly: true },
-    { label: "My Borrowed Books", value: "MyBorrowedBooks", userOnly: true },
-  ];
 
   const handleLogout = async () => {
     setSidebar(false);
@@ -51,6 +45,9 @@ const SideBar = ({
     setSidebar(false);
   };
 
+  const toggleSideBar = () => {
+    setSidebar((prev) => !prev);
+  };
   return (
     <>
       <aside
@@ -59,9 +56,9 @@ const SideBar = ({
         }`}
       >
         <div className="flex items-center justify-between border-b px-6 py-4 md:hidden">
-          <span className="text-lg font-semibold">Menu</span>
+          <span className="text-lg font-bold">Library Menu</span>
           <button
-            onClick={() => setSidebar(false)}
+            onClick={toggleSideBar}
             className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
             aria-label="Close sidebar"
           >
@@ -69,69 +66,138 @@ const SideBar = ({
           </button>
         </div>
 
-        <div className="md:hidden px-6 py-6">
-          <h2 className="mb-4 text-xl font-semibold">Library Menu</h2>
-
+        <div className="md:hidden h-10/11 px-6 py-6 flex flex-col">
           <div className="mb-4 space-y-2 md:hidden">
             {!isAuthenticated ? (
               <>
+                <div className="text-center">
+                  <a
+                    href="#home"
+                    onClick={toggleSideBar}
+                    className="font-extrabold hover:text-blue-600 transition text-sm lg:text-base"
+                  >
+                    Home
+                  </a>
+                </div>
+                <div className="text-center">
+                  <a
+                    href="#collections"
+                    onClick={toggleSideBar}
+                    className="font-extrabold hover:text-blue-600 transition text-sm lg:text-base"
+                  >
+                    Collections
+                  </a>
+                </div>
+                <div className="text-center">
+                  <a
+                    href="#author"
+                    onClick={toggleSideBar}
+                    className="font-extrabold hover:text-blue-600 transition text-sm lg:text-base"
+                  >
+                    Authors
+                  </a>
+                </div>
+
+                <div className="text-center">
+                  <a
+                    href="#aboutus"
+                    onClick={toggleSideBar}
+                    className="font-extrabold hover:text-blue-600 transition text-sm lg:text-base"
+                  >
+                    About
+                  </a>
+                </div>
+                <div>--------------------------------</div>
                 <button
                   onClick={handleLogin}
-                  className="block w-full rounded-xl bg-blue-600 px-4 py-3 text-left text-sm font-medium text-white transition hover:bg-blue-700"
+                  className="block w-full border rounded-2xl bg-blue-400  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-500 hover:scale-120 duration-100 cursor-pointer"
                 >
                   Login
                 </button>
                 <button
                   onClick={handleRegister}
-                  className="block w-full rounded-xl bg-gray-600 px-4 py-3 text-left text-sm font-medium text-white transition hover:bg-gray-700"
+                  className="block w-full border rounded-2xl bg-green-300  px-4 py-3 text-sm font font-mono text-black text-center transition hover:bg-green-400 hover:scale-120 duration-100 cursor-pointer"
                 >
                   Register
                 </button>
               </>
             ) : (
               <>
-                <button
-                  onClick={handleVisitDashboard}
-                  className="block w-full rounded-xl bg-blue-600 px-4 py-3 text-left text-sm font-medium text-white transition hover:bg-blue-700"
-                >
-                  Dashboard
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full rounded-xl bg-red-600 px-4 py-3 text-left text-sm font-medium text-white transition hover:bg-red-700"
-                >
-                  Logout
-                </button>
+                {role === "User" && (
+                  <>
+                    <button
+                      onClick={handleVisitDashboard}
+                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
+                    >
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
+                    >
+                      My Borrowed Books
+                    </button>
+                  </>
+                )}
+                {role === "Admin" && (
+                  <>
+                    <button
+                      onClick={handleVisitDashboard}
+                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
+                    >
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={handleVisitDashboard}
+                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
+                    >
+                      Books
+                    </button>
+                    <button
+                      onClick={handleVisitDashboard}
+                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
+                    >
+                      Catalogs
+                    </button>
+                    <button
+                      onClick={handleVisitDashboard}
+                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
+                    >
+                      Users
+                    </button>
+                    <button
+                      //onClick={handleLogout}
+                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
+                    >
+                      Add New Admin
+                    </button>
+                    <button
+                      onClick={handleVisitDashboard}
+                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
+                    >
+                      Update Credentials
+                    </button>
+                  </>
+                )}
               </>
             )}
           </div>
 
-          <nav className="space-y-2">
-            {menuItems.map((item) => {
-              if (item.adminOnly && role !== "Admin") return null;
-              if (item.userOnly && role !== "User") return null;
-              return (
-                <button
-                  key={item.value}
-                  onClick={() => handleSelect(item.value)}
-                  className={`block w-full rounded-xl px-4 py-3 text-left transition ${
-                    SelectedComponent === item.value
-                      ? "bg-blue-600 text-white"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </nav>
+          {isAuthenticated && (
+            <button
+              onClick={handleLogout}
+              className="mt-auto block w-full rounded-2xl bg-red-600 px-4 py-3 cursor-pointer text-white hover:bg-red-700"
+            >
+              Logout
+            </button>
+          )}
         </div>
       </aside>
 
       {isSideBarOpen && (
         <div
           className="fixed inset-0 z-20 bg-black/25 md:hidden"
-          onClick={() => setSidebar(false)}
+          onClick={toggleSideBar}
         />
       )}
     </>
