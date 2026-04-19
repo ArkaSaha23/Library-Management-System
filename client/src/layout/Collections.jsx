@@ -42,7 +42,7 @@ export default function Collections() {
   ];
 
   return (
-    <div className="py-10 bg-gray-200">
+    <div id="collections" className="py-10 bg-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-8">
