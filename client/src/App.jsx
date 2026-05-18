@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import LandingPage from "./Home/LandingPage"
@@ -12,12 +12,21 @@ import Register from "./pages/Register";
 import { ToastContainer } from "react-toastify";
 
 const App = () => {
+  const [isSideBarOpen, setSidebar] = useState(false);
+  const [selectedComponent, setSelectedComponent] = useState("");
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LandingPage/>}/>
-          <Route path="/Home" element={<Home />} />
+          <Route path="/" element={<LandingPage  isSideBarOpen={isSideBarOpen}
+        setSidebar={setSidebar}
+        selectedComponent={selectedComponent}
+        setSelectedComponent={setSelectedComponent}/>}/>
+          <Route path="/Home" element={<Home  
+           isSideBarOpen={isSideBarOpen}
+        setSidebar={setSidebar}
+        selectedComponent={selectedComponent}
+        setSelectedComponent={setSelectedComponent}/>} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/ResetPassword" element={<ResetPassword />} />
