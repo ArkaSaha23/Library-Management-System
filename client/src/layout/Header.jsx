@@ -16,6 +16,7 @@ const Header = ({ toggleSidebar }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   const isAuthenticated = useSelector(
     (state) => state.authReducer.isAuthenticated,
   );
