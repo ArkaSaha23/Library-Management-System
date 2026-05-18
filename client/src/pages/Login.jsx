@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-import Header from "../layout/Header";
-import SideBar from "../layout/SideBar";
-
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../store/slices/authSlice";
+import Header from "../layout/Header";
+import SideBar from "../layout/SideBar";
 
 import logo from "../assets/logo.png";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { isAuthenticated, loading, error } = useSelector((state) => state.authReducer);
 
-    const [formData, setFormData] = useState({
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/Home");
+    }
+  }, [isAuthenticated, navigate]);
+
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
-  const { isAuthenticated, loading, error } = useSelector(
-    (state) => state.authReducer,
-  );
 
   const handleChange = (e) => {
     setFormData({
@@ -32,14 +33,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(login(formData));
-    navigate("/Home");
   };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/Home");
-    }
-  }, [isAuthenticated]);
 
   const handleRegister = () => {
     navigate("/Register");
@@ -52,12 +46,11 @@ const Login = () => {
   return (
     <>
       <Header />
-      <SideBar />
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
           <div className="max-w-full flex items-center justify-center">
             <div>
-              <img src={logo} alt="logo" className="h-25 w-35" />
+              <img src={logo} alt="logo" className="h-25 w-35"/>
             </div>
           </div>
           <h2 className="text-3xl font-bold text-center mb-6">Login</h2>
@@ -85,9 +78,10 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+              disabled={loading}
+              className={`w-full text-white py-2 rounded-lg transition ${loading ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'}`}
             >
-              Login
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
 
