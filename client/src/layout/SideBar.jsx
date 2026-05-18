@@ -1,18 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaTimes } from "react-icons/fa";
-import { logout } from "../store/slices/authSlice";
+import { logout, resetAuthSlice } from "../store/slices/authSlice";
 
 const SideBar = ({
   isSideBarOpen,
   setSidebar,
-  SelectedComponent,
+  selectedComponent,
   setSelectedComponent,
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const isAuthenticated = useSelector(
     (state) => state.authReducer.isAuthenticated,
   );
@@ -25,10 +26,16 @@ const SideBar = ({
     navigate("/Login");
   };
 
-  const handleVisitDashboard = () => {
-    setSidebar(false);
-    navigate("/Dashboard");
-  };
+  // useEffect(()=>{
+  //   if(error){
+  //     toast.success(error);
+  //     dispatch(resetAuthSlice());
+  //   }
+  //   if(message){
+  //     toast.success(error);
+  //     dispatch(resetAuthSlice());
+  //   }
+  // },[dispatch,isAuthenticated,error,loading,message])
 
   const handleLogin = () => {
     setSidebar(false);
@@ -126,13 +133,13 @@ const SideBar = ({
                 {role === "User" && (
                   <>
                     <button
-                      onClick={handleVisitDashboard}
+                      onClick={() => handleSelect("Dashboard")}
                       className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
                     >
                       Dashboard
                     </button>
                     <button
-                      onClick={handleLogout}
+                      onClick={() => handleSelect("MyBorrowedBooks")}
                       className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
                     >
                       My Borrowed Books
@@ -142,37 +149,37 @@ const SideBar = ({
                 {role === "Admin" && (
                   <>
                     <button
-                      onClick={handleVisitDashboard}
+                      onClick={() => handleSelect("Dashboard")}
                       className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
                     >
                       Dashboard
                     </button>
                     <button
-                      onClick={handleVisitDashboard}
+                      onClick={() => handleSelect("Books")}
                       className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
                     >
                       Books
                     </button>
                     <button
-                      onClick={handleVisitDashboard}
+                      onClick={() => handleSelect("Catalog")}
                       className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
                     >
                       Catalogs
                     </button>
                     <button
-                      onClick={handleVisitDashboard}
+                      onClick={() => handleSelect("Users")}
                       className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
                     >
                       Users
                     </button>
                     <button
-                      //onClick={handleLogout}
+                      onClick={() => handleSelect("AddNewAdmin")}
                       className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
                     >
                       Add New Admin
                     </button>
                     <button
-                      onClick={handleVisitDashboard}
+                      onClick={() => handleSelect("UpdateCredentials")}
                       className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
                     >
                       Update Credentials
