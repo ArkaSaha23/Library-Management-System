@@ -165,66 +165,77 @@ export const resetAuthSlice = () => (dispatch) => {
 //below is a Redux Thunk (middleware function).allows API Calls
 export const register = (data) => async (dispatch) => {
   //data=what we send
-  dispatch(AuthSlice.actions.regRequest());
-  //here loading=true,spinner starts
+  try {
+    //1. Dispatch loading state
+    dispatch(AuthSlice.actions.regRequest());
 
-  await axios //API call
-    .post("http://localhost:3504/api/v1/auth/register", data, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
+    // 2. Make API call,res = what backend sends us
+    const res = await axios.post(
+      "http://localhost:3504/api/v1/auth/register",
+      data,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    })
-    //res.data=what backend sends us
-    .then((res) => {
-      dispatch(AuthSlice.actions.regSuccess(res.data));
-    })
-    .catch((err) => {
-      dispatch(
-        AuthSlice.actions.regError(
-          err.response.data.message || "Something went wrong",
-        ),
-      );
-    });
+    );
+
+    // 3. Dispatch success state with payload
+    dispatch(AuthSlice.actions.regSuccess(res.data)); //state = regSuccess , action.payload = res.data
+  } catch (err) {
+    // 4. Dispatch failure state if API fails
+    dispatch(
+      AuthSlice.actions.regError(
+        err.response.data.message || "Something went wrong",
+      ),
+    );
+  }
 };
 
 export const OTPverification =
   ({ email, OTP }) =>
   async (dispatch) => {
-    dispatch(AuthSlice.actions.OTPRequest());
-    //here loading=true,spinner starts
+    try {
+      //1.Dispatch loading state
+      dispatch(AuthSlice.actions.OTPRequest());
 
-    await axios //API call
-      .post(
+      //2. Make API call
+      const res = await axios.post(
         "http://localhost:3504/api/v1/auth/verifyOTP",
-        { email, OTP },
+        {
+          email,
+          OTP,
+        },
         {
           withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           },
         },
-      )
-      .then((res) => {
-        dispatch(AuthSlice.actions.OTPSuccess(res.data));
-      })
-      .catch((err) => {
-        dispatch(
-          AuthSlice.actions.OTPError(
-            err.response.data.message || "Something went wrong",
-          ),
-        );
-      });
+      );
+
+      //3.Dispatch success state with payload
+      dispatch(AuthSlice.actions.OTPSuccess(res.data));
+    } catch (err) {
+      // 4. Dispatch failure state if API fails
+      dispatch(
+        AuthSlice.actions.OTPError(
+          err.response?.data?.message || "Something went wrong",
+        ),
+      );
+    }
   };
 
 export const login =
   ({ email, password }) =>
   async (dispatch) => {
-    dispatch(AuthSlice.actions.loginRequest());
-    //here loading=true,spinner starts
+    try {
+      //1. dispatch the loading state
+      dispatch(AuthSlice.actions.loginRequest());
 
-    await axios //API call
-      .post(
+      //2. api call to login
+      const res = await axios.post(
         "http://localhost:3504/api/v1/auth/login",
         { email, password },
         {
@@ -233,17 +244,17 @@ export const login =
             "Content-Type": "application/json",
           },
         },
-      )
-      .then((res) => {
-        dispatch(AuthSlice.actions.loginSuccess(res.data)); 
-      })
-      .catch((err) => {
-        dispatch(
-          AuthSlice.actions.loginError(
-            err.response?.data?.message || err.message || "Something went wrong",
-          ),
-        );
-      });
+      );
+      //3. dispatch the success state with payload
+      dispatch(AuthSlice.actions.OTPSuccess(res.data));
+    } catch (err) {
+      //4. dispatch the filure state
+      dispatch(
+        AuthSlice.actions.loginError(
+          err.response?.data?.message || "SOMETHING WENT WRONG",
+        ),
+      );
+    }
   };
 
 export const logout = () => async (dispatch) => {
