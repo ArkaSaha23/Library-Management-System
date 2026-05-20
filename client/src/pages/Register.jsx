@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import Header from "../layout/Header";
 import SideBar from "../layout/SideBar";
@@ -7,6 +7,7 @@ import SideBar from "../layout/SideBar";
 import logo from "../assets/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { register, resetAuthSlice } from "../store/slices/authSlice";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -120,7 +121,7 @@ const Register = () => {
               type="submit"
               className="w-full bg-green-500 text-white font-mono font-extrabold py-2 rounded-lg hover:bg-green-600 transition hover:"
             >
-              Register
+              {loading ? "Loading..." : "Register"}
             </button>
           </form>
 
