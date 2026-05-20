@@ -33,8 +33,6 @@ const Register = () => {
     dispatch(register(data)); //will dispatch data in the authSlice register func()
   };
 
-  const handleChange = (e) => {};
-
   //if the user successfully registers he will get navigate to OTP verifiaction Page ////
   // otherwise error will be thrown
   useEffect(() => {
@@ -52,7 +50,7 @@ const Register = () => {
     return <Navigate to="/Home" />;
   }
   
-  
+
   return (
     <>
       <Header />
