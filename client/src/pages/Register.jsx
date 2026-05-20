@@ -1,94 +1,136 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 
 import Header from "../layout/Header";
 import SideBar from "../layout/SideBar";
 
 import logo from "../assets/logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { register, resetAuthSlice } from "../store/slices/authSlice";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const loading = useSelector((state) => state.authReducer.loading);
+  const error = useSelector((state) => state.authReducer.error);
+  const message = useSelector((state) => state.authReducer.message);
+  const user = useSelector((state) => state.authReducer.user);
+  const isAuthenticated = useSelector(
+    (state) => state.authReducer.isAuthenticated,
+  );
+
+  const handleRegister = (e) => {
+    e.preventDefault(); //It prevents the page from gettimng reoad or getting refreshed
+    const data = new FormData();
+    data.append("name", name);
+    data.append("email", email);
+    data.append("password", password);
+    dispatch(register(data)); //will dispatch data in the authSlice register func()
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleChange = (e) => {};
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      return;
+  //if the user successfully registers he will get navigate to OTP verifiaction Page ////
+  // otherwise error will be thrown
+  useEffect(() => {
+    if (message) {
+      navigate(`/OTPverification/${email}`);
     }
+    if (error) {
+      toast.error(error);
+      dispatch(resetAuthSlice());
+    }
+  }, [message, error, navigate, dispatch, isAuthenticated, loading]);
 
-    console.log("Register Data:", formData);
-  };
+  //if the user is already authenticated he will not get redirected here
+  if (isAuthenticated === true) {
+    return <Navigate to="/Home" />;
+  }
+  
+  
   return (
     <>
       <Header />
-      <SideBar />
+      {/* <SideBar /> */}
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+
+          {/* LOGO */}
           <div className="max-w-full flex items-center justify-center">
             <div>
               <img src={logo} alt="logo" className="h-25 w-35" />
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-center mb-6">Register</h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              required
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
+          {/* HEADING */}
+          <h2 className="text-3xl font-mono font-bold text-center mb-6">
+            Register
+          </h2>
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
+          <form onSubmit={handleRegister} className="space-y-4">
+            {/* NAME ENTRY */}
+            <div className="py-3 px-2 border border-gray-300 rounded-2xl bg-gray-100">
+              <div className="py-2 text-center font-mono">Enter your Name</div>
+              <input
+                type="text"
+                name="name"
+                placeholder="FULL NAME"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 hover:bg-gray-200 font-mono"
+              />
+            </div>
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
+            {/* EMAIL ENTRY */}
+            <div className="py-3 px-2 border border-gray-300 rounded-2xl bg-gray-100">
+              <div className="py-2 text-center font-mono">Enter your Email</div>
+              <input
+                type="email"
+                name="email"
+                placeholder="EMAIL"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 hover:bg-gray-200 font-mono"
+              />
+            </div>
 
+            {/* PASSWORD ENTRY */}
+            <div className="py-3 px-2 border border-gray-300 rounded-2xl bg-gray-100">
+              <div className="py-2 text-center font-mono">
+                Enter your Password
+              </div>
+              <input
+                type="password"
+                name="password"
+                placeholder="PASSWORD"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400  hover:bg-gray-200 font-mono"
+              />
+            </div>
+
+            {/* SUBMIT BUTTON */}
             <button
               type="submit"
-              className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition"
+              className="w-full bg-green-500 text-white font-mono font-extrabold py-2 rounded-lg hover:bg-green-600 transition hover:"
             >
               Register
             </button>
           </form>
 
-          <p className="text-center mt-4 text-sm">
+          {/* IF THE USER ALREADY HAVE AN ACCOUNT PREVIOUSLY */}
+          <p className="text-center font-mono mt-4 text-sm">
             Already have an account?{" "}
             <span
-              className="text-green-500 cursor-pointer"
+              className="text-blue-500 cursor-pointer font-mono text-md hover:text-blue-700"
               onClick={() => navigate("/Login")}
             >
               Login
