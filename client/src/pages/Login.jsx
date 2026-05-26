@@ -6,6 +6,7 @@ import Header from "../layout/Header";
 import SideBar from "../layout/SideBar";
 
 import logo from "../assets/logo.png";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const Login = () => {
   useEffect(() => {
     if (message) {
       navigate("/Home");
+      toast.success(message);
     }
     if (error) {
       toast.error(error);
@@ -39,12 +41,25 @@ const Login = () => {
     }
   }, [message, error, navigate, dispatch, isAuthenticated, loading]);
 
-
   return (
     <>
-      <Header />
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+      <div className="w-full p-3 bg-gray-100 flex justify-between">
+        <button
+          className="mt-3 px-5 py-2 border-2 border-gray-700 rounded-2xl font-mono text-md bg-white hover:bg-gray-900 hover:text-white cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          ← Back to Home Screen
+        </button>
+        <button
+          className="mt-3 px-5 border-2 border-gray-700 rounded-2xl font-mono text-md bg-white hover:bg-gray-900 hover:text-white cursor-pointer"
+          onClick={() => navigate("/Register")}
+        >
+          Register → 
+        </button>
+      </div>
+
+      <div className="min-h-screen flex justify-center bg-gray-100">
+        <div className="bg-white p-8 mt-10 rounded-2xl shadow-lg h-full w-full max-w-md">
           <div className="max-w-full flex items-center justify-center">
             <div>
               <img src={logo} alt="logo" className="h-25 w-35" />
@@ -56,7 +71,7 @@ const Login = () => {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="py-3 px-2 border border-gray-300 rounded-2xl bg-gray-100">
-              <div className="py-2 text-center font-mono">Enter your Name</div>
+              <div className="py-2 text-center font-mono">Enter your Email</div>
               <input
                 type="email"
                 name="email"
@@ -69,7 +84,9 @@ const Login = () => {
             </div>
 
             <div className="py-3 px-2 border border-gray-300 rounded-2xl bg-gray-100">
-              <div className="py-2 text-center font-mono">Enter your Name</div>
+              <div className="py-2 text-center font-mono">
+                Enter your Password
+              </div>
               <input
                 type="password"
                 name="password"
