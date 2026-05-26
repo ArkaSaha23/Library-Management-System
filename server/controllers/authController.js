@@ -69,8 +69,8 @@ export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
     const { email, OTP } = req.body;
 
     //email or otp is missing
-    if (!email || !OTP) {
-      return next(new ErrorHandler("Email or OTP is missing", 400));
+    if (!OTP) {
+      return next(new ErrorHandler("Please Enter the OTP", 400));
     }
 
     //finding the correct email
