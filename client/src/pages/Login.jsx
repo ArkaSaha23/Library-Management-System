@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../store/slices/authSlice";
-import Header from "../layout/Header";
-import SideBar from "../layout/SideBar";
+import { login, resetAuthSlice } from "../store/slices/authSlice";
 
 import logo from "../assets/logo.png";
 import { toast } from "react-toastify";
@@ -26,18 +24,13 @@ const Login = () => {
 
   useEffect(() => {
     if (message) {
-      navigate("/Home");
-      toast.success(message);
+      toast.success(message);   //successful login toast will sent a successful Loginmessage
+      dispatch(resetAuthSlice);  //reset the Loading,message,error authStates
+      navigate("/Home");        //Navigate to HomePage
     }
     if (error) {
-      toast.error(error);
-      dispatch(resetAuthSlice());
-    }
-  }, [message, error, navigate, dispatch, isAuthenticated, loading]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/Home");
+      toast.error(error);       //Unsuccessful login toast will sent a Error unsuccessful Login message
+      dispatch(resetAuthSlice());  //reset the Loading,message,error authStates
     }
   }, [message, error, navigate, dispatch, isAuthenticated, loading]);
 
@@ -76,7 +69,6 @@ const Login = () => {
                 type="email"
                 name="email"
                 placeholder="EMAIL"
-                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2 font-mono border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -91,7 +83,6 @@ const Login = () => {
                 type="password"
                 name="password"
                 placeholder="PASSWORD"
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-2 font-mono border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
