@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import Home from "./pages/Home";
 import LandingPage from "./Home/LandingPage";
 import Login from "./pages/Login";
@@ -43,7 +44,7 @@ const App = () => {
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/ResetPassword" element={<ResetPassword />} />
-          <Route path="/OTPverificatiom/:email" element={<OTPverification />} />
+          <Route path="/OTPverification/:email" element={<OTPverification />} /> 
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
         </Routes>
         <ToastContainer theme="dark" />
