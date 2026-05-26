@@ -38,6 +38,7 @@ const Register = () => {
   // otherwise error will be thrown
   useEffect(() => {
     if (message) {
+      toast.success(message);
       navigate(`/OTPverification/${email}`);
     }
     if (error) {
@@ -50,15 +51,26 @@ const Register = () => {
   if (isAuthenticated === true) {
     return <Navigate to="/Home" />;
   }
-  
 
   return (
     <>
-      <Header />
-      {/* <SideBar /> */}
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+      <div className="w-full p-3 bg-gray-100 flex justify-between">
+        <button
+          className="mt-3 px-5 py-2 border-2 border-gray-700 rounded-2xl font-mono text-md bg-white hover:bg-gray-900 hover:text-white cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          ← Back to Home Screen
+        </button>
+        <button
+          className="mt-3 px-5 border-2 border-gray-700 rounded-2xl font-mono text-md bg-white hover:bg-gray-900 hover:text-white cursor-pointer"
+          onClick={() => navigate("/Login")}
+        >
+          Login →
+        </button>
+      </div>
 
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="bg-white p-8 mt-10 rounded-2xl shadow-lg h-full w-full max-w-md">
           {/* LOGO */}
           <div className="max-w-full flex items-center justify-center">
             <div>
