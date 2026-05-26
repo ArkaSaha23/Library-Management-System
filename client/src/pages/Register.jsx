@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
-import Header from "../layout/Header";
-import SideBar from "../layout/SideBar";
-
 import logo from "../assets/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { register, resetAuthSlice } from "../store/slices/authSlice";
@@ -39,6 +36,7 @@ const Register = () => {
   useEffect(() => {
     if (message) {
       toast.success(message);
+      dispatch(resetAuthSlice());
       navigate(`/OTPverification/${email}`);
     }
     if (error) {
@@ -46,11 +44,6 @@ const Register = () => {
       dispatch(resetAuthSlice());
     }
   }, [message, error, navigate, dispatch, isAuthenticated, loading]);
-
-  //if the user is already authenticated he will not get redirected here
-  if (isAuthenticated === true) {
-    return <Navigate to="/Home" />;
-  }
 
   return (
     <>
@@ -91,7 +84,6 @@ const Register = () => {
                 type="text"
                 name="name"
                 placeholder="FULL NAME"
-                required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 hover:bg-gray-200 font-mono"
@@ -105,7 +97,6 @@ const Register = () => {
                 type="email"
                 name="email"
                 placeholder="EMAIL"
-                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 hover:bg-gray-200 font-mono"
@@ -121,7 +112,6 @@ const Register = () => {
                 type="password"
                 name="password"
                 placeholder="PASSWORD"
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400  hover:bg-gray-200 font-mono"
