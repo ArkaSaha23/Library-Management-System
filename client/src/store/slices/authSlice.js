@@ -9,6 +9,7 @@ const AuthSlice = createSlice({
     message: null,
     user: null,
     isAuthenticated: false,
+    initialized: false,
   },
   reducers: {
     //here are the actions which will change the state
@@ -91,12 +92,14 @@ const AuthSlice = createSlice({
       state.message = action.payload.message;
       state.isAuthenticated = true;
       state.user = action.payload.user;
+      state.initialized = true;
     },
     getUserError(state, action) {
       state.loading = false;
       state.user = null;
       state.error = action.payload;
       state.isAuthenticated = false;
+      state.initialized = true;
     },
 
     //forgot password
