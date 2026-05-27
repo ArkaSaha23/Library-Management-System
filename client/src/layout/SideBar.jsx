@@ -26,17 +26,6 @@ const SideBar = ({
     navigate("/Login");
   };
 
-  // useEffect(()=>{
-  //   if(error){
-  //     toast.success(error);
-  //     dispatch(resetAuthSlice());
-  //   }
-  //   if(message){
-  //     toast.success(error);
-  //     dispatch(resetAuthSlice());
-  //   }
-  // },[dispatch,isAuthenticated,error,loading,message])
-
   const handleLogin = () => {
     setSidebar(false);
     navigate("/Login");
