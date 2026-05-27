@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Home from "./pages/Home";
@@ -8,14 +8,23 @@ import OTPverification from "./pages/OTP";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Register from "./pages/Register";
-import UpdatePassword from "./pages/UpdatePassword"; 
+import UpdatePassword from "./pages/UpdatePassword";
 
 //react toastify : beautifull design Alert message popup
 import { ToastContainer } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "./store/slices/authSlice";
 
 const App = () => {
   const [isSideBarOpen, setSidebar] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState("");
+
+  const { user, isAuthenticated } = useSelector((state) => state.authReducer);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUser());
+  }, []);
+
   return (
     <>
       <BrowserRouter>
@@ -45,7 +54,7 @@ const App = () => {
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/ResetPassword/:token" element={<ResetPassword />} />
-          <Route path="/OTPverification/:email" element={<OTPverification />} /> 
+          <Route path="/OTPverification/:email" element={<OTPverification />} />
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/UpdatePassword" element={<UpdatePassword />} />
         </Routes>
