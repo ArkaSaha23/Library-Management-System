@@ -8,6 +8,7 @@ import { toggleSettingPopup } from "../store/slices/popUpSlice";
 import { IoIosNotifications } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import { logout } from "../store/slices/authSlice";
 
 const MainHeader = ({ toggleSidebar }) => {
   const dispatch = useDispatch();
@@ -17,8 +18,16 @@ const MainHeader = ({ toggleSidebar }) => {
   const [currentDate, SetCurrentDate] = useState("");
 
   const user = useSelector((state) => state.authReducer.user);
-  const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state) => state.authReducer.isAuthenticated,
+  );
+  const authInitialized = useSelector((state) => state.authReducer.initialized);
   const role = user?.role || "User";
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    navigate("/Login");
+  };
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -81,7 +90,7 @@ const MainHeader = ({ toggleSidebar }) => {
           </div>
 
           {/* right side.....notification icon,rest component*/}
-          {!isAuthenticated ? (
+          {!authInitialized ? null : !isAuthenticated ? (
             <Navigate to="/Login" />
           ) : (
             <>
@@ -114,7 +123,7 @@ const MainHeader = ({ toggleSidebar }) => {
                     </div>
                     <div className="col-span-1 col-start-18">
                       <button
-                        onClick={() => handleSelect("Catalog")}
+                        onClick={() => handleLogout()}
                         className="block w-full rounded-lg px-2 py-2 text-md font-mono text-black text-center transition hover:bg-red-500 hover:scale-120 duration-100 hover:font-extrabold cursor-pointer"
                       >
                         Logout
@@ -192,7 +201,7 @@ const MainHeader = ({ toggleSidebar }) => {
                     </div>
                     <div className="col-span-1 col-start-18">
                       <button
-                        onClick={() => handleSelect("Catalog")}
+                        onClick={() => handleLogout()}
                         className="block w-full rounded-lg px-2 py-2 text-xs font-mono text-black text-center transition hover:bg-red-500 hover:scale-120 duration-100 hover:font-extrabold cursor-pointer"
                       >
                         Logout
