@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
+import { MdAttachEmail } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { OTPverification, resetAuthSlice } from "../store/slices/authSlice";
@@ -67,9 +68,13 @@ const OTP = () => {
             <br />
             <span>Please Check your MailBox</span>
           </div>
-          <h2 className="text-3xl font-mono font-bold text-center mb-3">
-            Verify Your OTP
-          </h2>
+
+          <div className="flex justify-center items-center">
+            <MdAttachEmail className="text-3xl font mb-2 mr-2" />
+            <h2 className="text-3xl font-mono font-bold text-center mb-3">
+              Verify Your OTP
+            </h2>
+          </div>
 
           <form onSubmit={handleOTPVerify} className="text-center">
             <div className="mb-5 py-3 px-2 border border-gray-300 rounded-2xl bg-gray-100 ">
