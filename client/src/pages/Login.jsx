@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, resetAuthSlice } from "../store/slices/authSlice";
 
 import logo from "../assets/logo.png";
+import { IoMdLogIn } from "react-icons/io";
+
 import { toast } from "react-toastify";
 
 const Login = () => {
@@ -24,13 +26,13 @@ const Login = () => {
 
   useEffect(() => {
     if (message) {
-      toast.success(message);   //successful login toast will sent a successful Loginmessage
-      dispatch(resetAuthSlice);  //reset the Loading,message,error authStates
-      navigate("/Home");        //Navigate to HomePage
+      toast.success(message); //successful login toast will sent a successful Loginmessage
+      dispatch(resetAuthSlice); //reset the Loading,message,error authStates
+      navigate("/Home"); //Navigate to HomePage
     }
     if (error) {
-      toast.error(error);       //Unsuccessful login toast will sent a Error unsuccessful Login message
-      dispatch(resetAuthSlice());  //reset the Loading,message,error authStates
+      toast.error(error); //Unsuccessful login toast will sent a Error unsuccessful Login message
+      dispatch(resetAuthSlice()); //reset the Loading,message,error authStates
     }
   }, [message, error, navigate, dispatch, isAuthenticated, loading]);
 
@@ -47,7 +49,7 @@ const Login = () => {
           className="mt-3 px-5 border-2 border-gray-700 rounded-2xl font-mono text-md bg-white hover:bg-gray-900 hover:text-white cursor-pointer"
           onClick={() => navigate("/Register")}
         >
-          Register → 
+          Register →
         </button>
       </div>
 
@@ -58,9 +60,12 @@ const Login = () => {
               <img src={logo} alt="logo" className="h-25 w-35" />
             </div>
           </div>
-          <h2 className="text-3xl font-mono font-bold text-center mb-6">
-            Login
-          </h2>
+          <div className="flex justify-center items-center">
+            <IoMdLogIn className="text-3xl font mb-5 mr-2" />
+            <h2 className="text-3xl font-mono font-bold text-center mb-6">
+              Login
+            </h2>
+          </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="py-3 px-2 border border-gray-300 rounded-2xl bg-gray-100">
@@ -102,7 +107,7 @@ const Login = () => {
             <div className="w-1/3 max-h-full">
               <p
                 className="text-center font-mono mt-6 text-sm cursor-pointer text-blue-500 hover:text-blue-700"
-                onClick={() => navigate("/ForgetPassword")}
+                onClick={() => navigate("/ForgotPassword")}
               >
                 Forget Password
               </p>
