@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
 import logo from "../assets/logo.png";
+import { MdAppRegistration } from "react-icons/md";
+
 import { useDispatch, useSelector } from "react-redux";
 import { register, resetAuthSlice } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
@@ -72,9 +74,13 @@ const Register = () => {
           </div>
 
           {/* HEADING */}
-          <h2 className="text-3xl font-mono font-bold text-center mb-6">
+          <div className="flex justify-center items-center">
+            <MdAppRegistration className="text-3xl font mb-5 mr-2"/>
+            <h2 className="text-3xl font-mono font-bold text-center mb-6">
             Register
           </h2>
+          </div>
+          
 
           <form onSubmit={handleRegister} className="space-y-4">
             {/* NAME ENTRY */}
