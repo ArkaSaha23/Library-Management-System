@@ -27,7 +27,7 @@ const Login = () => {
   useEffect(() => {
     if (message) {
       toast.success(message); //successful login toast will sent a successful Loginmessage
-      dispatch(resetAuthSlice); //reset the Loading,message,error authStates
+      dispatch(resetAuthSlice()); //reset the Loading,message,error authStates
       navigate("/Home"); //Navigate to HomePage
     }
     if (error) {
