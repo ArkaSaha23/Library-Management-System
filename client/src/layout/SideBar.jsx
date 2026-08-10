@@ -1,8 +1,20 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
 import { GiHamburgerMenu } from "react-icons/gi";
+import { MdDashboard } from "react-icons/md";
+import { GrCatalog } from "react-icons/gr";
+import { PiBooksFill } from "react-icons/pi";
+import { FaUserPen } from "react-icons/fa6";
+import { FaUserCog } from "react-icons/fa";
+import { MdAdminPanelSettings } from "react-icons/md";
+import { RiUserSearchFill } from "react-icons/ri";
+import { IoSettings } from "react-icons/io5";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import { IoMdLogOut } from "react-icons/io";
 import { FaTimes } from "react-icons/fa";
+
 import { logout, resetAuthSlice } from "../store/slices/authSlice";
 
 const SideBar = ({
@@ -44,6 +56,78 @@ const SideBar = ({
   const toggleSideBar = () => {
     setSidebar((prev) => !prev);
   };
+
+  const userMenu = [
+    {
+      type: "button",
+      icons: <MdDashboard className="h-4 w-4" />,
+      label: "Dashboard",
+      action: () => handleSelect("Dashboard"),
+    },
+    {
+      type: "button",
+      icons: <GrCatalog className="h-4 w-4" />,
+      label: "Catalogs",
+      action: () => handleSelect("Catalogs"),
+    },
+    {
+      type: "button",
+      icons: <PiBooksFill className="h-4 w-4" />,
+      label: "Borrowed Books",
+      action: () => handleSelect("BorrowedBooks"),
+    },
+    {
+      type: "button",
+      icons: <FaUserPen className="h-4 w-4" />,
+      label: "Authors",
+      action: () => handleSelect("Authors"),
+    },
+    {
+      type: "button",
+      icons: <IoSettings className="h-4 w-4" />,
+      label: "Settings",
+      action: () => handleSelect("Catalogs"),
+    },
+  ];
+  const AdminMenu = [
+    {
+      type: "button",
+      icons: <MdDashboard className="h-4 w-4" />,
+      label: "Dashboard",
+      action: () => handleSelect("Dashboard"),
+    },
+    {
+      type: "button",
+      icons: <PiBooksFill className="h-4 w-4" />,
+      label: "Borrowed Books",
+      action: () => handleSelect("MyBorrowedBooks"),
+    },
+    {
+      type: "button",
+      icons: <GrCatalog className="h-4 w-4" />,
+      label: "Catalogs",
+      action: () => handleSelect("Catalogs"),
+    },
+    {
+      type: "button",
+      icons: <RiUserSearchFill className="h-4 w-4" />,
+      label: "Users",
+      action: () => handleSelect("Users"),
+    },
+    {
+      type: "button",
+      icons: <MdAdminPanelSettings className="h-4 w-4" />,
+      label: "Add New Admin",
+      action: () => handleSelect("BorrowedBooks"),
+    },
+    {
+      type: "button",
+      icons: <FaUserCog className="h-4 w-4" />,
+      label: "Update Credentials",
+      action: () => handleSelect("Dashboard"),
+    },
+  ];
+
   return (
     <>
       <aside
@@ -64,127 +148,55 @@ const SideBar = ({
 
         <div className="md:hidden h-10/11 px-6 py-6 flex flex-col">
           <div className="mb-4 space-y-2 md:hidden">
-            {!isAuthenticated ? (
-              <>
-                <div className="text-center">
-                  <a
-                    href="#home"
-                    onClick={toggleSideBar}
-                    className="font-extrabold hover:text-blue-600 transition text-sm lg:text-base"
-                  >
-                    Home
-                  </a>
-                </div>
-                <div className="text-center">
-                  <a
-                    href="#collections"
-                    onClick={toggleSideBar}
-                    className="font-extrabold hover:text-blue-600 transition text-sm lg:text-base"
-                  >
-                    Collections
-                  </a>
-                </div>
-                <div className="text-center">
-                  <a
-                    href="#author"
-                    onClick={toggleSideBar}
-                    className="font-extrabold hover:text-blue-600 transition text-sm lg:text-base"
-                  >
-                    Authors
-                  </a>
-                </div>
-
-                <div className="text-center">
-                  <a
-                    href="#aboutus"
-                    onClick={toggleSideBar}
-                    className="font-extrabold hover:text-blue-600 transition text-sm lg:text-base"
-                  >
-                    About
-                  </a>
-                </div>
-                <div>--------------------------------</div>
-                <button
-                  onClick={handleLogin}
-                  className="block w-full border rounded-2xl bg-blue-400  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-500 hover:scale-120 duration-100 cursor-pointer"
-                >
-                  Login
-                </button>
-                <button
-                  onClick={handleRegister}
-                  className="block w-full border rounded-2xl bg-green-300  px-4 py-3 text-sm font font-mono text-black text-center transition hover:bg-green-400 hover:scale-120 duration-100 cursor-pointer"
-                >
-                  Register
-                </button>
-              </>
-            ) : (
-              <>
-                {role === "User" && (
+            {isAuthenticated &&
+              (role === "User" ? (
+                <>
+                  {userMenu.map((item, index) => (
+                    <button
+                      key={index}
+                      onClick={item.action}
+                      className={`flex items-center justify-center w-full rounded-lg mt-3 px-2 py-2 text-md font-mono text-black text-center cursor-pointer transition hover:scale-120 duration-100
+                          ${
+                            item.label === "Logout"
+                              ? "hover:text-red-500"
+                              : "hover:text-blue-500"
+                          }`}
+                    >
+                      {item.icons}
+                      <span className="ml-1">{item.label}</span>
+                    </button>
+                  ))}
+                </>
+              ) : (
+                role === "Admin" && (
                   <>
-                    <button
-                      onClick={() => handleSelect("Dashboard")}
-                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
-                    >
-                      Dashboard
-                    </button>
-                    <button
-                      onClick={() => handleSelect("MyBorrowedBooks")}
-                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
-                    >
-                      My Borrowed Books
-                    </button>
+                    {AdminMenu.map((item, index) => (
+                      <button
+                        key={index}
+                        onClick={item.action}
+                        className={`flex items-center justify-center w-full rounded-lg mt-3 px-2 py-2 text-sm font-mono text-black text-center cursor-pointer transition hover:scale-120 duration-100
+                          ${
+                            item.label === "Logout"
+                              ? "hover:text-red-500"
+                              : "hover:text-blue-500"
+                          }`}
+                      >
+                        {item.icons}
+                        <span className="ml-1">{item.label}</span>
+                      </button>
+                    ))}
                   </>
-                )}
-                {role === "Admin" && (
-                  <>
-                    <button
-                      onClick={() => handleSelect("Dashboard")}
-                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
-                    >
-                      Dashboard
-                    </button>
-                    <button
-                      onClick={() => handleSelect("Books")}
-                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
-                    >
-                      Books
-                    </button>
-                    <button
-                      onClick={() => handleSelect("Catalog")}
-                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
-                    >
-                      Catalogs
-                    </button>
-                    <button
-                      onClick={() => handleSelect("Users")}
-                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
-                    >
-                      Users
-                    </button>
-                    <button
-                      onClick={() => handleSelect("AddNewAdmin")}
-                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
-                    >
-                      Add New Admin
-                    </button>
-                    <button
-                      onClick={() => handleSelect("UpdateCredentials")}
-                      className="block w-full border rounded-2xl bg-white  px-4 py-3 text-sm font-mono text-black text-center transition hover:bg-blue-400 hover:scale-120 duration-100 cursor-pointer"
-                    >
-                      Update Credentials
-                    </button>
-                  </>
-                )}
-              </>
-            )}
+                )
+              ))}
           </div>
 
           {isAuthenticated && (
             <button
               onClick={handleLogout}
-              className="mt-auto block w-full rounded-2xl bg-red-600 px-4 py-3 cursor-pointer text-white hover:bg-red-700"
+              className="flex items-center justify-center mt-auto w-full rounded-2xl bg-red-500 px-4 py-3 cursor-pointer text-white transiton all duration-300 hover:shadow-2xl hover:shadow-red-600/60 hover:bg-red-800 hover:"
             >
-              Logout
+              <IoMdLogOut />
+              <span> Logout</span>
             </button>
           )}
         </div>
