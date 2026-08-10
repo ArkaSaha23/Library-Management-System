@@ -14,6 +14,7 @@ import UpdatePassword from "./pages/UpdatePassword";
 import { ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./store/slices/authSlice";
+import { fetchAllUsers } from "./store/slices/userSlice";
 
 const App = () => {
   const [isSideBarOpen, setSidebar] = useState(false);
@@ -23,7 +24,12 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUser());
-  }, []);
+
+    if (isAuthenticated && user?.role === "Admin") {
+      dispatch(fetchAllUsers());
+      console.log("the Logged in user is an admin");
+    }
+  }, [isAuthenticated]);
 
   return (
     <>
@@ -32,12 +38,22 @@ const App = () => {
           <Route
             path="/"
             element={
-              <LandingPage
-                isSideBarOpen={isSideBarOpen}
-                setSidebar={setSidebar}
-                selectedComponent={selectedComponent}
-                setSelectedComponent={setSelectedComponent}
-              />
+              isAuthenticated ? (
+                <Home
+                  isSideBarOpen={isSideBarOpen}
+                  setSidebar={setSidebar}
+                  selectedComponent={selectedComponent}
+                  setSelectedComponent={setSelectedComponent}
+                />
+              ) : (
+                <Login />
+              )
+              // <Home
+              //   isSideBarOpen={isSideBarOpen}
+              //   setSidebar={setSidebar}
+              //   selectedComponent={selectedComponent}
+              //   setSelectedComponent={setSelectedComponent}
+              // />
             }
           />
           <Route
