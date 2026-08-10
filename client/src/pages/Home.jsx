@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import Header from "../layout/Header";
+import Header from "../Home/components/Header";
 import SideBar from "../layout/SideBar";
 
 import MainHeader from "../layout/MainHeader";
@@ -13,11 +13,11 @@ import Users from "../components/Users";
 import UserDashboard from "../components/UserDashboard";
 import MyBorrowedBooks from "../components/MyBorrowedBooks";
 
-import HeroSection from "../layout/HeroSection";
-import Collections from "../layout/Collections";
-import AboutUs from "../layout/AboutUs";
-import Authors from "../layout/Authors";
-import Footer from "../layout/Footer";
+import HeroSection from "../Home/components/HeroSection";
+import Collections from "../Home/components/Collections";
+import AboutUs from "../Home/components/AboutUs";
+import Authors from "../Home/components/Authors";
+import Footer from "../Home/components/Footer";
 
 const Home = ({
   isSideBarOpen,
@@ -36,7 +36,10 @@ const Home = ({
 
   return (
     <>
-      <MainHeader toggleSidebar={toggleSidebar} />
+      <MainHeader
+        toggleSidebar={toggleSidebar}
+        setSelectedComponent={setSelectedComponent}
+      />
 
       <SideBar
         isSideBarOpen={isSideBarOpen}
@@ -44,7 +47,8 @@ const Home = ({
         selectedComponent={selectedComponent}
         setSelectedComponent={setSelectedComponent}
       />
-      <div className="relative md:pl-64 flex min-h-screen bg-gray-100 pt-16">
+      <div className="relative flex min-h-screen bg-gray-100 pt-16">
+        {/* {(user.role === "user")?<UserDashboard/> : <AdminDashboard/>} */}
         {(() => {
           if (selectedComponent === "Dashboard") {
             if (user?.role === "User") {
