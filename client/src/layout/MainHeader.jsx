@@ -1,16 +1,28 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import logo from "../assets/logo.png";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { FaMagnifyingGlass } from "react-icons/fa6";
-import { toggleSettingPopup } from "../store/slices/popUpSlice";
-import { IoIosNotifications } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+
+import logo from "../assets/logo.png";
+
+import { toggleSettingPopup } from "../store/slices/popUpSlice";
 import { logout } from "../store/slices/authSlice";
 
-const MainHeader = ({ toggleSidebar }) => {
+import { GiHamburgerMenu } from "react-icons/gi";
+import { MdDashboard } from "react-icons/md";
+import { GrCatalog } from "react-icons/gr";
+import { PiBooksFill } from "react-icons/pi";
+import { FaUserPen } from "react-icons/fa6";
+import { FaUserCog } from "react-icons/fa";
+import { MdAdminPanelSettings } from "react-icons/md";
+import { RiUserSearchFill } from "react-icons/ri";
+import { IoSettings } from "react-icons/io5";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import { IoMdLogOut } from "react-icons/io";
+import { IoIosNotifications } from "react-icons/io";
+
+const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,6 +40,93 @@ const MainHeader = ({ toggleSidebar }) => {
     await dispatch(logout());
     navigate("/Login");
   };
+
+  const handleSelect = (value) => {
+    setSelectedComponent(value);
+  };
+
+  const userMenu = [
+    {
+      type: "button",
+      icons: <MdDashboard className="h-4 w-4" />,
+      label: "Dashboard",
+      action: () => handleSelect("Dashboard"),
+    },
+    {
+      type: "button",
+      icons: <GrCatalog className="h-4 w-4" />,
+      label: "Catalogs",
+      action: () => handleSelect("Catalogs"),
+    },
+    {
+      type: "button",
+      icons: <PiBooksFill className="h-4 w-4" />,
+      label: "Borrowed Books",
+      action: () => handleSelect("BorrowedBooks"),
+    },
+    {
+      type: "button",
+      icons: <FaUserPen className="h-4 w-4" />,
+      label: "Authors",
+      action: () => handleSelect("Authors"),
+    },
+    {
+      type: "button",
+      icons: <IoSettings className="h-4 w-4" />,
+      label: "Settings",
+      action: () => handleSelect("Catalogs"),
+    },
+    {
+      type: "button",
+      icons: <IoMdLogOut className="h-4 w-4" />,
+      label: "Logout",
+      action: () => handleLogout(),
+    },
+  ];
+  const AdminMenu = [
+    {
+      type: "button",
+      icons: <MdDashboard className="h-4 w-4" />,
+      label: "Dashboard",
+      action: () => handleSelect("Dashboard"),
+    },
+    {
+      type: "button",
+      icons: <PiBooksFill className="h-4 w-4" />,
+      label: "Borrowed Books",
+      action: () => handleSelect("Dashboard"),
+    },
+    {
+      type: "button",
+      icons: <GrCatalog className="h-4 w-4" />,
+      label: "Catalogs",
+      action: () => handleSelect("Dashboard"),
+    },
+    {
+      type: "button",
+      icons: <RiUserSearchFill className="h-4 w-4" />,
+      label: "Users",
+      action: () => handleSelect("Users"),
+    },
+    {
+      type: "button",
+      icons: <MdAdminPanelSettings className="h-4 w-4" />,
+      label: "Add New Admin",
+      action: () => handleSelect("BorrowedBooks"),
+    },
+    {
+      type: "button",
+      icons: <FaUserCog className="h-4 w-4" />,
+      label: "Update Credentials",
+      action: () => handleSelect("Dashboard"),
+    },
+    {
+      type: "button",
+      icons: <IoMdLogOut className="h-4 w-4" />,
+      label: "Logout",
+      action: () => handleLogout(),
+    },
+  ];
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -56,7 +155,7 @@ const MainHeader = ({ toggleSidebar }) => {
 
   return (
     <>
-      <header className="w-full h-20 fixed top-0 left-0 right-0 z-20 bg-gray-100 shadow-md">
+      <header className="w-full h-18 fixed top-0 left-0 right-0 z-20 bg-gray-100 shadow-md">
         <div className="mx-auto max-full grid grid-cols-5 md:grid-cols-20 gap-4 px-3 ">
           {/* left side logo */}
           <div
@@ -73,11 +172,11 @@ const MainHeader = ({ toggleSidebar }) => {
           </div>
 
           {/* center section...search bar */}
-          <div className="col-span-3 col-start-2 md:col-span-5 md:col-start-3 w-full flex justify-center items-center">
+          <div className="col-span-3 col-start-2 md:col-span-7 md:col-start-3 w-full flex justify-center items-center">
             <div className="bg-gray-100 w-full h-10 flex justify-center items-center">
               {/* search icon */}
-              <div className="h-10 lg:15 w-12 border bg-yellow-100 rounded-l-sm flex justify-center items-center">
-                <FaMagnifyingGlass className="w-full h-2/5" />
+              <div className="h-10 w-12 border bg-yellow-100 rounded-l-sm flex justify-center items-center">
+                <FaMagnifyingGlass className="h-5 w-5 text-gray-600" />
               </div>
 
               {/* search bar */}
@@ -96,40 +195,27 @@ const MainHeader = ({ toggleSidebar }) => {
             <>
               {role == "User" && (
                 <>
+                  {/**full screens */}
                   <div className="hidden md:flex md:col-span-8 md:col-start-12 items-center justify-center gap-4">
-                    <div className="col-span-1 col-start-10">
+                    {userMenu.map((item, index) => (
                       <button
-                        onClick={() => handleSelect("Catalog")}
-                        className="block w-full rounded-lg px-2 py-2 text-md font-mono text-black text-center transition hover:border-black hover:border hover:scale-120 duration-100 cursor-pointer"
+                        key={index}
+                        onClick={item.action}
+                        className={`flex items-center w-full rounded-lg px-2 py-2 text-sm font-mono text-black text-center cursor-pointer transition hover:scale-120 duration-100
+                          ${
+                            item.label === "Logout"
+                              ? "hover:text-red-500"
+                              : "hover:text-blue-500"
+                          }`}
                       >
-                        DashBoard
+                        {item.icons}
+                        <span className="ml-1">{item.label}</span>
                       </button>
-                    </div>
-                    <div className="col-span-1 col-start-14">
-                      <button
-                        onClick={() => handleSelect("Catalog")}
-                        className="block w-full rounded-lg px-2 py-2 text-md font-mono text-black text-center transition  hover:border-black hover:border hover:scale-120 duration-100 cursor-pointer"
-                      >
-                        My Borrowed Books
-                      </button>
-                    </div>
-                    <div className="col-span-1 col-start-17">
-                      <button
-                        onClick={() => handleSelect("Catalog")}
-                        className="block w-full px-2 py-2 text-2xl font-mono text-black text-center transition hover:scale-150 duration-100 cursor-pointer"
-                      >
-                        <IoIosNotifications />
-                      </button>
-                    </div>
-                    <div className="col-span-1 col-start-18">
-                      <button
-                        onClick={() => handleLogout()}
-                        className="block w-full rounded-lg px-2 py-2 text-md font-mono text-black text-center transition hover:bg-red-500 hover:scale-120 duration-100 hover:font-extrabold cursor-pointer"
-                      >
-                        Logout
-                      </button>
-                    </div>
+                    ))}
                   </div>
+
+                  {/**Hamburger menu for smaller screens */}
+
                   <div className="flex justify-center items-center">
                     <button
                       className="col-span-1 col-start-4 md:hidden rounded-xl"
@@ -142,72 +228,26 @@ const MainHeader = ({ toggleSidebar }) => {
               )}
               {role == "Admin" && (
                 <>
-                  <div className="md:col-span-8 md:col-start-11 md:flex hidden md:justify-center md:items-center">
-                    <div className="col-span-1 col-start-11">
+                  {/**full screens */}
+                  <div className="md:col-span-10 md:col-start-11 md:flex hidden md:justify-center md:items-center">
+                    {AdminMenu.map((item, index) => (
                       <button
-                        onClick={() => handleSelect("Catalog")}
-                        className="block w-full rounded-lg px-2 py-2 text-xs font-mono text-black text-center transition hover:border-black hover:border hover:scale-120 duration-100 cursor-pointer"
+                        key={index}
+                        onClick={item.action}
+                        className={`flex items-center w-full rounded-lg px-2 py-2 text-xs font-mono text-black text-center cursor-pointer transition hover:scale-120 duration-100
+                          ${
+                            item.label === "Logout"
+                              ? "hover:text-red-500"
+                              : "hover:text-blue-500"
+                          }`}
                       >
-                        DashBoard
+                        {item.icons}
+                        <span className="ml-1">{item.label}</span>
                       </button>
-                    </div>
-                    <div className="col-span-1 col-start-12">
-                      <button
-                        onClick={() => handleSelect("Catalog")}
-                        className="block w-full rounded-lg px-2 py-2 text-xs font-mono text-black text-center transition  hover:border-black hover:border hover:scale-120 duration-100 cursor-pointer"
-                      >
-                        My Borrowed Books
-                      </button>
-                    </div>
-                    <div className="col-span-1 col-start-13">
-                      <button
-                        onClick={() => handleSelect("Catalog")}
-                        className="block w-full rounded-lg px-2 py-2 text-xs font-mono text-black text-center transition  hover:border-black hover:border hover:scale-120 duration-100 cursor-pointer"
-                      >
-                        Catalogs
-                      </button>
-                    </div>
-                    <div className="col-span-1 col-start-14">
-                      <button
-                        onClick={() => handleSelect("Catalog")}
-                        className="block w-full rounded-lg px-2 py-2 text-xs font-mono text-black text-center transition  hover:border-black hover:border hover:scale-120 duration-100 cursor-pointer"
-                      >
-                        Users
-                      </button>
-                    </div>
-                    <div className="col-span-1 col-start-15">
-                      <button
-                        onClick={() => handleSelect("Catalog")}
-                        className="block w-full rounded-lg px-2 py-2 text-xs font-mono text-black text-center transition  hover:border-black hover:border hover:scale-120 duration-100 cursor-pointer"
-                      >
-                        Add New Admin
-                      </button>
-                    </div>
-                    <div className="col-span-1 col-start-16">
-                      <button
-                        onClick={() => handleSelect("Catalog")}
-                        className="block w-full rounded-lg px-2 py-2 text-xs font-mono text-black text-center transition hover:border-black hover:border hover:scale-120 duration-100 cursor-pointer"
-                      >
-                        Update Credentials
-                      </button>
-                    </div>
-                    <div className="col-span-1 col-start-17">
-                      <button
-                        onClick={() => handleSelect("Catalog")}
-                        className="block w-full px-2 py-2 text-2xl font-mono text-black text-center transition hover:scale-150 duration-100 cursor-pointer"
-                      >
-                        <IoIosNotifications />
-                      </button>
-                    </div>
-                    <div className="col-span-1 col-start-18">
-                      <button
-                        onClick={() => handleLogout()}
-                        className="block w-full rounded-lg px-2 py-2 text-xs font-mono text-black text-center transition hover:bg-red-500 hover:scale-120 duration-100 hover:font-extrabold cursor-pointer"
-                      >
-                        Logout
-                      </button>
-                    </div>
+                    ))}
                   </div>
+
+                  {/**Hamburger menu for smaller screens */}
                   <div className="flex justify-center items-center">
                     <button
                       className="col-span-1 col-start-4 md:hidden rounded-xl"
@@ -223,7 +263,7 @@ const MainHeader = ({ toggleSidebar }) => {
         </div>
       </header>
 
-      {/* BELOW HEADER */}
+      {/* BELOW HEADER
       <header className="absolute mt-20 h-60 w-full py-4 px-6 left-0  flex justify-center items-center z-14">
         <div className=" bg-white h-full w-11/12 gap-40 flex justify-center items-center shadow-md rounded-4xl">
           <div className=" flex items-center gap-2">
@@ -235,7 +275,7 @@ const MainHeader = ({ toggleSidebar }) => {
               <span>{user && user.role}</span>
             </div>
           </div>
-          {/*Right side*/}
+          {/*Right side
           <div className="hidden md:flex items-center gap-2">
             <div className="flex flex-col text-sm lg:text-base items-end font-semibold">
               <span>{currentDate}</span>
@@ -251,7 +291,7 @@ const MainHeader = ({ toggleSidebar }) => {
             />
           </div>
         </div>
-      </header>
+      </header> */}
     </>
   );
 };
