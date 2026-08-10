@@ -91,7 +91,7 @@ const AuthSlice = createSlice({
       state.loading = false;
       state.message = action.payload.message;
       state.isAuthenticated = true;
-      state.user = action.payload.user;
+      state.user = action.payload.curUser;
       state.initialized = true;
     },
     getUserError(state, action) {
@@ -248,8 +248,11 @@ export const login =
           },
         },
       );
+      console.log("backend response:",res)
+      console.log("usefull backend response:",res.data)
+      
       //3. dispatch the success state with payload
-      dispatch(AuthSlice.actions.OTPSuccess(res.data));
+      dispatch(AuthSlice.actions.loginSuccess(res.data));
     } catch (err) {
       //4. dispatch the filure state
       dispatch(
