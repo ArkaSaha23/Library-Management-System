@@ -1,22 +1,15 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import Header from "../layout/Header";
-import SideBar from "../layout/SideBar";
-import MainHeader from "../layout/MainHeader";
+import logo from "../assets/logo.png";
 
-/*import AdminDashboard from "../components/AdminDashboard";
-import BookManagement from "../components/BookManagement";
-import Catalog from "../components/Catalog";
-import Users from "../components/Users";
-import UserDashboard from "../components/UserDashboard";
-import MyBorrowedBooks from "../components/MyBorrowedBooks";*/
-
-import HeroSection from "../layout/HeroSection";
-import Collections from "../layout/Collections";
-import AboutUs from "../layout/AboutUs";
-import Authors from "../layout/Authors";
-import Footer from "../layout/Footer";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import HeroSection from "./components/HeroSection";
+import Collections from "./components/Collections";
+import AboutUs from "./components/AboutUs";
+import Authors from "./components/Authors";
+import Footer from "./components/Footer";
 
 const LandingPage = ({
   isSideBarOpen,
