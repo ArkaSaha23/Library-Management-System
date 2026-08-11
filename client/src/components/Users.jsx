@@ -85,7 +85,7 @@ const Users = () => {
                   </td>
 
                   <td className="px-4 py-4 text-center text-gray-600">
-                    {user.borrowedBooks?.length || 0}
+                    {user.booksBorrowed?.length || 0}
                   </td>
 
                   <td className="px-4 py-4 text-center text-gray-600 whitespace-nowrap">
