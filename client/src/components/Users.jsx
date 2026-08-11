@@ -57,7 +57,23 @@ const Users = () => {
                 </th>
 
                 <th className="px-4 py-3 text-center font-semibold text-gray-100 border border-gray-600">
+                  Number of Currently Borrowed Books
+                </th>
+
+                <th className="px-4 py-3 text-center font-semibold text-gray-100 border border-gray-600">
+                  Number of Returned Books
+                </th>
+
+                <th className="px-4 py-3 text-center font-semibold text-gray-100 border border-gray-600">
+                  Overdue Books
+                </th>
+
+                <th className="px-4 py-3 text-center font-semibold text-gray-100 border border-gray-600">
                   Registered On
+                </th>
+
+                <th className="px-4 py-3 text-center font-semibold text-gray-100 border border-gray-600">
+                  Last Login
                 </th>
               </tr>
             </thead>
@@ -68,28 +84,56 @@ const Users = () => {
                   key={user._id}
                   className="transition-colors hover:bg-gray-300"
                 >
-                  <td className="px-4 py-4 text-center text-gray-600">
+                  <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
                     {index + 1}
                   </td>
 
-                  <td className="px-4 py-4 font-medium text-gray-900">
+                  <td className="px-4 py-4 font-medium text-gray-900 border-r border-gray-300">
                     {user.name}
                   </td>
 
-                  <td className="px-4 py-4 text-gray-600">{user.email}</td>
+                  <td className="px-4 py-4 text-gray-600 border-r border-gray-300">
+                    {user.email}
+                  </td>
 
-                  <td className="px-4 py-4 text-center">
+                  <td className="px-4 py-4 text-center border-r border-gray-300">
                     <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
                       {user.role}
                     </span>
                   </td>
 
-                  <td className="px-4 py-4 text-center text-gray-600">
-                    {user.booksBorrowed?.length || 0}
+                  <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
+                    {user.booksBorrowed.length}
+                  </td>
+
+                  <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
+                    {
+                      user.booksBorrowed.filter(
+                        (book) => book.hasReturned == false,
+                      ).length
+                    }
+                  </td>
+                   <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
+                    {
+                      user.booksBorrowed.filter(
+                        (book) => book.hasReturned,
+                      ).length
+                    }
+                  </td>
+                  <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
+                    {
+                      user.booksBorrowed.filter(
+                        (book) => book.hasReturned === false && new Date(book.Duedate) < new Date() ,
+                      ).length
+                    }
                   </td>
 
                   <td className="px-4 py-4 text-center text-gray-600 whitespace-nowrap">
                     {formatDateTime(user.createdAt)}
+                  </td>
+
+                   <td className="px-4 py-4 text-center text-gray-600 whitespace-nowrap">
+                    {formatDateTime(user.updatedAt)}
                   </td>
                 </tr>
               ))}
