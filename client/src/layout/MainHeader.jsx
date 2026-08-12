@@ -94,13 +94,13 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
       type: "button",
       icons: <PiBooksFill className="h-4 w-4" />,
       label: "Borrowed Books",
-      action: () => handleSelect("Dashboard"),
+      action: () => handleSelect("MyBorrowedBooks"),
     },
     {
       type: "button",
       icons: <GrCatalog className="h-4 w-4" />,
       label: "Catalogs",
-      action: () => handleSelect("Dashboard"),
+      action: () => handleSelect("Catalogs"),
     },
     {
       type: "button",
@@ -112,7 +112,7 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
       type: "button",
       icons: <MdAdminPanelSettings className="h-4 w-4" />,
       label: "Add New Admin",
-      action: () => handleSelect("BorrowedBooks"),
+      action: () => handleSelect("AddNewAdmin"),
     },
     {
       type: "button",
