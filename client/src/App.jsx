@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Home from "./pages/Home";
@@ -17,9 +17,6 @@ import { getUser } from "./store/slices/authSlice";
 import { fetchAllUsers } from "./store/slices/userSlice";
 
 const App = () => {
-  const [isSideBarOpen, setSidebar] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState("");
-
   const { user, isAuthenticated } = useSelector((state) => state.authReducer);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -35,44 +32,14 @@ const App = () => {
     <>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={
-              isAuthenticated ? (
-                <Home
-                  isSideBarOpen={isSideBarOpen}
-                  setSidebar={setSidebar}
-                  selectedComponent={selectedComponent}
-                  setSelectedComponent={setSelectedComponent}
-                />
-              ) : (
-                <Login />
-              )
-              // <Home
-              //   isSideBarOpen={isSideBarOpen}
-              //   setSidebar={setSidebar}
-              //   selectedComponent={selectedComponent}
-              //   setSelectedComponent={setSelectedComponent}
-              // />
-            }
-          />
-          <Route
-            path="/Home"
-            element={
-              <Home
-                isSideBarOpen={isSideBarOpen}
-                setSidebar={setSidebar}
-                selectedComponent={selectedComponent}
-                setSelectedComponent={setSelectedComponent}
-              />
-            }
-          />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/ResetPassword/:token" element={<ResetPassword />} />
+          <Route path="/"                       element={isAuthenticated ? <Home /> : <Login />}/>
+          <Route path="/Home"                   element={<Home />} />
+          <Route path="/Login"                  element={<Login />} />
+          <Route path="/Register"               element={<Register />} />
+          <Route path="/ResetPassword/:token"   element={<ResetPassword />} />
           <Route path="/OTPverification/:email" element={<OTPverification />} />
-          <Route path="/ForgotPassword" element={<ForgotPassword />} />
-          <Route path="/UpdatePassword" element={<UpdatePassword />} />
+          <Route path="/ForgotPassword"         element={<ForgotPassword />} />
+          <Route path="/UpdatePassword"         element={<UpdatePassword />} />
         </Routes>
         <ToastContainer theme="dark" />
       </BrowserRouter>
