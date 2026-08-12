@@ -74,7 +74,7 @@ const SideBar = ({
       type: "button",
       icons: <PiBooksFill className="h-4 w-4" />,
       label: "Borrowed Books",
-      action: () => handleSelect("BorrowedBooks"),
+      action: () => handleSelect("MyBorrowedBooks"),
     },
     {
       type: "button",
@@ -118,7 +118,7 @@ const SideBar = ({
       type: "button",
       icons: <MdAdminPanelSettings className="h-4 w-4" />,
       label: "Add New Admin",
-      action: () => handleSelect("BorrowedBooks"),
+      action: () => handleSelect("AddNewAdmin"),
     },
     {
       type: "button",
