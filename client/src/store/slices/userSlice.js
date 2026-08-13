@@ -61,7 +61,6 @@ export const fetchAllUsers = () => async (dispatch) => {
       },
     );
     dispatch(UserSlice.actions.fetchAllUsersSuccess(res.data));
-    toast.success(res.data.message);
   } catch (err) {
     dispatch(
       UserSlice.actions.fetchAllUsersFailed(
@@ -76,7 +75,7 @@ export const addNewAdmin = (formData) => async (dispatch) => {
   try {
     dispatch(UserSlice.actions.addNewAdminRequest());
 
-    const res = await axios.get(
+    const res = await axios.post(
       "http://localhost:3504/api/v1/user/RegisterNewAdmin",
       formData,
       {
