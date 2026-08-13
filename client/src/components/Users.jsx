@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const Users = () => {
-  const { users } = useSelector((state) => state.userReducer);
+  const usersArray = useSelector((state) => state.userReducer.users);
 
   const formatDateTime = (timeStamp) => {
     const date = new Date(timeStamp);
@@ -32,8 +32,9 @@ const Users = () => {
 
         {/* list of users */}
         {/* list of users */}
-        <div className="w-full overflow-x-auto md:overflow-x-visible md:flex justify-center">
-          <table className="m-5 w-full md:w-10/11 min-w-[800px] text-sm border border-gray-400">
+        <div className="mt-8 w-full px-2 sm:px-5 md:px-7 lg:px-10">
+        <div className="w-full overflow-x-auto rounded-lg border border-gray-400 shadow-sm">
+          <table className="md:w-full text-sm border border-gray-400">
             <thead>
               <tr className="bg-gray-700 border">
                 <th className="px-4 py-3 text-center font-semibold text-gray-100 border border-gray-600">
@@ -79,7 +80,7 @@ const Users = () => {
             </thead>
 
             <tbody>
-              {users?.map((user, index) => (
+              {usersArray?.map((user, index) => (
                 <tr
                   key={user._id}
                   className="transition-colors hover:bg-gray-300"
@@ -139,6 +140,7 @@ const Users = () => {
               ))}
             </tbody>
           </table>
+        </div>
         </div>
       </main>
     </>
