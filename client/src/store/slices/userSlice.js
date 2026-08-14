@@ -55,9 +55,7 @@ export const fetchAllUsers = () => async (dispatch) => {
 
       {
         withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
+         //hearder:{}not required as we are not sending any data or request body
       },
     );
     dispatch(UserSlice.actions.fetchAllUsersSuccess(res.data));
@@ -80,7 +78,9 @@ export const addNewAdmin = (formData) => async (dispatch) => {
       formData,
       {
         withCredentials: true,
-        //hearder:{}not required as we are not sending any data or request body
+        hearder:{
+          "Content-Type":"multipart/form-data"
+        }
       },
     );
     dispatch(UserSlice.actions.addNewAdminSuccess());
