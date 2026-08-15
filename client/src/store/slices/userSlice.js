@@ -58,6 +58,7 @@ export const fetchAllUsers = () => async (dispatch) => {
          //hearder:{}not required as we are not sending any data or request body
       },
     );
+    console.log(res)
     dispatch(UserSlice.actions.fetchAllUsersSuccess(res.data));
   } catch (err) {
     dispatch(
@@ -78,7 +79,7 @@ export const addNewAdmin = (formData) => async (dispatch) => {
       formData,
       {
         withCredentials: true,
-        hearder:{
+        header:{
           "Content-Type":"multipart/form-data"
         }
       },
