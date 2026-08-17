@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 const popupSlice = createSlice({
   name: "popup",
   initialState: {
-    settingPopup: "false",
-    addBookPopup: "false",
-    readBookPopup: "false",
-    recordBookPopup: "false",
-    returnBookPopup: "false",
+    settingPopup: false,
+    addBookPopup: false,
+    readBookPopup: false,
+    recordBookPopup: false,
+    returnBookPopup: false,
   },
   reducers: {
     toggleSettingPopup(state) {
