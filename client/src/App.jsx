@@ -15,12 +15,14 @@ import { ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./store/slices/authSlice";
 import { fetchAllUsers } from "./store/slices/userSlice";
+import { getAllBooks } from "./store/slices/bookSlice";
 
 const App = () => {
   const { user, isAuthenticated } = useSelector((state) => state.authReducer);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUser());
+    dispatch(getAllBooks())
 
     if (isAuthenticated && user?.role === "Admin") {
       dispatch(fetchAllUsers());
