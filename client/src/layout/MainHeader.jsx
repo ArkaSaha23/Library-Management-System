@@ -67,8 +67,8 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
     {
       type: "button",
       icons: <FaUserPen className="h-4 w-4" />,
-      label: "Authors",
-      action: () => handleSelect("Authors"),
+      label: "Books Management",
+      action: () => handleSelect("BooksManagement"),
     },
     {
       type: "button",
@@ -117,8 +117,8 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
     {
       type: "button",
       icons: <FaUserCog className="h-4 w-4" />,
-      label: "Update Credentials",
-      action: () => handleSelect("Dashboard"),
+      label: "Books Management",
+      action: () => handleSelect("BooksManagement"),
     },
     {
       type: "button",
