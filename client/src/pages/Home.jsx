@@ -7,11 +7,12 @@ import SideBar from "../layout/SideBar";
 import MainHeader from "../layout/MainHeader";
 
 import AdminDashboard from "../components/AdminDashboard";
-import BookManagement from "../components/BookManagement";
+import BooksManagement from "../components/BookManagement";
 import Catalog from "../components/Catalog";
 import Users from "../components/Users";
 import UserDashboard from "../components/UserDashboard";
 import MyBorrowedBooks from "../components/MyBorrowedBooks";
+import AddNewAdmin from "../components/AddNewAdmin";
 
 import HeroSection from "../Home/components/HeroSection";
 import Collections from "../Home/components/Collections";
@@ -20,11 +21,11 @@ import Authors from "../Home/components/Authors";
 import Footer from "../Home/components/Footer";
 
 const Home = ({
-  isSideBarOpen,
-  setSidebar,
-  selectedComponent,
-  setSelectedComponent,
+ 
 }) => {
+  const [isSideBarOpen, setSidebar] = useState(false);
+  const [selectedComponent, setSelectedComponent] = useState("Dashboard");
+
   const user = useSelector((state) => state.authReducer.user);
   const isAuthenticated = useSelector(
     (state) => state.authReducer.isAuthenticated,
@@ -48,41 +49,21 @@ const Home = ({
         setSelectedComponent={setSelectedComponent}
       />
       <div className="relative flex min-h-screen bg-gray-100 pt-16">
-        {/* {(user.role === "user")?<UserDashboard/> : <AdminDashboard/>} */}
         {(() => {
-          if (selectedComponent === "Dashboard") {
-            if (user?.role === "User") {
-              return <UserDashboard />;
-            } else {
-              return <AdminDashboard />;
-            }
-          } else if (selectedComponent === "Books") {
-            return <BookManagement />;
-          } else if (selectedComponent === "Catalog") {
-            if (user?.role === "Admin") {
-              return <Catalog />;
-            } else {
-              return null;
-            }
-          } else if (selectedComponent === "Users") {
-            if (user?.role === "Admin") {
-              return <Users />;
-            } else {
-              return null;
-            }
-          } else if (selectedComponent === "MyBorrowedBooks") {
-            if (user?.role === "User") {
-              return <MyBorrowedBooks />;
-            } else {
-              return null;
-            }
-          } else {
-            // default
-            if (user?.role === "User") {
-              return <UserDashboard />;
-            } else {
-              return <AdminDashboard />;
-            }
+          if (selectedComponent === "Dashboard"){
+            if (user?.role === "User")  return <UserDashboard />; 
+            else return <AdminDashboard />;
+          }
+          else if (selectedComponent === "Catalogs")                        return <Catalog />;
+          else if (selectedComponent === "MyBorrowedBooks")                 return <MyBorrowedBooks />;
+          else if (selectedComponent === "BooksManagement")                 return <BooksManagement/>
+          else if (selectedComponent === "Users" && user?.role === "Admin") return <Users />;
+          else if(selectedComponent === "AddNewAdmin")                      return <AddNewAdmin/>
+
+          //DEFAULT 
+          else {        
+            if (user?.role === "User") return <UserDashboard />;
+            else return <AdminDashboard />;
           }
         })()}
       </div>
