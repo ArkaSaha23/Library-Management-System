@@ -66,15 +66,13 @@ const BookManagement = () => {
     setSearchedKeyword(e.target.value.toLowerCase());
   };
 
-  const searchedBooks = Array.isArray(books)
-    ? books.filter((book) =>
-        book.title?.toLowerCase().includes(searchedKeyword),
-      )
-    : [];
+  const searchedBooks = books.filter((book) =>
+    book.title.toLowerCase().includes(searchedKeyword)
+  );
 
   return (
     <>
-      <main className="relative flex-1 w-full p-3 sm:p-4 md:p-6 lg:p-8">
+      <main className="relative flex-1 w-full mt-5 p-3 sm:p-4 md:p-6 lg:p-8">
         <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <h2 className="text-lg font-semibold text-slate-800 sm:text-xl md:text-2xl">
             {user && user.role === "Admin" ? "Book Management" : "Books"}
@@ -224,8 +222,8 @@ const BookManagement = () => {
         )}
       </main>
       {addBookPopup && <AddBookPopup />}
-      {readBookPopup && <ReadBookPopup />}
-      {recordBookPopup && <RecordBookPopup />}
+      {readBookPopup && <ReadBookPopup bookId={readBook}/>}
+      {recordBookPopup && <RecordBookPopup bookId={borrowBookId}/>}
     </>
   );
 }
