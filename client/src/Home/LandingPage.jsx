@@ -11,12 +11,7 @@ import AboutUs from "./components/AboutUs";
 import Authors from "./components/Authors";
 import Footer from "./components/Footer";
 
-const LandingPage = ({
-  isSideBarOpen,
-  setSidebar,
-  selectedComponent,
-  setSelectedComponent,
-}) => {
+const LandingPage = () => {
   const user = useSelector((state) => state.authReducer.user);
   const isAuthenticated = useSelector(
     (state) => state.authReducer.isAuthenticated,
