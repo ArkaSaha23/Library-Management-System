@@ -92,12 +92,6 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
     },
     {
       type: "button",
-      icons: <PiBooksFill className="h-4 w-4" />,
-      label: "Borrowed Books",
-      action: () => handleSelect("MyBorrowedBooks"),
-    },
-    {
-      type: "button",
       icons: <GrCatalog className="h-4 w-4" />,
       label: "Catalogs",
       action: () => handleSelect("Catalogs"),
@@ -155,24 +149,25 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
 
   return (
     <>
-      <header className="w-full h-18 fixed top-0 left-0 right-0 z-20 bg-gray-100 shadow-md">
-        <div className="mx-auto max-full grid grid-cols-5 md:grid-cols-20 gap-4 px-3 ">
+      <header className="fixed inset-x-0 top-0 z-20 bg-gray-100 shadow-md">
+        <div className="mx-auto flex w-full items-center justify-between gap-2 px-2 py-2 sm:px-3 md:px-4 lg:px-6">
           {/* left side logo */}
           <div
-            className="col-span-1 col-start-1 md:col-span-2 md:col-start-1 flex items-center gap-2 sm:gap-3 cursor-pointer shrink-0"
+            className="flex shrink-0 items-center"
             onClick={() => navigate("/")}
           >
-            <span className="text-lg font-semibold tracking-wide">
-              <img
-                className="h-20 sm:h-20 object-contain"
-                src={logo}
-                alt="logo"
-              />
-            </span>
+            <img
+              className=" cursor-pointer h-12 w-auto object-contain sm:h-14 md:h-16"
+              src={logo}
+              alt="logo"
+            />
+            {/* <div className="hidden ml-10 h-10 w-12 border bg-yellow-100 rounded-l-sm md:flex justify-center items-center">
+              <FaMagnifyingGlass className="h-5 w-5 text-gray-600" />
+            </div> */}
           </div>
 
           {/* center section...search bar */}
-          <div className="col-span-3 col-start-2 md:col-span-7 md:col-start-3 w-full flex justify-center items-center">
+          <div className="w-full md:w-80 lg:w-120 flex justify-center items-center">
             <div className="bg-gray-100 w-full h-10 flex justify-center items-center">
               {/* search icon */}
               <div className="h-10 w-12 border bg-yellow-100 rounded-l-sm flex justify-center items-center">
@@ -195,13 +190,12 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
             <>
               {role == "User" && (
                 <>
-                  {/**full screens */}
-                  <div className="hidden md:flex md:col-span-8 md:col-start-12 items-center justify-center gap-4">
+                  <div className="hidden md:flex md:flex-wrap md:items-center md:justify-end md:gap-1 lg:gap-2">
                     {userMenu.map((item, index) => (
                       <button
                         key={index}
                         onClick={item.action}
-                        className={`flex items-center w-full rounded-lg px-2 py-2 text-sm font-mono text-black text-center cursor-pointer transition hover:scale-120 duration-100
+                        className={`inline-flex items-center justify-center rounded-lg px-2 py-2 text-[10px] font-mono text-black transition duration-100 hover:scale-105 whitespace-nowrap md:text-xs lg:text-sm
                           ${
                             item.label === "Logout"
                               ? "hover:text-red-500"
@@ -214,11 +208,9 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
                     ))}
                   </div>
 
-                  {/**Hamburger menu for smaller screens */}
-
-                  <div className="flex justify-center items-center">
+                  <div className="ml-auto flex items-center justify-center md:hidden">
                     <button
-                      className="col-span-1 col-start-4 md:hidden rounded-xl"
+                      className="flex items-center justify-center rounded-xl p-2"
                       onClick={toggleSidebar}
                     >
                       <GiHamburgerMenu className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -228,13 +220,12 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
               )}
               {role == "Admin" && (
                 <>
-                  {/**full screens */}
-                  <div className="md:col-span-10 md:col-start-11 md:flex hidden md:justify-center md:items-center">
+                  <div className="hidden md:flex md:flex-wrap md:items-center md:justify-end md:gap-1 lg:gap-2">
                     {AdminMenu.map((item, index) => (
                       <button
                         key={index}
                         onClick={item.action}
-                        className={`flex items-center w-full rounded-lg px-2 py-2 text-xs font-mono text-black text-center cursor-pointer transition hover:scale-120 duration-100
+                        className={`inline-flex items-center justify-center rounded-lg px-2 py-2 text-[10px] font-mono text-black transition duration-100 hover:scale-105 whitespace-nowrap md:text-xs lg:text-sm
                           ${
                             item.label === "Logout"
                               ? "hover:text-red-500"
@@ -247,10 +238,9 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
                     ))}
                   </div>
 
-                  {/**Hamburger menu for smaller screens */}
-                  <div className="flex justify-center items-center">
+                  <div className="ml-auto flex items-center justify-center md:hidden">
                     <button
-                      className="col-span-1 col-start-4 md:hidden rounded-xl"
+                      className="flex items-center justify-center rounded-xl p-2"
                       onClick={toggleSidebar}
                     >
                       <GiHamburgerMenu className="h-5 w-5 sm:h-6 sm:w-6" />
