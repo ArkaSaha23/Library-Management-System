@@ -98,12 +98,6 @@ const SideBar = ({
     },
     {
       type: "button",
-      icons: <PiBooksFill className="h-4 w-4" />,
-      label: "Borrowed Books",
-      action: () => handleSelect("MyBorrowedBooks"),
-    },
-    {
-      type: "button",
       icons: <GrCatalog className="h-4 w-4" />,
       label: "Catalogs",
       action: () => handleSelect("Catalogs"),
