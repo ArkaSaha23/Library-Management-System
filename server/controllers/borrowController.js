@@ -244,13 +244,15 @@ export const getBorrowedBookByuser = catchAsyncErrors(
 //when user wants to check which books he has borrowed
 export const seeBorrowedBook = catchAsyncErrors(async (req, res, next) => {
   const { booksBorrowed } = req.user;
-  console.log(booksBorrowed);
+  console.log("List of books borrowed",booksBorrowed);
 
   //find the books which havent been returned
   const books = [];
   booksBorrowed.forEach((element) => {
-    if (element.hasReturned === false)
       books.push({
+        id: element._id,
+        bookId : element.bookID,
+        hasReturned : element.hasReturned,
         UserName: req.user.name,
         BookName: element.bookTitle,
         borrowedDate: new Date(element.borrowedDate).toLocaleDateString(
