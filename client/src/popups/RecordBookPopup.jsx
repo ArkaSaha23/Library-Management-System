@@ -1,6 +1,7 @@
 import React from 'react'
 
-const RecordBookPopup = () => {
+const RecordBookPopup = (bookId) => {
+   console.log("Record Book");
   return (
     <div>
       
