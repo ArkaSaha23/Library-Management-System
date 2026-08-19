@@ -268,6 +268,6 @@ export const seeBorrowedBook = catchAsyncErrors(async (req, res, next) => {
       books.length === 0
         ? "No books are borrowed by the user"
         : "List of Books which are borrowed by the User",
-    bookBorrowed: books.length === 0 ? "[]" : books,
+    bookBorrowed: books,
   });
 });
