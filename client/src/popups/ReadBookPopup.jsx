@@ -1,6 +1,7 @@
 import React from 'react'
 
-const ReadBookPopup = () => {
+const ReadBookPopup = (BookId) => {
+   console.log("Read Book");
   return (
     <div>
       
