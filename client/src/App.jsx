@@ -18,16 +18,10 @@ import { fetchAllUsers } from "./store/slices/userSlice";
 import { getAllBooks } from "./store/slices/bookSlice";
 
 const App = () => {
-  const { user, isAuthenticated } = useSelector((state) => state.authReducer);
+  const {isAuthenticated } = useSelector((state) => state.authReducer);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUser());
-    dispatch(getAllBooks())
-
-    if (isAuthenticated && user?.role === "Admin") {
-      dispatch(fetchAllUsers());
-      console.log("the Logged in user is an admin");
-    }
   }, [isAuthenticated]);
 
   return (
