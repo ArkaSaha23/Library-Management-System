@@ -1,7 +1,14 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllUsers } from "../store/slices/userSlice";
+import { toast } from "react-toastify";
 
 const Users = () => {
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch(fetchAllUsers());
+    toast.success()
+  },[dispatch])
   const usersArray = useSelector((state) => state.userReducer.users);
 
   const formatDateTime = (timeStamp) => {
