@@ -39,6 +39,7 @@ const Home = ({
     <>
       <MainHeader
         toggleSidebar={toggleSidebar}
+        selectedComponent={selectedComponent}
         setSelectedComponent={setSelectedComponent}
       />
 
@@ -55,7 +56,7 @@ const Home = ({
             else return <AdminDashboard />;
           }
           else if (selectedComponent === "Catalogs")                        return <Catalog />;
-          else if (selectedComponent === "BorrowedBooks")                 return <MyBorrowedBooks />;
+          else if (selectedComponent === "BorrowedBooks")                   return <MyBorrowedBooks />;
           else if (selectedComponent === "BooksManagement")                 return <BooksManagement/>
           else if (selectedComponent === "Users" && user?.role === "Admin") return <Users />;
           else if(selectedComponent === "AddNewAdmin")                      return <AddNewAdmin/>
