@@ -14,6 +14,10 @@ import RecordBookPopup from "../popups/RecordBookPopup";
 const BookManagement = () => {
   const dispatch = useDispatch();
 
+  useEffect( ()=>{
+    dispatch(getAllBooks());
+  },[dispatch])
+
   const { user, isAuthenticated } = useSelector((state) => state.authReducer);
   const { loading, error, message, books } = useSelector((state) => state.bookReducer);
   const { addBookPopup, readBookPopup, recordBookPopup } = useSelector((state) => state.popUpReducer);
@@ -60,7 +64,18 @@ const BookManagement = () => {
     }
   }, [loading,message,error,borrowLoading,borrowMessage,borrowError,dispatch,]);
 
-  //
+  const tableComponents = ["ID","Title","Author","Diescription","Edition","Category","Language","Published Year","Publisher","Price","Pages","Availability"];
+
+  const formatDate = (timeStamp) => {
+    const date = new Date(timeStamp);
+
+    const day = `${String(date.getDate()).padStart(2, "0")}`;
+    const month = `${String(date.getMonth() + 1).padStart(2, "0")}`;
+    const year = `${String(date.getFullYear())}`;
+    const addedDate = `${day}-${month}-${year}`;
+    return addedDate;
+  }
+
   const [searchedKeyword, setSearchedKeyword] = useState("");
   const handleSearch = (e) => {
     setSearchedKeyword(e.target.value.toLowerCase());
@@ -72,7 +87,7 @@ const BookManagement = () => {
 
   return (
     <>
-      <main className="relative flex-1 w-full mt-5 p-3 sm:p-4 md:p-6 lg:p-8">
+      <main className="relative flex-1 w-full p-3 sm:p-4 md:p-6 lg:p-8">
         <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <h2 className="text-lg font-semibold text-slate-800 sm:text-xl md:text-2xl">
             {user && user.role === "Admin" ? "Book Management" : "Books"}
@@ -107,50 +122,26 @@ const BookManagement = () => {
               <table className="min-w-4xl w-full border-collapse text-left text-sm text-slate-700">
                 <thead>
                   <tr className="bg-slate-800 text-slate-100">
-                    <th className="px-4 py-3 text-left font-semibold text-gray-100 border border-gray-600">
-                      ID
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-100 border border-gray-600">
-                      Name
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-100 border border-gray-600">
-                      Author
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-100 border border-gray-600">
-                      Description
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-100 border border-gray-600">
-                      Edition
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-100 border border-gray-600">
-                      Category
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-100 border border-gray-600">
-                      Language
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-100 border border-gray-600">
-                      Published Year
-                    </th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-100 border border-gray-600">
-                      Publisher
-                    </th>
+                   {tableComponents.map((component,index) => (
+                     <th 
+                        key={index} 
+                        className="px-4 py-3 text-center font-semibold text-gray-100 border border-gray-600">
+                        {component}
+                      </th>
+                    ))}
                     {isAuthenticated && user?.role === "Admin" && (
                       <th className="border border-slate-700 px-3 py-3 text-center font-semibold">
                         Quantity
                       </th>
                     )}
-                    <th className="border border-slate-700 px-3 py-3 text-center font-semibold">
-                      Price
-                    </th>
-                    <th className="border border-slate-700 px-3 py-3 text-center font-semibold">
-                      Pages
-                    </th>
-                    <th className="border border-slate-700 px-3 py-3 text-center font-semibold">
-                      Availability
-                    </th>
                     {isAuthenticated && user?.role === "Admin" && (
                       <th className="border border-slate-700 px-3 py-3 text-center font-semibold">
                         Record
+                      </th>
+                    )}
+                    {isAuthenticated && user?.role === "Admin" && (
+                      <th className="border border-slate-700 px-3 py-3 text-center font-semibold w-30">
+                        Added Date
                       </th>
                     )}
                   </tr>
@@ -160,7 +151,7 @@ const BookManagement = () => {
                   {searchedBooks?.map((book, index) => (
                     <tr
                       key={book._id}
-                      className="transition-colors hover:bg-gray-200"
+                      className="transition-colors border border-gray-400  hover:bg-gray-200"
                     >
                       <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
                         {index + 1}
@@ -189,11 +180,7 @@ const BookManagement = () => {
                       <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
                         {book.publisher}
                       </td>
-                      {isAuthenticated && user?.role === "Admin" && (
-                        <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
-                          {book.quantityAvailable}
-                        </td>
-                      )}
+                      
                       <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
                         {book.price}
                       </td>
@@ -204,9 +191,19 @@ const BookManagement = () => {
                         {book.isFree ? "Available" : "Not Available"}
                       </td>
                       {isAuthenticated && user?.role === "Admin" && (
-                        <td className="px-4 py-2 space-x-2 flex justify-center items-center">
-                          <BookA className="cursor-pointer" onClick={() => openBookPopUp(book._id)} />
-                          <NotebookPen className="cursor-pointer" onClick={() => openRecordBookPopUp(book._id)}/>
+                        <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
+                          {book.quantityAvailable}
+                        </td>
+                      )}
+                      {isAuthenticated && user?.role === "Admin" && (
+                        <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
+                          <BookA className="cursor-pointer m-2" onClick={() => openBookPopUp(book._id)} />
+                          <NotebookPen className="cursor-pointer m-2" onClick={() => openRecordBookPopUp(book._id)}/>
+                        </td>
+                      )}
+                      {isAuthenticated && user?.role === "Admin" && (
+                        <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
+                          {formatDate(book.AddedDate)}
                         </td>
                       )}
                     </tr>
