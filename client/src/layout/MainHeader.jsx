@@ -12,9 +12,8 @@ import { logout } from "../store/slices/authSlice";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdDashboard } from "react-icons/md";
 import { GrCatalog } from "react-icons/gr";
-import { PiBooksFill } from "react-icons/pi";
-import { FaUserPen } from "react-icons/fa6";
-import { FaUserCog } from "react-icons/fa";
+import { GiBookshelf } from "react-icons/gi";
+import { IoBookSharp } from "react-icons/io5";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { RiUserSearchFill } from "react-icons/ri";
 import { IoSettings } from "react-icons/io5";
@@ -22,7 +21,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoMdLogOut } from "react-icons/io";
 import { IoIosNotifications } from "react-icons/io";
 
-const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
+const MainHeader = ({ toggleSidebar, selectedComponent,setSelectedComponent }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -50,31 +49,29 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
       type: "button",
       icons: <MdDashboard className="h-4 w-4" />,
       label: "Dashboard",
+      component : "Dashboard",
       action: () => handleSelect("Dashboard"),
     },
     {
       type: "button",
       icons: <GrCatalog className="h-4 w-4" />,
       label: "Catalogs",
+      component : "Catalogs",
       action: () => handleSelect("Catalogs"),
     },
     {
       type: "button",
-      icons: <PiBooksFill className="h-4 w-4" />,
+      icons: <IoBookSharp className="h-4 w-4" />,
       label: "Borrowed Books",
+      component : "BorrowedBooks",
       action: () => handleSelect("BorrowedBooks"),
     },
     {
       type: "button",
-      icons: <FaUserPen className="h-4 w-4" />,
-      label: "Books Management",
+      icons: <GiBookshelf className="h-4 w-4" />,
+      label: "List of Books",
+      component : "BooksManagement",
       action: () => handleSelect("BooksManagement"),
-    },
-    {
-      type: "button",
-      icons: <IoSettings className="h-4 w-4" />,
-      label: "Settings",
-      action: () => handleSelect("Catalogs"),
     },
     {
       type: "button",
@@ -88,30 +85,35 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
       type: "button",
       icons: <MdDashboard className="h-4 w-4" />,
       label: "Dashboard",
+      component : "Dashboard",
       action: () => handleSelect("Dashboard"),
     },
     {
       type: "button",
-      icons: <GrCatalog className="h-4 w-4" />,
+      icons: <IoBookSharp className="h-4 w-4" />,
       label: "Catalogs",
+      component : "Catalogs",
       action: () => handleSelect("Catalogs"),
     },
     {
       type: "button",
       icons: <RiUserSearchFill className="h-4 w-4" />,
       label: "Users",
+      component : "Users",
       action: () => handleSelect("Users"),
     },
     {
       type: "button",
       icons: <MdAdminPanelSettings className="h-4 w-4" />,
       label: "Add New Admin",
+      component : "AddNewAdmin",
       action: () => handleSelect("AddNewAdmin"),
     },
     {
       type: "button",
-      icons: <FaUserCog className="h-4 w-4" />,
+      icons: <GiBookshelf className="h-4 w-4" />,
       label: "Books Management",
+      component : "BooksManagement",
       action: () => handleSelect("BooksManagement"),
     },
     {
@@ -195,12 +197,9 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
                       <button
                         key={index}
                         onClick={item.action}
-                        className={`inline-flex items-center justify-center rounded-lg px-2 py-2 text-[10px] font-mono text-black transition duration-100 hover:scale-105 whitespace-nowrap md:text-xs lg:text-sm
-                          ${
-                            item.label === "Logout"
-                              ? "hover:text-red-500"
-                              : "hover:text-blue-500"
-                          }`}
+                        className={`inline-flex items-center justify-center rounded-lg px-2 py-2 text-[10px] font-mono text-black transition duration-100 hover:scale-110 whitespace-nowrap md:text-xs lg:text-sm
+                          ${item.label === "Logout" ? "hover:text-red-500" : "hover:text-blue-400"} 
+                          ${selectedComponent === item.component ? "text-blue-600" : "text-black"}`}
                       >
                         {item.icons}
                         <span className="ml-1">{item.label}</span>
@@ -225,12 +224,9 @@ const MainHeader = ({ toggleSidebar, setSelectedComponent }) => {
                       <button
                         key={index}
                         onClick={item.action}
-                        className={`inline-flex items-center justify-center rounded-lg px-2 py-2 text-[10px] font-mono text-black transition duration-100 hover:scale-105 whitespace-nowrap md:text-xs lg:text-sm
-                          ${
-                            item.label === "Logout"
-                              ? "hover:text-red-500"
-                              : "hover:text-blue-500"
-                          }`}
+                        className={`inline-flex items-center justify-center rounded-lg px-2 py-2 text-[10px] font-mono text-black transition duration-100 hover:scale-110 whitespace-nowrap md:text-xs lg:text-sm
+                          ${item.label === "Logout" ? "hover:text-red-500" : "hover:text-blue-500"
+                          } ${selectedComponent === item.component ? "text-blue-600" : "text-black"}`}
                       >
                         {item.icons}
                         <span className="ml-1">{item.label}</span>
