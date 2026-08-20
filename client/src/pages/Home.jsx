@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import Header from "../Home/components/Header";
 import SideBar from "../layout/SideBar";
-
 import MainHeader from "../layout/MainHeader";
 
 import AdminDashboard from "../components/AdminDashboard";
@@ -13,12 +11,6 @@ import Users from "../components/Users";
 import UserDashboard from "../components/UserDashboard";
 import MyBorrowedBooks from "../components/MyBorrowedBooks";
 import AddNewAdmin from "../components/AddNewAdmin";
-
-import HeroSection from "../Home/components/HeroSection";
-import Collections from "../Home/components/Collections";
-import AboutUs from "../Home/components/AboutUs";
-import Authors from "../Home/components/Authors";
-import Footer from "../Home/components/Footer";
 
 const Home = ({
  
