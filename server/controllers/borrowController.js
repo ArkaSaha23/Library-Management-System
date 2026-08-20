@@ -219,7 +219,7 @@ export const getAllBorrowedBooks = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//book borrowed by a specific user //ADMIN
+//book borrowed by a specific user //ADMIN 
 export const getBorrowedBookByuser = catchAsyncErrors(
   async (req, res, next) => {
     const { email } = req.body;
@@ -255,9 +255,7 @@ export const seeBorrowedBook = catchAsyncErrors(async (req, res, next) => {
         hasReturned : element.hasReturned,
         UserName: req.user.name,
         BookName: element.bookTitle,
-        borrowedDate: new Date(element.borrowedDate).toLocaleDateString(
-          "en-IN",
-        ),
+        borrowedDate: new Date(element.borrowedDate).toLocaleDateString("en-IN"),
         Duedate: new Date(element.Duedate).toLocaleDateString("en-IN"),
       });
   });
