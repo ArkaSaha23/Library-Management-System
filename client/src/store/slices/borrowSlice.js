@@ -67,8 +67,8 @@ const BorrowSlice = createSlice({
     },
     seeBorrowedBookSuccess(state, action) {
       state.loading = false;
-      state.userBorrowedBooks = action.payload.bookBorrowed;
       state.message = action.payload.message;
+      state.userBorrowedBooks = action.payload.bookBorrowed;
       state.error = null;
     },
     seeBorrowedBookfailed(state, action) {
@@ -204,7 +204,7 @@ export const seeBorrowedBook = () => async (dispatch) => {
     dispatch(BorrowSlice.actions.seeBorrowedBookSuccess(res.data));
   } catch (err) {
     dispatch(
-      BorrowSlice.actions.seeBorrowedBookFailed(
+      BorrowSlice.actions.seeBorrowedBookfailed(
         err.response.data.message || "Something went wrong",
       ),
     );
@@ -222,6 +222,7 @@ export const getAllBorrowedBooks = () => async (dispatch) => {
       },
     );
     dispatch(BorrowSlice.actions.getAllBorrowedBooksRequest(res.data));
+    dispatch(BorrowSlice.actions.resetBorrowSlice());
   } catch (err) {
     dispatch(
       BorrowSlice.actions.getAllBorrowedBooksFailed(
@@ -243,6 +244,7 @@ export const getBorrowedBooksByUser = () => async (dispatch) => {
     );
     dispatch(
       BorrowSlice.actions.getBorrowedBooksByUserSuccess(res.data),
+      dispatch(BorrowSlice.actions.resetBorrowSlice()),
     );
   } catch (err) {
     dispatch(
