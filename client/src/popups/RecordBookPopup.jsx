@@ -3,16 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaWindowClose } from "react-icons/fa";
 import { toggleRecordBookPopup } from "../store/slices/popUpSlice";
 import {borrowBook, resetBorrowSlice} from "../store/slices/borrowSlice";
+import { toast } from "react-toastify";
 
 const RecordBookPopup = ({ book }) => {
   const dispatch = useDispatch();
   const { loading, message } = useSelector((state) => state.borrowReducer);
-  
   const [email,setEmail] = useState("");
 
   const handleRecordBook = (e) => {
     e.preventDefault(); //It prevents the page from gettimng reoad or getting refreshed
     dispatch(borrowBook( email, book ));
+    dispatch(toggleRecordBookPopup());
     setEmail("");
   };
   useEffect(()=>{
@@ -40,24 +41,6 @@ const RecordBookPopup = ({ book }) => {
           </div>
 
           {/**MAIN BODY */}
-          <div className="flex flex-1 flex-col">
-            <div className="mb-2 flex justify-center">
-              <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold uppercase tracking-wide text-blue-600 border border-blue-600">
-                {book.category}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 ">
-              <div>
-                <h3 className="text-2xl font-bold leading-tight text-gray-900">{book.title}</h3>
-                <p className="mt-2 text-base text-gray-500">
-                  by{" "}
-                  <span className="font-semibold text-gray-700">{book.author}</span>
-                </p>
-              </div>
-            </div>
-          </div>
-
           <form onSubmit={handleRecordBook}>
             <div className="py-3 px-2 border border-gray-300 rounded-2xl bg-gray-100">
               <div className="py-2 text-center font-mono">Enter Borrower Email</div>
