@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BookA, CloudHail } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  toggleReadBookPopup,
-  toggleReturnBookPopup,
-} from "../store/slices/popUpSlice";
+import {toggleReadBookPopup,toggleReturnBookPopup} from "../store/slices/popUpSlice";
 import { seeBorrowedBook, resetBorrowSlice } from "../store/slices/borrowSlice";
+import { getAllBooks, resetBookSlice } from "../store/slices/bookSlice";
 import { toast } from "react-toastify";
 import ReadBookPopup from "../popups/ReadBookPopup";
 import ReturnBookPopup from "../popups/ReturnBookPopup";
@@ -13,20 +11,29 @@ import ReturnBookPopup from "../popups/ReturnBookPopup";
 const MyBorrowedBooks = () => {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.authReducer);
-  const { userBorrowedBooks, message } = useSelector(
-    (state) => state.borrowReducer,
-  );
-  const { books } = useSelector((state) => state.bookReducer);
-  const { readBookPopup, returnBookPopup } = useSelector(
-    (state) => state.popUpReducer,
-  );
+  const { userBorrowedBooks, message } = useSelector((state) => state.borrowReducer);
+  const { books , message : bookMessage } = useSelector((state) => state.bookReducer);
+  const { readBookPopup, returnBookPopup } = useSelector((state) => state.popUpReducer);
 
+  //get all the books and then if (bookMessage) then resetBookSlice 
+  useEffect(() => {
+    dispatch(getAllBooks());
+  }, [dispatch]);
+  
+  useEffect(()=>{
+    if (bookMessage) {
+      dispatch(resetBookSlice());
+    }
+  },[dispatch,bookMessage]);
+
+    //get all the Borrowed books By User and then if (message) then resetBorrowSlice 
   useEffect(() => {
     dispatch(seeBorrowedBook());
   }, [dispatch]);
 
   useEffect(() => {
     if (message) {
+      console.log("2nd messgae see Borrowed books",message)
       toast.success(message);
       dispatch(resetBorrowSlice());
     }
@@ -59,9 +66,7 @@ const MyBorrowedBooks = () => {
   const notReturnedBooks = userBorrowedBooks?.filter(
     (book) => book.hasReturned === false,
   );
-  const booksToDisplay =
-    filter === "Returned" ? returnedBooks : notReturnedBooks;
-  console.log(booksToDisplay);
+  const booksToDisplay = filter === "Returned" ? returnedBooks : notReturnedBooks;
   return (
     <>
       <main className="relative flex-1 w-full p-3 sm:p-4 md:p-6 lg:p-8">
@@ -96,13 +101,14 @@ const MyBorrowedBooks = () => {
               <table className="min-w-4xl w-full border-collapse text-left text-sm text-slate-700">
                 <thead>
                   <tr className="bg-slate-800 text-slate-100">
-                   {tableComponents.map((component,index) => (
-                     <th 
-                        key={index} 
-                        className="px-4 py-3 text-center font-semibold text-gray-100 border border-gray-600">
-                      {component}
-                    </th>
-                   ))}
+                    {tableComponents.map((component, index) => (
+                      <th
+                        key={index}
+                        className="px-4 py-3 text-center font-semibold text-gray-100 border border-gray-600"
+                      >
+                        {component}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
 
@@ -112,18 +118,10 @@ const MyBorrowedBooks = () => {
                       key={book.id}
                       className="transition-colors hover:bg-gray-200"
                     >
-                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
-                        {index + 1}
-                      </td>
-                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
-                        {book.BookName}
-                      </td>
-                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
-                        {book.borrowedDate}
-                      </td>
-                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
-                        {book.Duedate}
-                      </td>
+                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{index + 1}</td>
+                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{book.BookName}</td>
+                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{book.borrowedDate}</td>
+                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{book.Duedate}</td>
                       <td className="px-4 py-2">
                         <div className="flex justify-center items-center">
                           <BookA
@@ -155,7 +153,7 @@ const MyBorrowedBooks = () => {
           </div>
         )}
       </main>
-      {readBookPopup && <ReadBookPopup book={readBook} />}
+      {readBookPopup && readBook && <ReadBookPopup book={readBook} />}
       {returnBookPopup && <ReturnBookPopup book={retunBook} />}
     </>
   );
