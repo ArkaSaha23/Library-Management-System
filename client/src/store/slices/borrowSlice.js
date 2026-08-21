@@ -123,7 +123,7 @@ const BorrowSlice = createSlice({
 
 //FUNCTIONS
 // add/record books
-export const borrowBook = ({email,id}) => async (dispatch) => {
+export const borrowBook = (email,id) => async (dispatch) => {
   try {
     dispatch(BorrowSlice.actions.borrowBookRequest());
     const res = await axios.post(
