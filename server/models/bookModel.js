@@ -18,7 +18,6 @@ const BookSchema=new mongoose.Schema({
     type:String,
     trim:true,
     default:"1st Edition",
-    required:true
   },
   price:{
     type:Number,
