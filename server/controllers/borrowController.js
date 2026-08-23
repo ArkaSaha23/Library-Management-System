@@ -189,11 +189,16 @@ export const renewBook = catchAsyncErrors(async (req, res, next) => {
 export const getAllBorrowedBooks = catchAsyncErrors(async (req, res, next) => {
   const AllBooksWhichAreBorrowed = await BorrowData.find().populate("book");
   const borrowList = [];
-  AllBooksWhichAreBorrowed.map((curBook) => {
+  AllBooksWhichAreBorrowed.map((curBook) => {    
     (console.log("--------------------------------------"),
+    console.log("Required Info--------------------------------------"),
+
+      console.log("Book Id:", curBook.book._id),
+      console.log("Returned Date", new Date(curBook.returnDate)),
       console.log("User Email:", curBook.user.email),
       console.log("User Name:", curBook.user.name),
       console.log("Book Name", curBook.book.title),
+      console.log("Fine:",curBook.fine),
       console.log(
         "Borrow Date:",
         new Date(curBook.borrowedDate).toLocaleDateString("en-IN"),
@@ -202,13 +207,16 @@ export const getAllBorrowedBooks = catchAsyncErrors(async (req, res, next) => {
         "Due Date:",
         new Date(curBook.dueDate).toLocaleDateString("en-IN"),
       ),
-      console.log("--------------------------------------"));
+      console.log("-----------------NEXT---------------------"));
     borrowList.push({
+      BookId : curBook.book._id,
+      ReturnDate: curBook.returnDate ? new Date(curBook.returnDate) : null,
       UserEmail: curBook.user.email,
       UserName: curBook.user.name,
       BookName: curBook.book.title,
-      BorrowDate: new Date(curBook.borrowedDate).toLocaleDateString("en-IN"),
-      DueDate: new Date(curBook.dueDate).toLocaleDateString("en-IN"),
+      fine : curBook.fine,
+      BorrowDate: new Date(curBook.borrowedDate),
+      DueDate: new Date(curBook.dueDate),
     });
   });
 
