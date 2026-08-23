@@ -20,7 +20,7 @@ const ReadBookPopup = ({ book }) => {
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-5">
-        <div className="w-11/12 rounded-lg bg-white shadow-lg sm:w-1/2">
+        <div className="w-11/12 rounded-lg bg-white shadow-lg sm:w-1/2 md:w-2/3">
           {/* Header */}
           <div className="flex items-center justify-between rounded-t-lg bg-black px-6 py-4 text-white">
             <h2 className="text-lg font-bold">View Book Info</h2>
@@ -42,7 +42,7 @@ const ReadBookPopup = ({ book }) => {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 ">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                   <div>
                     <h3 className="text-2xl font-bold leading-tight text-gray-900">{book.title}</h3>
                     <p className="mt-2 text-base text-gray-500">
@@ -51,8 +51,8 @@ const ReadBookPopup = ({ book }) => {
                     </p>
                   </div>
                   {isAuthenticated && user.role === "Admin" && (
-                    <div className="mt-2 text-right mr-5">
-                      <p className="text-xs font-medium uppercase tracking-wide text-gray-400">Book ID</p>
+                    <div className="mt-2 md:text-right mr-5">
+                      <p className="text-xs font-medium uppercase px-2 tracking-wide text-gray-400">Book ID</p>
                       <p className="text-xs md:text-lg mt-1 px-2 font-semibold text-gray-800">{book._id}</p>
                     </div>
                   )}
@@ -101,23 +101,25 @@ const ReadBookPopup = ({ book }) => {
                 </div>
 
                 {/* Availability */}
-                <div className="mt-5">
+                {user?.role === "User" && (
+                  <div className="mt-5">
                   <span
                     className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold ${
                       book.available
                         ? "bg-green-50 text-green-700 ring-1 ring-green-200"
                         : "bg-red-50 text-red-700 ring-1 ring-red-200"
-                    }`}
-                  >
-                    <span
-                      className={`h-2 w-2 rounded-full ${
-                        book.available ? "bg-green-500" : "bg-red-500"
                       }`}
-                    ></span>
+                    >
+                      <span
+                        className={`h-2 w-2 rounded-full ${
+                          book.available ? "bg-green-500" : "bg-red-500"
+                        }`}
+                      ></span>
 
-                    {book.available ? "Available" : "Currently Borrowed"}
-                  </span>
-                </div>
+                      {book.available ? "Available" : "Currently Borrowed"}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
