@@ -55,7 +55,7 @@ const MyBorrowedBooks = () => {
     dispatch(toggleReturnBookPopup());
   };
 
-  const tableComponents = ["ID","Title","Borrowed Books","Due date","Read Books","Return Book"];
+  const tableComponents = ["ID","Title","Borrowed Date","Due date","Read Books","Return Book"];
 
   //we will filter books in two parts.user has alredy returned books//user yet to return
   const [filter, setFilter] = useState("Not Returned");
