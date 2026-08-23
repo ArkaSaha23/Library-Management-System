@@ -6,7 +6,7 @@ import MainHeader from "../layout/MainHeader";
 
 import AdminDashboard from "../components/AdminDashboard";
 import BooksManagement from "../components/BookManagement";
-import Catalog from "../components/Catalog";
+import BorrowingManagement from "../components/BorrowingManagement";
 import Users from "../components/Users";
 import UserDashboard from "../components/UserDashboard";
 import MyBorrowedBooks from "../components/MyBorrowedBooks";
@@ -47,7 +47,7 @@ const Home = ({
             if (user?.role === "User")  return <UserDashboard />; 
             else return <AdminDashboard />;
           }
-          else if (selectedComponent === "Catalogs")                        return <Catalog />;
+          else if (selectedComponent === "BorrowingManagement" && user?.role === "Admin")  return <BorrowingManagement />;
           else if (selectedComponent === "BorrowedBooks")                   return <MyBorrowedBooks />;
           else if (selectedComponent === "BooksManagement")                 return <BooksManagement/>
           else if (selectedComponent === "Users" && user?.role === "Admin") return <Users />;
