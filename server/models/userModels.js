@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
   },
   booksBorrowed: [
     {
+      borrowId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Borrow",
+      },
       bookID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Borrow",
