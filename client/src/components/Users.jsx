@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUsers } from "../store/slices/userSlice";
 import { toast } from "react-toastify";
@@ -27,13 +27,33 @@ const Users = () => {
     return `${borrowedDate} ${borrowedTime}`;
   };
 
+  const [searchedKeyword, setSearchedKeyword] = useState("");
+    const handleSearch = (e) => {
+      setSearchedKeyword(e.target.value.toLowerCase());
+    };
+    
+  const searchedUsers = usersArray?.filter((user) =>
+    user.name.toLowerCase().includes(searchedKeyword) ||
+    user.email.toLowerCase().includes(searchedKeyword)
+  );
+
   return (
     <>
       <main className="mt-2 w-full h-full">
         {/* Heading */}
-        <header className="mt-5 md:mt-8 flex w-full h-full justify-center items-center">
-          <div className="flex justify-center text-xl font-medium md:text-3xl md:font-semiold text-gray-800">
+        <header className="mt-5 md:mt-8 flex w-full h-full flex-col gap-4 px-4 sm:px-5  md:flex-row md:justify-between md:items-center md:px-7 lg:px-10">
+          <div className="flex justify-center text-xl font-medium md:text-2xl md:font-semiold text-gray-800">
             Registered Users List
+          </div>
+          
+          <div className="w-full md:w-80 lg:w-120">          
+            <input
+            type="text"
+            placeholder="Search Books"
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            value={searchedKeyword}
+            onChange={handleSearch}
+            />
           </div>
         </header>
 
@@ -87,7 +107,7 @@ const Users = () => {
             </thead>
 
             <tbody>
-              {usersArray?.map((user, index) => (
+              {searchedUsers?.map((user, index) => (
                 <tr
                   key={user._id}
                   className="transition-colors hover:bg-gray-300"
