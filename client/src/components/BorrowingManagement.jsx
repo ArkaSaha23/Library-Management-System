@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { getAllBooks, resetBookSlice } from "../store/slices/bookSlice";
 import { getAllBorrowedBooks, resetBorrowSlice } from "../store/slices/borrowSlice";
 import ReturnBookPopup from "../popups/ReturnBookPopup";
-const Catalog = () => {
+const BorrowingManagement = () => {
   const dispatch = useDispatch()
   const { returnBookPopup } = useSelector((state) => state.popUpReducer);
   const { loading, error, message, allBorrowedBooks } = useSelector((state) => state.borrowReducer);
@@ -57,7 +57,7 @@ const Catalog = () => {
     return (dueDate <= currentDate)
   });
 
-  const tableComponents =["ID","Borrower Name","Borrower Email","Book Title","Borrowed Date","Due date","Has Returned","Fine","Return"];
+  const tableComponents =["ID","Borrower Name","Borrower Email","Book Title","Borrowed Date","Due date","Returned Date","Has Returned","Fine","Return"];
   
   const BooksToDisplay = filter === "borrowed" ? borrowedBooks : overDueBooks;
 
@@ -68,7 +68,6 @@ const Catalog = () => {
     console.log("Return Book id",bookId);
     setEmail(email);
     setborrowedBookId(bookId);
-    //console.log("Return Book id",borrowedBookId);
     dispatch(toggleReturnBookPopup());
   }
 
@@ -86,30 +85,51 @@ const Catalog = () => {
     }
   },[dispatch,message,error,loading])  ///message not written
 
+  const [searchedKeyword, setSearchedKeyword] = useState("");
+  const handleSearch = (e) => {
+    setSearchedKeyword(e.target.value.toLowerCase());
+  };
+  
+   const searchedBooks = BooksToDisplay?.filter((book) =>
+    book.UserName?.toLowerCase().includes(searchedKeyword) ||
+    book.UserEmail?.toLowerCase().includes(searchedKeyword)
+  );
+
   return <>
   <main className="relative flex-1 w-full p-3 sm:p-4 md:p-6 lg:p-8">
-        <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <header className="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
 
           {/**ONLY USERS CAN SEE THIS PAGE */}
-          {isAuthenticated && user?.role === "Admin" && (
-            <div className="w-full flex justify-center items-center md:w-auto lg:gap-4">
-              <button
-                onClick={() => setFilter("borrowed")}
+      {isAuthenticated && user?.role === "Admin" && (
+        <div className="flex w-full items-center justify-between gap-3 ">
+          <div className="flex items-center md:w-auto lg:gap-4 "> 
+            <button
+              onClick={() => setFilter("borrowed")}
                 className={`cursor-pointer flex w-full items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition sm:w-auto sm:text-base ${filter === "borrowed" ? "bg-black text-white " : "bg-white hover:bg-gray-300 border-gray-300 border text-black"}`}
-              >
+                >
                 Borrowed Books
-              </button>
-              <button
-                onClick={() => setFilter("overdue")}
-                className={`cursor-pointer flex w-full items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition sm:w-auto sm:text-base ${filter === "overdue" ? "bg-black text-white " : "bg-white hover:bg-gray-300 border-gray-300 border text-black"}`}
-              >
-                Overdue Books
-              </button>
-            </div>
-          )}
-        </header>
+            </button>
+            <button
+              onClick={() => setFilter("overdue")}
+              className={`cursor-pointer flex w-full items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition sm:w-auto sm:text-base ${filter === "overdue" ? "bg-black text-white " : "bg-white hover:bg-gray-300 border-gray-300 border text-black"}`}
+                >
+              Overdue Books
+            </button>
+          </div>
+          <div className="w-full md:w-80 lg:w-120">
+            <input
+              type="text"
+              placeholder="Search Books"
+              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+              value={searchedKeyword}
+              onChange={handleSearch}
+            />
+          </div>
+        </div>
+      )}
+    </header>
 
-        {/**There is the list of books borrowed by user */}
+      {/**There is the list of books borrowed by user */}
         {BooksToDisplay && BooksToDisplay.length > 0 ? (
           <div className="mt-6 w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
             <div className="overflow-x-auto">
@@ -127,7 +147,7 @@ const Catalog = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {BooksToDisplay?.map((book, index) => (
+                  {searchedBooks?.map((book, index) => (
                     <tr
                       key={index}
                       className="transition-colors hover:bg-gray-200"
@@ -139,21 +159,23 @@ const Catalog = () => {
                       <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{book.BookName}</td>
                       <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{formatDate(book.BorrowDate)}</td>
                       <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{formatDateTime(book.DueDate)}</td>
-                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{book.ReturnDate ? "Returned":"Not Returned"}</td>
+                       <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
+                        {book.ReturnDate === null ? "----------" : formatDate(book.ReturnDate)}</td>
+                      <td className="px-4 py-4 text-center border-r border-gray-300 font-semibold">
+                        <div className={`${book.ReturnDate ? "p-1 text-green-500 border border-green-500 rounded-full bg-green-100" : 
+                          "p-1 text-red-500 border border-red-500 rounded-full bg-red-100"}`}>{book.ReturnDate ? "Returned":"Not Returned"}</div>
+                      </td> 
                       <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{book.fine}</td>
                       <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">
                         {book.ReturnDate ? (
                           <div>
                             <FaSquareCheck className="w-6 h-6"/>
-                           
                           </div>
-                           
                         ) : (
                           <div>
                             <PiKeyReturnBold onClick={()=>openReturnBookPopUp(book?.UserEmail,book.BookId)} className="w-6 h-6"/>
                               <h1></h1>
                           </div>
-                          
                         )}
                       </td>
                     </tr>
@@ -168,9 +190,9 @@ const Catalog = () => {
           </div>
         )}
       </main>
-      {returnBookPopup && <ReturnBookPopup email={email} bookId={borrowedBookId} />}
+      {returnBookPopup && <ReturnBookPopup email={email} book={borrowedBookId}/>}
   
   </>;
 };
 
-export default Catalog;
+export default BorrowingManagement;
