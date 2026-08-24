@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaWindowClose } from "react-icons/fa";
 import { toggleReadBookPopup } from "../store/slices/popUpSlice";
 
-const ReadBookPopup = ({ book }) => {
+const ReadBookPopup = ({ book,hasReturned }) => {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.authReducer);
-  console.log("book info :", book);
+  console.log("hasReturned :", hasReturned);
 
   const formatDate = (timeStamp) => {
     const date = new Date(timeStamp);
@@ -100,36 +100,21 @@ const ReadBookPopup = ({ book }) => {
                   </div>
                 </div>
 
-                {/* Availability */}
-                {user?.role === "User" && (
-                  <div className="mt-5">
-                  <span
-                    className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold ${
-                      book.available
-                        ? "bg-green-50 text-green-700 ring-1 ring-green-200"
-                        : "bg-red-50 text-red-700 ring-1 ring-red-200"
-                      }`}
-                    >
-                      <span
-                        className={`h-2 w-2 rounded-full ${
-                          book.available ? "bg-green-500" : "bg-red-500"
-                        }`}
-                      ></span>
-
-                      {book.available ? "Available" : "Currently Borrowed"}
-                    </span>
+                {user?.role === "User" && !hasReturned && (
+                  <div className="mt-5 flex justify-center items-center">
+                    <h1 className="py-1 px-2 bg-red-200 font-semibold text-red-600 border rounded-full">Currently Borrowed</h1>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Description */}
-            <div className="mt-7 rounded-lg bg-gray-50 p-5">
-              <h4 className="mb-2 text-sm font-bold uppercase tracking-wide text-gray-700">
+            <div className="mt-7 rounded-lg bg-gray-300 p-5">
+              <h4 className="mb-2 text-xl text-center font-bold uppercase tracking-wide text-gray-700">
                 About this book
               </h4>
 
-              <p className="text-sm leading-6 text-gray-600">
+              <p className="text-md leading-6 text-gray-700">
                 {book.description}
               </p>
             </div>
@@ -139,16 +124,10 @@ const ReadBookPopup = ({ book }) => {
           <div className="flex items-center justify-end gap-3 rounded-b-lg border-t border-gray-200 bg-gray-50 px-6 py-4 sm:px-8">
             <button
               onClick={() => dispatch(toggleReadBookPopup())}
-              className="rounded-md border border-gray-300 bg-white px-5 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-100"
+              className="cursor-pointer rounded-md border  bg-black px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800"
             >
               Close
             </button>
-
-            {book.available && (
-              <button className="rounded-md bg-black px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800">
-                Borrow Book
-              </button>
-            )}
           </div>
         </div>
       </div>
