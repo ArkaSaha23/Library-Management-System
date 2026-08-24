@@ -7,6 +7,7 @@ import { getAllBooks, resetBookSlice } from "../store/slices/bookSlice";
 import { toast } from "react-toastify";
 import ReadBookPopup from "../popups/ReadBookPopup";
 import ReturnBookPopup from "../popups/ReturnBookPopup";
+import { PiKeyReturnBold } from "react-icons/pi";
 
 const MyBorrowedBooks = () => {
   const dispatch = useDispatch();
@@ -33,29 +34,59 @@ const MyBorrowedBooks = () => {
 
   useEffect(() => {
     if (message) {
-      console.log("2nd messgae see Borrowed books",message)
       toast.success(message);
       dispatch(resetBorrowSlice());
     }
   }, [message, dispatch]);
 
+  console.log("List of books borrowed By user:",userBorrowedBooks);
+  const formatDate = (timeStamp) => {
+    const date = new Date(timeStamp);
+
+    const day = `${String(date.getDate()).padStart(2, "0")}`;
+    const month = `${String(date.getMonth() + 1).padStart(2, "0")}`;
+    const year = `${String(date.getFullYear())}`;
+    const borrowedDate = `${day}-${month}-${year}`;
+    return `${borrowedDate}`;
+  };
+
+    const formatDateTime = (timeStamp) => {
+    const date = new Date(timeStamp);
+
+    const day = `${String(date.getDate()).padStart(2, "0")}`;
+    const month = `${String(date.getMonth() + 1).padStart(2, "0")}`;
+    const year = `${String(date.getFullYear())}`;
+    const finalDate = `${day}-${month}-${year}`;
+    const hours = `${String(date.getHours()).padStart(2, 0)}`;
+    const finalTime = `${hours}:00:00`;
+    return `${finalDate} before ${finalTime}`;
+  };
+
   //get which book you want to read with ID
   const [readBook, setreadBook] = useState({});
-  const openBookPopUp = (id) => {
+  const [hasReturned,setHasReturned] = useState(false);
+  const openBookPopUp = (id,hasReturned) => {
+    console.log(hasReturned);
     const book = books.find((book) => book._id === id);
     setreadBook(book);
+    setHasReturned(hasReturned);
+    console.log(hasReturned);
     dispatch(toggleReadBookPopup());
   };
 
   //return the book back to library
-  const [retunBook, setReturnBook] = useState({});
-  const returnBookPopUp = (id) => {
-    const book = books.find((book) => book._id === id);
-    setReturnBook(book);
+  const [retunBookId, setReturnBookId] = useState({});
+  const [returnBorrowId, setReturnBorrowId] = useState({});
+  const returnBookPopUp = (bookId,borrowId) => {
+    const book = books.find((book) => book._id === bookId);
+    const borrowDetails = userBorrowedBooks.find((borrowDetails) => borrowDetails.borrowId === borrowId);
+    //console.log("The Borrow ID that will be send to return book popup is:",borrowId);
+    setReturnBorrowId(borrowDetails);
+    setReturnBookId(book);
     dispatch(toggleReturnBookPopup());
   };
 
-  const tableComponents = ["ID","Title","Borrowed Date","Due date","Read Books","Return Book"];
+  const tableComponents = ["ID","Title","Borrowed Date","Due date","Read Books"];
 
   //we will filter books in two parts.user has alredy returned books//user yet to return
   const [filter, setFilter] = useState("Not Returned");
@@ -109,38 +140,42 @@ const MyBorrowedBooks = () => {
                         {component}
                       </th>
                     ))}
+                    {filter === "Returned" && (
+                    <th  className="px-4 py-3 text-center font-semibold text-gray-100 border border-gray-600">
+                        View Return Details
+                    </th>)}
+                    
                   </tr>
                 </thead>
 
                 <tbody>
                   {booksToDisplay?.map((book, index) => (
                     <tr
-                      key={book.id}
+                      key={index}
                       className="transition-colors hover:bg-gray-200"
                     >
                       <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{index + 1}</td>
                       <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{book.BookName}</td>
-                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{book.borrowedDate}</td>
-                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{book.Duedate}</td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{formatDate(book.borrowedDate)}</td>
+                      <td className="px-4 py-4 text-center text-gray-600 border-r border-gray-300">{formatDateTime(book.Duedate)}</td>
+                      <td className="px-4 py-2 border-r border-gray-300">
                         <div className="flex justify-center items-center">
                           <BookA
                             className="cursor-pointer"
-                            onClick={() => openBookPopUp(book.bookId)}
+                            onClick={() => openBookPopUp(book.bookId,book.hasReturned)}
                           />
                         </div>
                       </td>
-
+                      {filter === "Returned" && (
                       <td className="px-4 py-2">
                         <div className="flex justify-center items-center">
-                          {!book.hasReturned && (
-                            <BookA
-                              className="cursor-pointer"
-                              onClick={() => returnBookPopUp(book.bookId)}
+                            <PiKeyReturnBold
+                              className="cursor-pointer w-6 h-6"
+                              onClick={() => returnBookPopUp(book.bookId,book.borrowId)}
                             />
-                          )}
                         </div>
                       </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -153,8 +188,8 @@ const MyBorrowedBooks = () => {
           </div>
         )}
       </main>
-      {readBookPopup && readBook && <ReadBookPopup book={readBook} />}
-      {returnBookPopup && <ReturnBookPopup book={retunBook} />}
+      {readBookPopup && readBook && <ReadBookPopup book={readBook} hasReturned={hasReturned}/>}
+      {returnBookPopup && <ReturnBookPopup book={retunBookId} borrowId={returnBorrowId}/>}
     </>
   );
 };
