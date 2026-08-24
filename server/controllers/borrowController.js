@@ -48,18 +48,8 @@ export const borrowBook = catchAsyncErrors(async (req, res, next) => {
     bookWantsToBorrow.quantityAvailable > 0 ? true : false;
   await bookWantsToBorrow.save();
 
-  // update user
-  curUser.booksBorrowed.push({
-    bookID: bookWantsToBorrow._id,
-    bookTitle: bookWantsToBorrow.title,
-    borrowedDate,
-    Duedate: dueDate,
-    hasReturned: false,
-  });
-  await curUser.save();
-
-  // create borrow record
-  await BorrowData.create({
+   // create borrow record
+  const borrow = await BorrowData.create({
     user: {
       id: curUser._id,
       name: curUser.name,
@@ -70,6 +60,17 @@ export const borrowBook = catchAsyncErrors(async (req, res, next) => {
     borrowedDate,
     dueDate,
   });
+
+  // update user
+  curUser.booksBorrowed.push({
+    borrowId: borrow._id,
+    bookID: bookWantsToBorrow._id,
+    bookTitle: bookWantsToBorrow.title,
+    borrowedDate,
+    Duedate: dueDate,
+    hasReturned: false,
+  });
+  await curUser.save();
 
   res.status(200).json({
     success: true,
@@ -255,18 +256,24 @@ export const seeBorrowedBook = catchAsyncErrors(async (req, res, next) => {
   console.log("List of books borrowed",booksBorrowed);
 
   //find the books which havent been returned
-  const books = [];
-  booksBorrowed.forEach((element) => {
-      books.push({
-        id: element._id,
-        bookId : element.bookID,
-        hasReturned : element.hasReturned,
-        UserName: req.user.name,
-        BookName: element.bookTitle,
-        borrowedDate: new Date(element.borrowedDate).toLocaleDateString("en-IN"),
-        Duedate: new Date(element.Duedate).toLocaleDateString("en-IN"),
-      });
-  });
+  const books=[];
+  for (const element of booksBorrowed) {
+    const borrow = await BorrowData.findById(element.borrowId).populate("book");
+    if (!borrow) continue;
+    books.push({
+      borrowId: borrow._id,
+      bookId: borrow.book._id,
+      hasReturned: borrow.returnDate !== null,
+      UserName: borrow.user.name,
+      BookName: borrow.book.title,
+      borrowedDate: new Date(borrow.borrowedDate),
+      Duedate: new Date(borrow.dueDate),
+      ReturnedDate: borrow.returnDate
+      ? new Date(borrow.returnDate)
+      : null,
+      fine: borrow.fine,
+    });
+}
 
   res.status(200).json({
     success: true,
