@@ -8,6 +8,9 @@ import { Pie } from "react-chartjs-2";
 import { IoLibrary, IoSettings } from "react-icons/io5";
 import { ImLibrary } from "react-icons/im";
 import { MdLocalLibrary } from "react-icons/md";
+import { FcOvertime } from "react-icons/fc";
+import { PiKeyReturnFill } from "react-icons/pi";
+import { FaChartPie } from "react-icons/fa";
 import { FaBookSkull } from "react-icons/fa6";
 
 import SettingPopUp from "../popups/SettingPopup";
@@ -81,7 +84,7 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
   //   updateDateTime(); //will run once immediately
   //   const intervalID = setInterval(updateDateTime, 1000); //after every 1 sec this function will run
   //   return () => clearInterval(intervalID); //
-  // }, []);
+  // }, [])
 
   useEffect(() => {
     dispatch(seeBorrowedBook());
@@ -95,6 +98,9 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
 
   const currentDate = new Date();
 
+  const upcomingReturns = [];
+  const booksOverdue = [];
+
   const totalBorrowedBooks = userBorrowedBooks.filter(
     (book) => !book.hasReturned,
   ).length;
@@ -103,8 +109,17 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
   ).length;
   const OverDueBooks = userBorrowedBooks?.filter((book) => {
     const dueDate = new Date(book.Duedate);
+
+    if (dueDate <= currentDate) {
+      booksOverdue.push({
+        bookName: book.BookName,
+        dueDate: book.Duedate,
+      });
+    }
     return dueDate <= currentDate;
   });
+  console.log("List of OverDue books:", booksOverdue);
+
   const totalOverDueBooks = OverDueBooks.length;
 
   const data = {
@@ -445,13 +460,36 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
               <h2 className="mb-5 text-xl font-mono text-center font-semibold text-yellow-500">
                 Borrowing Overview
               </h2>
-              <MdLocalLibrary className="text-3xl mb-5 text-yellow-400" />
+              <FaChartPie className="text-3xl mb-5 text-yellow-400" />
             </div>
 
             <div className="flex h-72 md:h-100 w-full items-center justify-center">
               <div className="relative h-full w-full max-w-lg flex justify-center">
-                <Pie data={data} options={{cutout:0}}/>
+                <Pie data={data} options={{ cutout: 0 }} />
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/**OverDue Books and Upcoming Returns */}
+        <div className="mx-auto mt-6 grid w-11/12 grid-cols-1 gap-5 md:grid-cols-2">
+          {/**Overdue Books */}
+           <div className="rounded-2xl bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-center gap-3">
+              <h2 className="mb-5 text-xl font-mono text-center font-semibold text-red-400">
+                OverDue Book List
+              </h2>
+              <FcOvertime className="text-3xl mb-5 text-red-400" />
+            </div>
+          </div>
+
+          {/**Upcoming returns */}
+          <div className="rounded-2xl bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-center gap-3">
+              <h2 className="mb-5 text-xl font-mono text-center font-semibold text-blue-400">
+                Upcoming Returns
+              </h2>
+              <PiKeyReturnFill className="text-3xl mb-5 text-blue-400" />
             </div>
           </div>
         </div>
