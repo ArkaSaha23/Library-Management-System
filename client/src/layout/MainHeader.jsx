@@ -11,12 +11,11 @@ import { logout } from "../store/slices/authSlice";
 
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdDashboard } from "react-icons/md";
-import { GrCatalog } from "react-icons/gr";
+import { FaUser } from "react-icons/fa";
 import { GiBookshelf } from "react-icons/gi";
 import { IoBookSharp } from "react-icons/io5";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { RiUserSearchFill } from "react-icons/ri";
-import { IoSettings } from "react-icons/io5";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoMdLogOut } from "react-icons/io";
 import { IoIosNotifications } from "react-icons/io";
@@ -25,13 +24,7 @@ const MainHeader = ({ toggleSidebar, selectedComponent,setSelectedComponent }) =
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [currentTime, SetCurrentTime] = useState("");
-  const [currentDate, SetCurrentDate] = useState("");
-
-  const user = useSelector((state) => state.authReducer.user);
-  const isAuthenticated = useSelector(
-    (state) => state.authReducer.isAuthenticated,
-  );
+  const {user,isAuthenticated} = useSelector((state) => state.authReducer);
   const authInitialized = useSelector((state) => state.authReducer.initialized);
   const role = user?.role || "User";
 
@@ -52,13 +45,13 @@ const MainHeader = ({ toggleSidebar, selectedComponent,setSelectedComponent }) =
       component : "Dashboard",
       action: () => handleSelect("Dashboard"),
     },
-    {
-      type: "button",
-      icons: <GrCatalog className="h-4 w-4" />,
-      label: "Catalogs",
-      component : "Catalogs",
-      action: () => handleSelect("Catalogs"),
-    },
+    // {
+    //   type: "button",
+    //   icons: <GrCatalog className="h-4 w-4" />,
+    //   label: "Catalogs",
+    //   component : "Catalogs",
+    //   action: () => handleSelect("Catalogs"),
+    // },
     {
       type: "button",
       icons: <IoBookSharp className="h-4 w-4" />,
@@ -91,9 +84,9 @@ const MainHeader = ({ toggleSidebar, selectedComponent,setSelectedComponent }) =
     {
       type: "button",
       icons: <IoBookSharp className="h-4 w-4" />,
-      label: "Catalogs",
-      component : "Catalogs",
-      action: () => handleSelect("Catalogs"),
+      label: "Borrowing Management",
+      component : "BorrowingManagement",
+      action: () => handleSelect("BorrowingManagement"),
     },
     {
       type: "button",
@@ -124,38 +117,13 @@ const MainHeader = ({ toggleSidebar, selectedComponent,setSelectedComponent }) =
     },
   ];
 
-  useEffect(() => {
-    const updateDateTime = () => {
-      const now = new Date();
-      //time
-      const hours = now.getHours() % 12 || 12;
-      const minutes = now.getMinutes().toString().padStart(2, "0");
-      const seconds = now.getSeconds().toString().padStart(2, "0");
-      const ampm = now.getHours() >= 12 ? "p.m." : "a.m.";
-
-      SetCurrentTime(`${hours}:${minutes}:${seconds} ${ampm}`);
-
-      //date
-      const curDate = {
-        weekday: "long",
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      };
-      SetCurrentDate(now.toLocaleDateString("en-IN", curDate));
-    };
-    updateDateTime(); //will run once immediately
-    const intervalID = setInterval(updateDateTime, 1000); //after every 1 sec this function will run
-    return () => clearInterval(intervalID); //
-  }, []);
-
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-20 bg-gray-100 shadow-md">
-        <div className="mx-auto flex w-full items-center justify-between gap-2 px-2 py-2 sm:px-3 md:px-4 lg:px-6">
+      <header className="fixed inset-x-0 top-0 z-20 border-b border-blue-100 bg-gray-100 shadow-md">
+        <div className="mx-auto flex w-full items-center gap-2 px-2 py-2 sm:px-3 md:px-4 lg:px-6">
           {/* left side logo */}
           <div
-            className="flex shrink-0 items-center"
+            className="flex shrink-0 items-center justify-start lg:w-auto"
             onClick={() => navigate("/")}
           >
             <img
@@ -163,26 +131,6 @@ const MainHeader = ({ toggleSidebar, selectedComponent,setSelectedComponent }) =
               src={logo}
               alt="logo"
             />
-            {/* <div className="hidden ml-10 h-10 w-12 border bg-yellow-100 rounded-l-sm md:flex justify-center items-center">
-              <FaMagnifyingGlass className="h-5 w-5 text-gray-600" />
-            </div> */}
-          </div>
-
-          {/* center section...search bar */}
-          <div className="w-full md:w-80 lg:w-120 flex justify-center items-center">
-            <div className="bg-gray-100 w-full h-10 flex justify-center items-center">
-              {/* search icon */}
-              <div className="h-10 w-12 border bg-yellow-100 rounded-l-sm flex justify-center items-center">
-                <FaMagnifyingGlass className="h-5 w-5 text-gray-600" />
-              </div>
-
-              {/* search bar */}
-              <input
-                className="bg-gray-100 w-full h-10 border-gray-700 border rounded-r-lg font-medium text-xs p-2"
-                type="text"
-                placeholder="Search Books,Authors,Catalogs"
-              />
-            </div>
           </div>
 
           {/* right side.....notification icon,rest component*/}
@@ -192,14 +140,14 @@ const MainHeader = ({ toggleSidebar, selectedComponent,setSelectedComponent }) =
             <>
               {role == "User" && (
                 <>
-                  <div className="hidden md:flex md:flex-wrap md:items-center md:justify-end md:gap-1 lg:gap-2">
+                  <div className="hidden min-w-0 flex-1 items-center justify-center gap-1 md:gap-5 lg:gap-7 md:flex md:flex-wrap">
                     {userMenu.map((item, index) => (
                       <button
                         key={index}
                         onClick={item.action}
                         className={`inline-flex items-center justify-center rounded-lg px-2 py-2 text-[10px] font-mono text-black transition duration-100 hover:scale-110 whitespace-nowrap md:text-xs lg:text-sm
                           ${item.label === "Logout" ? "hover:text-red-500" : "hover:text-blue-400"} 
-                          ${selectedComponent === item.component ? "text-blue-600" : "text-black"}`}
+                          ${selectedComponent === item.component ? "text-blue-600 scale-130 border border-blue-400 bg-blue-100 rounded-xl" : "text-black"}`}
                       >
                         {item.icons}
                         <span className="ml-1">{item.label}</span>
@@ -207,9 +155,9 @@ const MainHeader = ({ toggleSidebar, selectedComponent,setSelectedComponent }) =
                     ))}
                   </div>
 
-                  <div className="ml-auto flex items-center justify-center md:hidden">
+                  <div className="ml-auto flex items-center justify-end md:hidden">
                     <button
-                      className="flex items-center justify-center rounded-xl p-2"
+                      className="flex items-center justify-end rounded-xl p-2"
                       onClick={toggleSidebar}
                     >
                       <GiHamburgerMenu className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -219,14 +167,14 @@ const MainHeader = ({ toggleSidebar, selectedComponent,setSelectedComponent }) =
               )}
               {role == "Admin" && (
                 <>
-                  <div className="hidden md:flex md:flex-wrap md:items-center md:justify-end md:gap-1 lg:gap-2">
+                  <div className="hidden md:flex flex-1 min-w-0 items-center justify-center md:flex-wrap gap-1 md:gap-5 lg:gap-7">
                     {AdminMenu.map((item, index) => (
                       <button
                         key={index}
                         onClick={item.action}
                         className={`inline-flex items-center justify-center rounded-lg px-2 py-2 text-[10px] font-mono text-black transition duration-100 hover:scale-110 whitespace-nowrap md:text-xs lg:text-sm
                           ${item.label === "Logout" ? "hover:text-red-500" : "hover:text-blue-500"
-                          } ${selectedComponent === item.component ? "text-blue-600" : "text-black"}`}
+                          } ${selectedComponent === item.component ? "text-blue-600 scale-120 border border-blue-400 bg-blue-100 rounded-xl" : "text-black"}`}
                       >
                         {item.icons}
                         <span className="ml-1">{item.label}</span>
@@ -246,6 +194,24 @@ const MainHeader = ({ toggleSidebar, selectedComponent,setSelectedComponent }) =
               )}
             </>
           )}
+          <div className="flex shrink-0 items-center justify-end lg:w-48 lg:mr-2">
+            <div className="flex items-center justify-end gap-2 sm:gap-3">
+               {/* User Icon */}
+                  <FaUser className="h-6 w-5 sm:h-10 sm:w-10 text-blue-500 shrink-0" />
+ 
+               {/* User Details */}
+              <div className="sm:block">
+                <h2 className="text-md md:text-2xl font-mono font-bold text-blue-700 truncate">
+                     {user?.name}
+                </h2>
+
+                <h4 className="ml-1 text-xs sm:text-sm font-mono font-bold  text-blue-500">
+                {user?.role}
+                </h4>
+              </div>
+
+            </div>
+          </div>
         </div>
       </header>
 
