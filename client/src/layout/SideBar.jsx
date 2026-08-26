@@ -65,13 +65,13 @@ const SideBar = ({
       component : "Dashboard",
       action: () => handleSelect("Dashboard"),
     },
-    {
-      type: "button",
-      icons: <GrCatalog className="h-4 w-4" />,
-      label: "Catalogs",
-      component : "Catalogs",
-      action: () => handleSelect("Catalogs"),
-    },
+    // {
+    //   type: "button",
+    //   icons: <GrCatalog className="h-4 w-4" />,
+    //   label: "Catalogs",
+    //   component : "Catalogs",
+    //   action: () => handleSelect("Catalogs"),
+    // },
     {
       type: "button",
       icons: <PiBooksFill className="h-4 w-4" />,
@@ -98,9 +98,9 @@ const SideBar = ({
     {
       type: "button",
       icons: <GrCatalog className="h-4 w-4" />,
-      label: "Catalogs",
-      component : "Catalogs",
-      action: () => handleSelect("Catalogs"),
+      label: "Borrowing Management",
+      component : "BorrowingManagement",
+      action: () => handleSelect("BorrowingManagement"),
     },
     {
       type: "button",
