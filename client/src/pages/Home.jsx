@@ -44,8 +44,8 @@ const Home = ({
       <div className="relative flex min-h-screen bg-gray-100 pt-16">
         {(() => {
           if (selectedComponent === "Dashboard"){
-            if (user?.role === "User")  return <UserDashboard />; 
-            else return <AdminDashboard />;
+            if (user?.role === "User")  return <UserDashboard selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}/>; 
+            else return <AdminDashboard selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}/>;
           }
           else if (selectedComponent === "BorrowingManagement" && user?.role === "Admin")  return <BorrowingManagement />;
           else if (selectedComponent === "BorrowedBooks")                   return <MyBorrowedBooks />;
