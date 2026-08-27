@@ -5,7 +5,7 @@ import { ImLibrary } from "react-icons/im";
 import { MdLocalLibrary } from "react-icons/md";
 import { FcOvertime } from "react-icons/fc";
 import { PiKeyReturnFill } from "react-icons/pi";
-import { FaChartPie } from "react-icons/fa";
+import { FaBookReader, FaChartPie } from "react-icons/fa";
 import { FaBookSkull } from "react-icons/fa6";
 
 import SettingPopUp from "../popups/SettingPopup";
@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {Chart as ChartJS, Tooltip, Legend, ArcElement,} from "chart.js";
 import { resetBorrowSlice, seeBorrowedBook } from "../store/slices/borrowSlice";
 import { toggleSettingPopup } from "../store/slices/popUpSlice";
-import { FaAddressBook, FaBookMedical, FaPenFancy } from "react-icons/fa";
+import { FaAddressBook, FaBookMedical, FaPenFancy,FaBook } from "react-icons/fa";
 
 ChartJS.register(Tooltip,Legend,ArcElement);
 
@@ -76,7 +76,7 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
     ],
   };
 
-  const bookTitles = ["The Silent Library", "Beyond the Pages", "The Lost Chapter", "Echoes of Time", "The Hidden Story", "Whispers of Wisdom", "The Forgotten Book", "Pages of Destiny", "The Last Chapter", "Secrets Between Pages", "The Endless Story", "Tales of Tomorrow", "The Midnight Reader", "Journey Through Pages", "The Book of Dreams", "Shadows of Yesterday", "Letters from the Past", "The Secret Shelf", "Stories Untold", "The Wandering Reader", "A World of Words", "The Golden Bookmark", "Chronicles of Time", "The Forgotten Chapter", "Beyond the Bookshelf", "The Curious Reader", "Pages of Wonder", "The Hidden Chapter", "Whispers Between Pages", "The Endless Library"];
+ const bookTitles = ["Pride and Prejudice", "1984", "The Great Gatsby", "The Alchemist", "The Hobbit", "Animal Farm", "The Little Prince", "The Book Thief", "Jane Eyre", "Little Women", "The Guide", "Malgudi Days", "Train to Pakistan", "Midnight's Children", "The God of Small Things", "The White Tiger", "A Suitable Boy", "Swami and Friends", "The Namesake", "Gitanjali", "Pather Panchali", "Devdas", "Chokher Bali", "Aranyak", "Gora", "Srikanta", "Durgeshnandini", "Kapalkundala", "Mahesh", "Hajar Churashir Ma", "To Kill a Mockingbird", "The Catcher in the Rye", "The Lord of the Rings", "Harry Potter", "The Kite Runner", "A Thousand Splendid Suns", "The Old Man and the Sea", "Crime and Punishment", "Great Expectations", "Oliver Twist", "Wuthering Heights", "The Picture of Dorian Gray", "The Adventures of Sherlock Holmes", "Moby-Dick", "Don Quixote", "The Odyssey", "The Iliad", "War and Peace", "The Brothers Karamazov", "The Stranger"];
 
   const bookColors = ["from-blue-500 to-indigo-600", "from-purple-500 to-violet-600", "from-rose-400 to-pink-600", "from-emerald-400 to-green-600", "from-orange-400 to-amber-500", "from-cyan-400 to-teal-600", "from-red-400 to-rose-600", "from-yellow-400 to-orange-500", "from-fuchsia-500 to-purple-600", "from-sky-400 to-blue-600", "from-lime-400 to-green-500", "from-teal-400 to-cyan-600", "from-indigo-500 to-purple-600", "from-amber-400 to-yellow-500", "from-pink-400 to-rose-500", "from-violet-500 to-fuchsia-600", "from-slate-500 to-gray-700", "from-red-500 to-orange-500", "from-green-500 to-teal-600", "from-blue-400 to-cyan-500"];
 
@@ -92,7 +92,7 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
     <>
       <div className="w-full px-3 py-6 md:px-6 bg-gray-300">
         {/* ================= WELCOME BANNER ================= */}
-        <div className="mx-auto my-2 flex h-auto min-h-75 w-11/12 flex-col items-center justify-between gap-6 rounded-2xl bg-linear-to-r from-indigo-50 via-violet-50 to-blue-50 px-4 py-5 shadow-md sm:px-6 md:px-8 lg:h-75 lg:flex-row lg:gap-2 lg:py-0">
+        <div className="mx-auto my-2 flex h-auto min-h-75 w-11/12 flex-col items-center justify-between gap-6 rounded-2xl bg-linear-to-r from-indigo-50 via-violet-50 to-blue-50 px-4 py-5 shadow-md sm:px-6 md:px-8 md:mt-8 lg:mt-3 lg:h-75 lg:flex-row lg:gap-2 lg:py-0">
           {/* LEFT SIDE - Colorful Welcome Section */}
           <div className="relative flex w-full flex-col items-start justify-center overflow-hidden px-2 py-2 sm:px-4 lg:w-1/2 lg:px-6">
             {/* Soft background decorations */}
@@ -100,12 +100,17 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
             <div className="absolute bottom-0 left-1/3 h-16 w-16 rounded-full bg-purple-100/60" />
 
             {/* Small colorful badge */}
-            <div className="relative mb-3 flex items-center gap-2 rounded-full bg-linear-to-r from-blue-50 to-purple-50 px-3 py-1.5">
+            <div className="relative mb-1 flex items-center gap-2 rounded-full bg-linear-to-r from-blue-50 to-purple-50 px-3 py-1.5">
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-yellow-100 text-sm">✨</span>
-              <span className="flex items-center text-xs font-semibold text-blue-600 sm:text-sm lg:text-xl gap-2">
+              <span className="flex items-center text-xs font-semibold text-blue-600 sm:text-sm lg:text-md gap-2">
                 <h1>Your Library Space</h1>
                 <ImLibrary className="text-xl" />
               </span>
+            </div>
+
+            <div className="flex gap-2 items-center ml-2 mt-2 mb-3">
+              <h1 className="bg-linear-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent text-xs md:text-lg xl:text-xl font-bold ">ShelfSync, Library Management System</h1>
+              <FaBookReader className="text-purple-500"/>
             </div>
 
             {/* Welcome text */}
@@ -136,16 +141,16 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
               {/* View Books */}
               <button
                 onClick={() => setSelectedComponent("BooksManagement")}
-                className="group flex w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-blue-500 to-indigo-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:from-blue-600 hover:to-indigo-600 hover:shadow-md sm:w-auto sm:px-5 sm:text-sm"
+                className="group flex w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-blue-500 to-indigo-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:from-blue-600 hover:to-indigo-600 hover:shadow-md sm:w-auto sm:px-5 sm:text-sm cursor-pointer"
               >
-                <span className="transition-transform duration-200 group-hover:rotate-6"> 📚</span>
+                <span className="transition-transform duration-200 group-hover:rotate-6"><FaBook/></span>
                 View Our Books
               </button>
 
               {/* Settings */}
               <button
                 onClick={() => dispatch(toggleSettingPopup())}
-                className="group flex w-full items-center justify-center gap-2 rounded-lg border-2 border-purple-500 bg-linear-to-r from-gray-50 to-purple-50 px-4 py-2 text-xs font-semibold text-purple-500 shadow-sm ring-1 ring-gray-200 transition duration-200 hover:-translate-y-0.5 hover:from-purple-50 hover:to-pink-50 hover:shadow-md sm:w-auto sm:px-5 sm:text-sm"
+                className="group flex w-full items-center justify-center gap-2 rounded-lg border-2 border-purple-500 bg-linear-to-r from-gray-50 to-purple-50 px-4 py-2 text-xs font-semibold text-purple-500 shadow-sm ring-1 ring-gray-200 transition duration-200 hover:-translate-y-0.5 hover:from-purple-50 hover:to-pink-50 hover:shadow-md sm:w-auto sm:px-5 sm:text-sm cursor-pointer"
               >
                 <IoSettings className="text-base text-purple-500 transition-transform duration-300 group-hover:rotate-90 sm:text-lg" />
                 Settings
