@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from "react";
-import logo_with_title from "../assets/logo-with-title-black.png";
-import returnIcon from "../assets/redo.png";
-import browseIcon from "../assets/pointing.png";
-import bookIcon from "../assets/book-square.png";
-import BookOnTable from "../assets/BookOnTable.png";
 import { Pie } from "react-chartjs-2";
 import { IoLibrary, IoSettings } from "react-icons/io5";
 import { ImLibrary } from "react-icons/im";
@@ -16,75 +11,19 @@ import { FaBookSkull } from "react-icons/fa6";
 import SettingPopUp from "../popups/SettingPopup";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  PointElement,
-  ArcElement,
-} from "chart.js";
-import logo from "../assets/black-logo.png";
+import {Chart as ChartJS, Tooltip, Legend, ArcElement,} from "chart.js";
 import { resetBorrowSlice, seeBorrowedBook } from "../store/slices/borrowSlice";
 import { toggleSettingPopup } from "../store/slices/popUpSlice";
-import SettingPopup from "../popups/SettingPopup";
 import { FaAddressBook, FaBookMedical, FaPenFancy } from "react-icons/fa";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  PointElement,
-  ArcElement,
-);
+ChartJS.register(Tooltip,Legend,ArcElement);
 
 const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const { settingPopup } = useSelector((state) => state.popUpReducer);
-  const { userBorrowedBooks, message } = useSelector(
-    (state) => state.borrowReducer,
-  );
+  const { userBorrowedBooks, message } = useSelector((state) => state.borrowReducer,);
   const { user, isAuthenticated } = useSelector((state) => state.authReducer);
-
-  //const [currentTime, SetCurrentTime] = useState("");
-  //const [currentDate, SetCurrentDate] = useState("");
-
-  // useEffect(() => {
-  //   const updateDateTime = () => {
-  //     const now = new Date();
-  //     //time
-  //     const hours = now.getHours() % 12 || 12;
-  //     const minutes = now.getMinutes().toString().padStart(2, "0");
-  //     const seconds = now.getSeconds().toString().padStart(2, "0");
-  //     const ampm = now.getHours() >= 12 ? "p.m." : "a.m.";
-
-  //     SetCurrentTime(`${hours}:${minutes}:${seconds} ${ampm}`);
-
-  //     //date
-  //     const curDate = {
-  //       weekday: "long",
-  //       month: "short",
-  //       day: "numeric",
-  //       year: "numeric",
-  //     };
-  //     SetCurrentDate(now.toLocaleDateString("en-IN", curDate));
-  //   };
-  //   updateDateTime(); //will run once immediately
-  //   const intervalID = setInterval(updateDateTime, 1000); //after every 1 sec this function will run
-  //   return () => clearInterval(intervalID); //
-  // }, [])
 
   useEffect(() => {
     dispatch(seeBorrowedBook());
@@ -97,19 +36,16 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
   }, [message, dispatch]);
 
   const currentDate = new Date();
+  console.log(userBorrowedBooks);
 
-  const upcomingReturns = [];
+  const totalBorrowedBooks = userBorrowedBooks.length;
+  const currentlyBorrowedBooks = userBorrowedBooks.filter((book) => !book.hasReturned).length;
+  const totalReturnedBooks = userBorrowedBooks.filter((book) => book.hasReturned).length;
+
   const booksOverdue = [];
-
-  const totalBorrowedBooks = userBorrowedBooks.filter(
-    (book) => !book.hasReturned,
-  ).length;
-  const totalReturnedBooks = userBorrowedBooks.filter(
-    (book) => book.hasReturned,
-  ).length;
   const OverDueBooks = userBorrowedBooks?.filter((book) => {
     const dueDate = new Date(book.Duedate);
-
+    console.log(Math.ceil((dueDate - currentDate) / (1000 * 60 * 60 * 24)));
     if (dueDate <= currentDate) {
       booksOverdue.push({
         bookName: book.BookName,
@@ -118,15 +54,20 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
     }
     return dueDate <= currentDate;
   });
-  console.log("List of OverDue books:", booksOverdue);
-
   const totalOverDueBooks = OverDueBooks.length;
+
+  const upcomingReturns = userBorrowedBooks?.filter((book) => {
+    const dueDate = new Date(book.Duedate);
+    const dayCount = Math.ceil((dueDate - currentDate) / (1000 * 60 * 60 * 24));
+    return (!book.hasreturned && dayCount >=0 && dayCount <= 3);
+  });
+  console.log("Upcoming returns:", upcomingReturns);
 
   const data = {
     labels: ["Currently Borrowed Books", "Returned Books", "Overdue Books"],
     datasets: [
       {
-        data: [totalBorrowedBooks, totalReturnedBooks, totalOverDueBooks],
+        data: [currentlyBorrowedBooks, totalReturnedBooks, totalOverDueBooks],
         backgroundColor: ["#66B2FF", "#00FF80", "#FF3333"],
         hoverOffset: 6,
         borderWidth: 3,
@@ -134,6 +75,18 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
       },
     ],
   };
+
+  const bookTitles = ["The Silent Library", "Beyond the Pages", "The Lost Chapter", "Echoes of Time", "The Hidden Story", "Whispers of Wisdom", "The Forgotten Book", "Pages of Destiny", "The Last Chapter", "Secrets Between Pages", "The Endless Story", "Tales of Tomorrow", "The Midnight Reader", "Journey Through Pages", "The Book of Dreams", "Shadows of Yesterday", "Letters from the Past", "The Secret Shelf", "Stories Untold", "The Wandering Reader", "A World of Words", "The Golden Bookmark", "Chronicles of Time", "The Forgotten Chapter", "Beyond the Bookshelf", "The Curious Reader", "Pages of Wonder", "The Hidden Chapter", "Whispers Between Pages", "The Endless Library"];
+
+  const bookColors = ["from-blue-500 to-indigo-600", "from-purple-500 to-violet-600", "from-rose-400 to-pink-600", "from-emerald-400 to-green-600", "from-orange-400 to-amber-500", "from-cyan-400 to-teal-600", "from-red-400 to-rose-600", "from-yellow-400 to-orange-500", "from-fuchsia-500 to-purple-600", "from-sky-400 to-blue-600", "from-lime-400 to-green-500", "from-teal-400 to-cyan-600", "from-indigo-500 to-purple-600", "from-amber-400 to-yellow-500", "from-pink-400 to-rose-500", "from-violet-500 to-fuchsia-600", "from-slate-500 to-gray-700", "from-red-500 to-orange-500", "from-green-500 to-teal-600", "from-blue-400 to-cyan-500"];
+
+  const [randomBooks] = useState(() =>
+    Array.from({ length: 6 }, (_, index) => ({
+      title: bookTitles[Math.floor(Math.random() * bookTitles.length)],
+      color: bookColors[Math.floor(Math.random() * bookColors.length)],
+      rotate: Math.floor(Math.random() * 13) - 6,
+    })),
+  );
 
   return (
     <>
@@ -148,10 +101,8 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
 
             {/* Small colorful badge */}
             <div className="relative mb-3 flex items-center gap-2 rounded-full bg-linear-to-r from-blue-50 to-purple-50 px-3 py-1.5">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-yellow-100 text-sm">
-                ✨
-              </span>
-              <span className="flex items-center text-xs font-semibold text-blue-600 sm:text-sm gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-yellow-100 text-sm">✨</span>
+              <span className="flex items-center text-xs font-semibold text-blue-600 sm:text-sm lg:text-xl gap-2">
                 <h1>Your Library Space</h1>
                 <ImLibrary className="text-xl" />
               </span>
@@ -160,11 +111,9 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
             {/* Welcome text */}
             <div className="relative w-full">
               {/* Mobile */}
-              <span className="block text-base font-bold sm:text-xl md:hidden">
+              <span className="block text-base font-bold sm:text-xl lg:text-2xl md:hidden">
                 👋 Welcome back,{" "}
-                <span className="whitespace-nowrap text-blue-600">
-                  {user.name}
-                </span>
+                <span className="whitespace-nowrap text-blue-600">{user.name}</span>
               </span>
 
               {/* Desktop */}
@@ -183,16 +132,13 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
               </span>
             </div>
 
-            {/* Buttons */}
             <div className="relative mt-5 flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
               {/* View Books */}
               <button
                 onClick={() => setSelectedComponent("BooksManagement")}
                 className="group flex w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-blue-500 to-indigo-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:from-blue-600 hover:to-indigo-600 hover:shadow-md sm:w-auto sm:px-5 sm:text-sm"
               >
-                <span className="transition-transform duration-200 group-hover:rotate-6">
-                  📚
-                </span>
+                <span className="transition-transform duration-200 group-hover:rotate-6"> 📚</span>
                 View Our Books
               </button>
 
@@ -207,156 +153,31 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
             </div>
 
             {/* Tiny decorative elements */}
-            <span className="absolute right-0 top-20 md:top-25 text-3xl text-violet-700">
-              <IoLibrary />
-            </span>
-            <span className=" absolute top-1 right-2 rotate-45 text-md  text-yellow-400">
-              <FaAddressBook />
-            </span>
-            <span className=" absolute top-6 right-16 -rotate-20 text-xl text-pink-400">
-              <FaBookMedical />
-            </span>
-            <span className=" absolute top-6 right-6 rotate-30 text-xl text-red-400">
-              <FaBookSkull />
-            </span>
+            <span className="absolute right-0 top-20 md:top-25 text-3xl text-violet-700"><IoLibrary /></span>
+            <span className=" absolute top-1 right-2 rotate-45 text-md  text-yellow-400"><FaAddressBook /></span>
+            <span className=" absolute top-6 right-16 -rotate-20 text-xl text-pink-400"><FaBookMedical /></span>
+            <span className=" absolute top-6 right-6 rotate-30 text-xl text-red-400"><FaBookSkull /></span>
           </div>
 
           {/* RIGHT SIDE - Colorful Library Illustration */}
           <div className="flex w-full items-center justify-center px-0 sm:px-2 lg:w-1/2 lg:px-4">
-            <div className="relative h-55 w-full max-w-xl overflow-hidden rounded-3xl bg-linear-to-r from-sky-500 via-white to-purple-500 sm:h-52 md:h-56 lg:h-60">
-              {/* Background decorative blobs */}
-              <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-purple-100/70" />
-              <div className="absolute -bottom-14 -left-10 h-40 w-40 rounded-full bg-yellow-100/70" />
-              <div className="absolute left-1/2 top-4 h-20 w-20 rounded-full bg-pink-100/50" />
-
-              {/* Decorative dots */}
-              <div className="absolute left-5 top-8 h-2 w-2 rounded-full bg-blue-500 sm:left-8" />
-              <div className="absolute left-12 top-14 h-2 w-2 rounded-full bg-pink-400 sm:left-16" />
-              <div className="absolute right-16 top-8 h-2 w-2 rounded-full bg-yellow-400 sm:right-24" />
-              <div className="absolute bottom-8 right-5 h-2 w-2 rounded-full bg-green-400 sm:bottom-10 sm:right-10" />
-
-              {/* Stars */}
-              <span className="absolute left-8 top-5 text-lg text-yellow-400 sm:left-12 sm:top-6 sm:text-xl">
-                ✦
-              </span>
-              <span className="absolute right-16 top-10 text-base text-purple-400 sm:right-28 sm:top-12 sm:text-lg">
-                ✦
-              </span>
-              <span className="absolute bottom-6 right-8 text-lg text-pink-400 sm:right-16 sm:bottom-7 sm:text-xl">
-                ✧
-              </span>
-
-              {/* Lamp */}
-              <div className="absolute right-8 top-0 flex flex-col items-center sm:right-16">
-                <div className="h-7 w-0.5 bg-gray-400" />
-                <div className="h-5 w-12 rounded-b-full bg-yellow-400 shadow-md" />
-                <div className="h-2 w-8 rounded-full bg-yellow-200 blur-sm" />
+            <div className="relative flex h-55 w-full max-w-xl items-center justify-center overflow-hidden rounded-3xl sm:h-52 md:h-56 lg:h-60">
+              <div className="flex items-end justify-center -space-x-5">
+                {randomBooks.map((book, index) => (
+                  <div
+                    key={index}
+                    style={{ transform: `rotate(${book.rotate}deg)` }}
+                    className={`relative h-40 w-24 rounded-lg bg-linear-to-br ${book.color} border-2 border-white shadow-xl hover:rotate-0 sm:h-44 sm:w-27 md:h-48 md:w-28 ${index >= 4 ? "hidden sm:block" : ""}`}
+                  >
+                    <div className="absolute left-2 top-0 h-full w-1 bg-black/10" />
+                    <div className="absolute inset-2 rounded-md border border-white/30" />
+                    <div className="absolute inset-x-2 top-1/2 -translate-y-1/2 text-center">
+                      <p className="text-[10px] font-bold leading-tight text-white sm:text-xs">{book.title}</p>
+                    </div>
+                    <span className="absolute bottom-3 right-3 text-[9px] font-semibold text-white/60">{String(index + 1).padStart(2, "0")}</span>
+                  </div>
+                ))}
               </div>
-
-              {/* BOOKSHELF */}
-              <div className="absolute bottom-9 left-1/2 w-[78%] -translate-x-1/2 sm:w-[70%]">
-                {/* Top shelf */}
-                <div className="absolute -top-3 left-0 h-2 w-full rounded-full bg-indigo-600 shadow-sm" />
-
-                {/* Books */}
-                <div className="flex h-28 items-end justify-center gap-0.5 sm:gap-1">
-                  {/* Red book */}
-                  <div className="h-18 w-5 -rotate-2 rounded-t-md bg-rose-400 shadow-sm sm:w-7">
-                    <div className="mx-auto mt-4 h-1 w-3 rounded-full bg-rose-200 sm:w-4" />
-                  </div>
-
-                  {/* Blue book */}
-                  <div className="h-24 w-6 rounded-t-md bg-blue-600 shadow-sm sm:w-8">
-                    <div className="mx-auto mt-4 h-1 w-4 rounded-full bg-blue-300 sm:w-5" />
-                    <div className="mx-auto mt-2 h-8 w-0.5 bg-blue-300" />
-                  </div>
-
-                  {/* Green book */}
-                  <div className="h-16 w-5 rotate-2 rounded-t-md bg-emerald-400 shadow-sm sm:w-7">
-                    <div className="mx-auto mt-3 h-1 w-3 rounded-full bg-emerald-100 sm:w-4" />
-                  </div>
-
-                  {/* Purple book */}
-                  <div className="h-27 w-7 rounded-t-md bg-purple-600 shadow-sm sm:w-9">
-                    <div className="mx-auto mt-5 h-1 w-4 rounded-full bg-purple-300 sm:w-5" />
-                    <div className="mx-auto mt-2 h-10 w-0.5 bg-purple-300" />
-                  </div>
-
-                  {/* Yellow book */}
-                  <div className="h-20 w-5 -rotate-1 rounded-t-md bg-amber-400 shadow-sm sm:w-7">
-                    <div className="mx-auto mt-4 h-1 w-3 rounded-full bg-yellow-100 sm:w-4" />
-                  </div>
-
-                  {/* Orange book */}
-                  <div className="h-24.5 w-6 rounded-t-md bg-orange-500 shadow-sm sm:w-8">
-                    <div className="mx-auto mt-4 h-1 w-3 rounded-full bg-orange-200 sm:w-4" />
-                  </div>
-
-                  {/* Pink book */}
-                  <div className="h-17.5 w-5 rotate-2 rounded-t-md bg-pink-500 shadow-sm sm:w-7">
-                    <div className="mx-auto mt-3 h-1 w-3 rounded-full bg-pink-200 sm:w-4" />
-                  </div>
-                </div>
-
-                {/* Main shelf */}
-                <div className="h-3 w-full rounded-md bg-indigo-700 shadow-md" />
-
-                {/* Bottom books */}
-                <div className="mx-auto mt-2 flex h-8 w-[92%] items-end justify-center gap-1">
-                  <div className="h-6 w-8 rounded-sm bg-red-200 shadow-sm sm:w-12" />
-                  <div className="h-7 w-10 rounded-sm bg-blue-200 shadow-sm sm:w-14" />
-                  <div className="h-5 w-7 rounded-sm bg-green-200 shadow-sm sm:w-10" />
-                  <div className="h-6 w-8 rounded-sm bg-yellow-200 shadow-sm sm:w-12" />
-                </div>
-              </div>
-
-              {/* OPEN BOOK */}
-              <div className="absolute bottom-4 left-5 rotate-[-8deg] sm:bottom-5 sm:left-12">
-                <div className="relative flex">
-                  {/* Left page */}
-                  <div className="h-8 w-9 rounded-l-md bg-white shadow-md sm:h-10 sm:w-12">
-                    <div className="mx-2 mt-3 h-0.5 rounded-full bg-blue-200" />
-                    <div className="mx-2 mt-2 h-0.5 rounded-full bg-purple-200" />
-                    <div className="mx-2 mt-2 h-0.5 w-5 rounded-full bg-pink-200 sm:w-6" />
-                  </div>
-
-                  {/* Right page */}
-                  <div className="h-8 w-9 rounded-r-md bg-yellow-50 shadow-md sm:h-10 sm:w-12">
-                    <div className="mx-2 mt-3 h-0.5 rounded-full bg-yellow-300" />
-                    <div className="mx-2 mt-2 h-0.5 rounded-full bg-green-200" />
-                    <div className="mx-2 mt-2 h-0.5 w-5 rounded-full bg-blue-200 sm:w-6" />
-                  </div>
-
-                  {/* Center */}
-                  <div className="absolute left-1/2 top-0 h-8 w-px -translate-x-1/2 bg-gray-200 sm:h-10" />
-                </div>
-              </div>
-
-              {/* FLOATING BOOK */}
-              <div className="absolute bottom-9 right-8 rotate-12 sm:right-14 sm:bottom-10">
-                <div className="relative h-8 w-11 rounded-md bg-linear-to-r from-pink-500 to-purple-500 shadow-lg sm:h-10 sm:w-14">
-                  <div className="absolute left-2 top-2 h-1 w-6 rounded-full bg-pink-200 sm:w-8" />
-                  <div className="absolute left-2 top-5 h-1 w-4 rounded-full bg-purple-200 sm:w-5" />
-                  <div className="absolute right-2 top-0 h-5 w-2 bg-yellow-300 sm:h-6" />
-                </div>
-              </div>
-
-              {/* PLANT */}
-              <div className="absolute bottom-7 right-2 sm:bottom-8 sm:right-4">
-                <div className="relative">
-                  {/* Leaves */}
-                  <div className="absolute bottom-5 left-1 h-6 w-3 -rotate-35 rounded-full bg-green-400 sm:h-7 sm:w-4" />
-                  <div className="absolute bottom-6 left-4 h-7 w-3 rotate-35 rounded-full bg-emerald-500 sm:h-8 sm:w-4" />
-                  <div className="absolute bottom-5 left-6 h-5 w-3 rotate-60 rounded-full bg-lime-400 sm:h-6 sm:w-4" />
-
-                  {/* Pot */}
-                  <div className="mt-8 h-6 w-10 rounded-b-lg bg-orange-400 shadow-sm sm:h-7 sm:w-12" />
-                </div>
-              </div>
-
-              {/* Decorative lines */}
-              <div className="absolute bottom-12 left-4 h-0.5 w-5 rotate-[-20deg] rounded-full bg-pink-300 sm:bottom-14 sm:left-6 sm:w-6" />
-              <div className="absolute right-5 top-20 h-0.5 w-6 rotate-20 rounded-full bg-blue-300 sm:right-8 sm:top-24 sm:w-8" />
             </div>
           </div>
         </div>
@@ -366,9 +187,7 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
           {/* ================= LEFT - LIBRARY ACTIVITY ================= */}
           <div className="rounded-2xl bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-center gap-3">
-              <h2 className="mb-5 text-xl font-mono text-center font-semibold text-purple-800">
-                Library Activity
-              </h2>
+              <h2 className="mb-5 text-xl font-mono text-center font-semibold text-purple-800">Library Activity</h2>
               <MdLocalLibrary className="text-3xl mb-5 text-purple-400" />
             </div>
 
@@ -376,126 +195,153 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
               {/**Total Borrowed Books */}
               <div className="flex items-center justify-between rounded-xl bg-yellow-50 p-2 md:p-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg bg-yellow-200">
-                    📚
-                  </div>
-
-                  <div>
-                    <p className="font-medium text-sm md:text-md text-yellow-800">
-                      Total Borrowed Books
-                    </p>
-                  </div>
+                  <div className="flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg bg-yellow-200">📚</div>
+                  <p className="font-medium text-sm md:text-md text-yellow-800">Total Borrowed Books</p>
                 </div>
-
-                <span className="text-xl md:text-2xl font-bold text-yellow-600">
-                  {String(totalBorrowedBooks + totalReturnedBooks).padStart(
-                    2,
-                    "0",
-                  )}
-                </span>
+                <span className="text-xl md:text-2xl font-bold text-yellow-600">{String(totalBorrowedBooks).padStart(2, "0")}</span>
               </div>
 
-              {/* Borrowed */}
+              {/** Borrowed */}
               <div className="flex items-center justify-between rounded-xl bg-blue-50 p-2 md:p-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg bg-blue-200">
-                    📔
-                  </div>
-
-                  <div>
-                    <p className="font-medium text-sm md:text-md text-blue-800">
-                      Currently Borrowed Books
-                    </p>
-                  </div>
+                  <div className="flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg bg-blue-200">📔</div>
+                  <p className="font-medium text-sm md:text-md text-blue-800">Currently Borrowed Books</p>
                 </div>
-
-                <span className="text-xl md:text-2xl font-bold text-blue-600">
-                  {String(totalBorrowedBooks).padStart(2, "0")}
-                </span>
+                <span className="text-xl md:text-2xl font-bold text-blue-600">{String(currentlyBorrowedBooks).padStart(2, "0")}</span>
               </div>
 
-              {/* Returned */}
+              {/** Returned */}
               <div className="flex items-center justify-between rounded-xl bg-green-50 p-2 md:p-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg bg-green-200">
-                    ✓
-                  </div>
-
-                  <div>
-                    <p className="font-medium text-sm md:text-md text-green-800">
-                      Returned Books
-                    </p>
-                  </div>
+                  <div className="flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg bg-green-200">✓</div>
+                  <p className="font-medium text-sm md:text-md text-green-800">Returned Books</p>
                 </div>
-
-                <span className="text-xl md:text-2xl font-bold text-green-600">
-                  {String(totalReturnedBooks).padStart(2, "0")}
-                </span>
+                <span className="text-xl md:text-2xl font-bold text-green-600">{String(totalReturnedBooks).padStart(2, "0")}</span>
               </div>
 
-              {/* Overdue */}
+              {/** Overdue */}
               <div className="flex items-center justify-between rounded-xl bg-red-50 p-2 md:p-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg bg-red-200">
-                    ⚠
-                  </div>
-
-                  <div>
-                    <p className="font-medium text-sm md:text-md text-red-800">
-                      Overdue Books
-                    </p>
-                  </div>
+                  <div className="flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg bg-red-200">⚠</div>
+                  <p className="font-medium text-sm md:text-md text-red-800">Overdue Books</p>
                 </div>
-
-                <span className="text-xl md:text-2xl font-bold text-red-600">
-                  {String(totalOverDueBooks).padStart(2, "0")}
-                </span>
+                <span className="text-xl md:text-2xl font-bold text-red-600">{String(totalOverDueBooks + 2).padStart(2, "0")}</span>
               </div>
             </div>
           </div>
 
-          {/* ================= RIGHT - GRAPH ================= */}
+          {/** RIGHT GRAPH */}
           <div className="rounded-2xl bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-center gap-3">
-              <h2 className="mb-5 text-xl font-mono text-center font-semibold text-yellow-500">
-                Borrowing Overview
-              </h2>
+              <h2 className="mb-5 text-xl font-mono text-center font-semibold text-yellow-500">Borrowing Overview</h2>
               <FaChartPie className="text-3xl mb-5 text-yellow-400" />
             </div>
 
-            <div className="flex h-72 md:h-100 w-full items-center justify-center">
-              <div className="relative h-full w-full max-w-lg flex justify-center">
-                <Pie data={data} options={{ cutout: 0 }} />
-              </div>
+          <div className="flex h-72 md:h-100 w-full items-center justify-center">
+            <div className="relative h-full w-full max-w-lg flex justify-center">
+              <Pie data={data} options={{ cutout: 0 }} />
             </div>
           </div>
         </div>
+      </div>
 
         {/**OverDue Books and Upcoming Returns */}
         <div className="mx-auto mt-6 grid w-11/12 grid-cols-1 gap-5 md:grid-cols-2">
           {/**Overdue Books */}
-           <div className="rounded-2xl bg-white p-6 shadow-2xl">
+          <div className="rounded-2xl bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-center gap-3">
-              <h2 className="mb-5 text-xl font-mono text-center font-semibold text-red-400">
-                OverDue Book List
-              </h2>
+              <h2 className="mb-5 text-xl font-mono text-center font-semibold text-red-400">OverDue Book List</h2>
               <FcOvertime className="text-3xl mb-5 text-red-400" />
+            </div>
+            <div>
+              {booksOverdue?.length > 0 ? (
+                <div className="w-full overflow-x-auto rounded-xl border border-red-100">
+                  <table className="w-full min-w-125 text-left">
+                    <thead className="bg-red-50">
+                      <tr>
+                        <th className="p-2 flex justify-center items-center text-gray-700">SL no.</th>
+                        <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Book Name</th>
+                        <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Due Date Passed</th>
+                      </tr>
+                    </thead>
+
+                    <tbody className="divide-y divide-gray-100 bg-white">
+                      {booksOverdue.map((book, index) => (
+                        <tr
+                          key={index}
+                          className="transition hover:bg-red-50/40"
+                        >
+                          <td className="p-2 flex justify-center items-center">{index + 1}</td>
+                          <td className="px-4 py-3 sm:px-5">
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm font-semibold text-gray-700">{book.bookName}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600 sm:px-5">{new Date(book.dueDate).toLocaleDateString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="flex min-h-32 flex-col items-center justify-center rounded-xl border-2 border-red-200 bg-red-50 px-4 text-center">
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-red-200 text-red-700 text-2xl font-bold">✓</div>
+                  <p className="text-xl font-bold text-red-700 sm:text-base">No Overdue Books</p>
+                  <p className="text-sm font-bold text-red-500">Thank You for your cooperation</p>
+                </div>
+              )}
             </div>
           </div>
 
           {/**Upcoming returns */}
           <div className="rounded-2xl bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-center gap-3">
-              <h2 className="mb-5 text-xl font-mono text-center font-semibold text-blue-400">
-                Upcoming Returns
-              </h2>
-              <PiKeyReturnFill className="text-3xl mb-5 text-blue-400" />
+              <h2 className="mb-5 text-xl font-mono text-center font-semibold text-green-400">Upcoming Returns</h2>
+              <PiKeyReturnFill className="text-3xl mb-5 text-green-400" />
+            </div>
+            <div>
+              {upcomingReturns.length > 0 ? (
+                <div className="w-full overflow-x-auto rounded-xl border border-red-100">
+                  <table className="w-full min-w-125 text-left">
+                    <thead className="bg-green-50">
+                      <tr>
+                        <td className="p-2 flex justify-center items-center text-gray-700">SL no.</td>
+                        <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Book Name</th>
+                        <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Due Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 bg-white">
+                      {upcomingReturns.map((book, index) => (
+                        <tr
+                          key={index}
+                          className="transition hover:bg-red-50/40"
+                        >
+                          <td className="p-2 flex justify-center items-center">{index + 1}</td>
+                          <td className="px-4 py-3 sm:px-5">
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm font-semibold text-gray-700">{book.bookName}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600 sm:px-5">{new Date(book.dueDate).toLocaleDateString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="flex min-h-32 flex-col items-center justify-center rounded-xl border-2 border-green-200 bg-green-50 px-4 text-center">
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-green-200 text-green-700 text-2xl font-bold">
+                    ✓
+                  </div>
+                  <p className="text-xl font-bold text-green-700 sm:text-base">No Upcoming Returns</p>
+                  <p className="text-sm font-bold text-green-500">You're all caught up for now!</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-
-      <section></section>
+      
       {settingPopup && <SettingPopUp />}
     </>
   );
