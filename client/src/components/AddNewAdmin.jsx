@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import placeHolder from "../assets/placeholder.jpg";
-import closeIcon from "../assets/close-square.png";
 import keyIcon from "../assets/key.png";
 import { useDispatch, useSelector } from "react-redux";
 
