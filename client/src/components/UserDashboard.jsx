@@ -225,7 +225,7 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
                   <div className="flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg bg-red-200">⚠</div>
                   <p className="font-medium text-sm md:text-md text-red-800">Overdue Books</p>
                 </div>
-                <span className="text-xl md:text-2xl font-bold text-red-600">{String(totalOverDueBooks + 2).padStart(2, "0")}</span>
+                <span className="text-xl md:text-2xl font-bold text-red-600">{String(totalOverDueBooks).padStart(2, "0")}</span>
               </div>
             </div>
           </div>
