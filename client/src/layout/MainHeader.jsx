@@ -6,7 +6,6 @@ import { Navigate } from "react-router-dom";
 
 import logo from "../assets/logo.png";
 
-import { toggleSettingPopup } from "../store/slices/popUpSlice";
 import { logout } from "../store/slices/authSlice";
 
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -16,9 +15,7 @@ import { GiBookshelf } from "react-icons/gi";
 import { IoBookSharp } from "react-icons/io5";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { RiUserSearchFill } from "react-icons/ri";
-import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoMdLogOut } from "react-icons/io";
-import { IoIosNotifications } from "react-icons/io";
 
 const MainHeader = ({ toggleSidebar, selectedComponent,setSelectedComponent }) => {
   const dispatch = useDispatch();
