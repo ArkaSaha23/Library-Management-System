@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { GiHamburgerMenu } from "react-icons/gi";
 import { MdDashboard } from "react-icons/md";
 import { GrCatalog } from "react-icons/gr";
 import { PiBooksFill } from "react-icons/pi";
@@ -10,8 +9,6 @@ import { FaUserPen } from "react-icons/fa6";
 import { FaUserCog } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { RiUserSearchFill } from "react-icons/ri";
-import { IoSettings } from "react-icons/io5";
-import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoMdLogOut } from "react-icons/io";
 import { FaTimes } from "react-icons/fa";
 
