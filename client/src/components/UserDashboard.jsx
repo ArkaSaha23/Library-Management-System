@@ -76,6 +76,18 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
     ],
   };
 
+  const formatDateTime = (timeStamp) => {
+    const date = new Date(timeStamp);
+
+    const day = `${String(date.getDate()).padStart(2, "0")}`;
+    const month = `${String(date.getMonth() + 1).padStart(2, "0")}`;
+    const year = `${String(date.getFullYear())}`;
+    const borrowedDate = `${day}-${month}-${year}`;
+    const hours = `${String(date.getHours()).padStart(2, 0)}`;
+    const borrowedTime = `${hours}:00:00`;
+    return `${borrowedDate} before ${borrowedTime}`;
+  };
+
  const bookTitles = ["Pride and Prejudice", "1984", "The Great Gatsby", "The Alchemist", "The Hobbit", "Animal Farm", "The Little Prince", "The Book Thief", "Jane Eyre", "Little Women", "The Guide", "Malgudi Days", "Train to Pakistan", "Midnight's Children", "The God of Small Things", "The White Tiger", "A Suitable Boy", "Swami and Friends", "The Namesake", "Gitanjali", "Pather Panchali", "Devdas", "Chokher Bali", "Aranyak", "Gora", "Srikanta", "Durgeshnandini", "Kapalkundala", "Mahesh", "Hajar Churashir Ma", "To Kill a Mockingbird", "The Catcher in the Rye", "The Lord of the Rings", "Harry Potter", "The Kite Runner", "A Thousand Splendid Suns", "The Old Man and the Sea", "Crime and Punishment", "Great Expectations", "Oliver Twist", "Wuthering Heights", "The Picture of Dorian Gray", "The Adventures of Sherlock Holmes", "Moby-Dick", "Don Quixote", "The Odyssey", "The Iliad", "War and Peace", "The Brothers Karamazov", "The Stranger"];
 
   const bookColors = ["from-blue-500 to-indigo-600", "from-purple-500 to-violet-600", "from-rose-400 to-pink-600", "from-emerald-400 to-green-600", "from-orange-400 to-amber-500", "from-cyan-400 to-teal-600", "from-red-400 to-rose-600", "from-yellow-400 to-orange-500", "from-fuchsia-500 to-purple-600", "from-sky-400 to-blue-600", "from-lime-400 to-green-500", "from-teal-400 to-cyan-600", "from-indigo-500 to-purple-600", "from-amber-400 to-yellow-500", "from-pink-400 to-rose-500", "from-violet-500 to-fuchsia-600", "from-slate-500 to-gray-700", "from-red-500 to-orange-500", "from-green-500 to-teal-600", "from-blue-400 to-cyan-500"];
@@ -90,9 +102,9 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
 
   return (
     <>
-      <div className="w-full px-3 py-6 md:px-6 bg-gray-300">
+      <main className="w-full px-3 py-6 md:px-6 bg-gray-300">
         {/* ================= WELCOME BANNER ================= */}
-        <div className="mx-auto my-2 flex h-auto min-h-75 w-11/12 flex-col items-center justify-between gap-6 rounded-2xl bg-linear-to-r from-indigo-50 via-violet-50 to-blue-50 px-4 py-5 shadow-md sm:px-6 md:px-8 md:mt-8 lg:mt-3 lg:h-75 lg:flex-row lg:gap-2 lg:py-0">
+        <section className="mx-auto my-2 flex h-auto min-h-75 w-11/12 flex-col items-center justify-between gap-6 rounded-2xl bg-linear-to-r from-indigo-50 via-violet-50 to-blue-50 px-4 py-5 shadow-md sm:px-6 md:px-8 md:mt-8 lg:mt-3 lg:h-75 lg:flex-row lg:gap-2 lg:py-0">
           {/* LEFT SIDE - Colorful Welcome Section */}
           <div className="relative flex w-full flex-col items-start justify-center overflow-hidden px-2 py-2 sm:px-4 lg:w-1/2 lg:px-6">
             {/* Soft background decorations */}
@@ -185,10 +197,10 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* ================= DASHBOARD CONTENT ================= */}
-        <div className="mx-auto mt-6 grid w-11/12 grid-cols-1 gap-5 md:grid-cols-2">
+        <section className="mx-auto mt-6 grid w-11/12 grid-cols-1 gap-5 md:grid-cols-2">
           {/* ================= LEFT - LIBRARY ACTIVITY ================= */}
           <div className="rounded-2xl bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-center gap-3">
@@ -248,10 +260,10 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
             </div>
           </div>
         </div>
-      </div>
+        </section>
 
         {/**OverDue Books and Upcoming Returns */}
-        <div className="mx-auto mt-6 grid w-11/12 grid-cols-1 gap-5 md:grid-cols-2">
+        <section className="mx-auto mt-6 grid w-11/12 grid-cols-1 gap-5 md:grid-cols-2">
           {/**Overdue Books */}
           <div className="rounded-2xl bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-center gap-3">
@@ -282,7 +294,7 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
                               <span className="text-sm font-semibold text-gray-700">{book.bookName}</span>
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600 sm:px-5">{new Date(book.dueDate).toLocaleDateString()}</td>
+                          <td className="px-4 py-3 text-sm text-gray-600 sm:px-5">{formatDateTime(book.dueDate)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -324,10 +336,10 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
                           <td className="p-2 flex justify-center items-center">{index + 1}</td>
                           <td className="px-4 py-3 sm:px-5">
                             <div className="flex items-center gap-3">
-                              <span className="text-sm font-semibold text-gray-700">{book.bookName}</span>
+                              <span className="text-sm font-semibold text-gray-700">{book.BookName}</span>
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600 sm:px-5">{new Date(book.dueDate).toLocaleDateString()}</td>
+                          <td className="px-4 py-3 text-sm text-gray-600 sm:px-5">{formatDateTime(book.Duedate)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -344,8 +356,9 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
               )}
             </div>
           </div>
-        </div>
-      </div>
+        </section>
+        
+      </main>
       
       {settingPopup && <SettingPopUp />}
     </>
