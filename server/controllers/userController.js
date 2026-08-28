@@ -8,7 +8,6 @@ const { v2: cloudinary } = pkg;
 //get all the registeresd user//ADMIN
 export const getallUsers = catchAsyncErrors(async (req, res, next) => {
   const alluser = await UserDataSchema.find({
-    role: "User",
     accountVerified: true,
   });
   res.status(200).json({
