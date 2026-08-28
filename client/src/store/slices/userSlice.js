@@ -59,7 +59,6 @@ export const fetchAllUsers = () => async (dispatch) => {
       },
     );
     console.log(res)
-    toast.success("These is the List of Users")
     dispatch(UserSlice.actions.fetchAllUsersSuccess(res.data));
   } catch (err) {
     dispatch(
