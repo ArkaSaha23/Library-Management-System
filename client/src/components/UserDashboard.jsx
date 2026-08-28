@@ -129,13 +129,13 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
             <div className="relative w-full">
               {/* Mobile */}
               <span className="block text-base font-bold sm:text-xl lg:text-2xl md:hidden">
-                👋 Welcome back,{" "}
+                👋 Your Dashboard,{" "}
                 <span className="whitespace-nowrap text-blue-600">{user.name}</span>
               </span>
 
               {/* Desktop */}
               <span className="hidden text-2xl font-bold md:block lg:text-3xl">
-                👋 Welcome back,{" "}
+                👋 Your Dashboard,{" "}
                 <span className="text-blue-600">{user.name}</span>
               </span>
 

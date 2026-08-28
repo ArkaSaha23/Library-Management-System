@@ -34,7 +34,7 @@ const AdminDashboard = ({ selectedComponent, setSelectedComponent }) => {
     dispatch(getAllBorrowedBooks());
     dispatch(fetchAllUsers());
     dispatch(getAllBooks());
-  }, [dispatch,getAllBooks,getAllBorrowedBooks,fetchAllUsers]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (message || bookMsg) {
