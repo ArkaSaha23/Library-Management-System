@@ -7,7 +7,7 @@ const Users = () => {
   const dispatch = useDispatch();
   useEffect(()=>{
     dispatch(fetchAllUsers());
-    toast.success()
+    toast.success("Here is the list of the users")
   },[dispatch])
   const usersArray = useSelector((state) => state.userReducer.users);
 
@@ -107,7 +107,8 @@ const Users = () => {
             </thead>
 
             <tbody>
-              {searchedUsers?.map((user, index) => (
+              {searchedUsers?.map((user, index) => 
+                user?.role === "User" ? (
                 <tr
                   key={user._id}
                   className="transition-colors hover:bg-gray-300"
@@ -164,7 +165,7 @@ const Users = () => {
                     {formatDateTime(user.updatedAt)}
                   </td>
                 </tr>
-              ))}
+              ) : null )}
             </tbody>
           </table>
         </div>
