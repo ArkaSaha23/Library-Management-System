@@ -3,7 +3,7 @@ import ErrorHandler from "../middlewares/errorMiddleware.js";
 import { UserDataSchema } from "../models/userModels.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { sendVerificationCode } from "../utils/sendverificationCode.js";
+import { sendVerificationCode } from "../utils/sendVerificationCode.js";
 import { sendTokens } from "../utils/sendTokens.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import { ForgetPasswordEmailTemplate } from "../utils/ForgetPasswardEmailTemplate.js";
