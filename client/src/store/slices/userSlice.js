@@ -51,14 +51,14 @@ export const fetchAllUsers = () => async (dispatch) => {
   try {
     dispatch(UserSlice.actions.fetchAllUserRequest());
     const res = await axios.get(
-      "http://localhost:3504/api/v1/user/getAllUsers",
+      "https://library-management-backend-n88q.onrender.com/api/v1/user/getAllUsers",
 
       {
         withCredentials: true,
-         //hearder:{}not required as we are not sending any data or request body
+        //hearder:{}not required as we are not sending any data or request body
       },
     );
-    console.log(res)
+    console.log(res);
     dispatch(UserSlice.actions.fetchAllUsersSuccess(res.data));
   } catch (err) {
     dispatch(
@@ -75,13 +75,13 @@ export const addNewAdmin = (formData) => async (dispatch) => {
     dispatch(UserSlice.actions.addNewAdminRequest());
 
     const res = await axios.post(
-      "http://localhost:3504/api/v1/user/RegisterNewAdmin",
+      "https://library-management-backend-n88q.onrender.com/api/v1/user/RegisterNewAdmin",
       formData,
       {
         withCredentials: true,
-        header:{
-          "Content-Type":"multipart/form-data"
-        }
+        header: {
+          "Content-Type": "multipart/form-data",
+        },
       },
     );
     dispatch(UserSlice.actions.addNewAdminSuccess());
@@ -95,6 +95,5 @@ export const addNewAdmin = (formData) => async (dispatch) => {
     );
   }
 };
-
 
 export default UserSlice.reducer;

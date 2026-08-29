@@ -124,15 +124,16 @@ const BorrowSlice = createSlice({
 
 //FUNCTIONS
 // add/record books
-export const borrowBook = (email,id) => async (dispatch) => {
+export const borrowBook = (email, id) => async (dispatch) => {
   try {
     dispatch(BorrowSlice.actions.borrowBookRequest());
     const res = await axios.post(
-      `http://localhost:3504/api/v1/borrow/borrowBook/${id}`,{email},
+      `https://library-management-backend-n88q.onrender.com/api/v1/borrow/borrowBook/${id}`,
+      { email },
       {
         withCredentials: true,
-        headers:{
-          "Content-Type":"application/json",
+        headers: {
+          "Content-Type": "application/json",
         },
       },
     );
@@ -146,59 +147,64 @@ export const borrowBook = (email,id) => async (dispatch) => {
   }
 };
 //return book
-export const returnBook = ({email,bookId}) => async (dispatch) => {
-  try {
-    dispatch(BorrowSlice.actions.returnBookRequest());
-    const res = await axios.put(
-      `http://localhost:3504/api/v1/borrow/returnBook/${bookId}`,{email},
-      {
-        withCredentials: true,
-        headers:{
-          "Content-Type":"application/json",
+export const returnBook =
+  ({ email, bookId }) =>
+  async (dispatch) => {
+    try {
+      dispatch(BorrowSlice.actions.returnBookRequest());
+      const res = await axios.put(
+        `https://library-management-backend-n88q.onrender.com/api/v1/borrow/returnBook/${bookId}`,
+        { email },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      },
-    );
-    dispatch(BorrowSlice.actions.returnBookSuccess(res.data));
-    dispatch(toggleReturnBookPopup());
-  } catch (err) {
-    dispatch(
-      BorrowSlice.actions.returnBookFailed(
-        err.response.data.message || "Something went wrong",
-      ),
-    );
-  }
-};
+      );
+      dispatch(BorrowSlice.actions.returnBookSuccess(res.data));
+      dispatch(toggleReturnBookPopup());
+    } catch (err) {
+      dispatch(
+        BorrowSlice.actions.returnBookFailed(
+          err.response.data.message || "Something went wrong",
+        ),
+      );
+    }
+  };
 
 //renew book
-export const renewBook = ({email,id}) => async (dispatch) => {
-  try {
-    dispatch(BorrowSlice.actions. renewBookRequest());
-    const res = await axios.put(
-      `http://localhost:3504/api/v1/borrow/renewBook/${id}`,{email},
-      {
-        withCredentials: true,
-        headers:{
-          "Content-Type":"application/json",
+export const renewBook =
+  ({ email, id }) =>
+  async (dispatch) => {
+    try {
+      dispatch(BorrowSlice.actions.renewBookRequest());
+      const res = await axios.put(
+        `https://library-management-backend-n88q.onrender.com/api/v1/borrow/renewBook/${id}`,
+        { email },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      },
-    );
-    dispatch(BorrowSlice.actions. renewBookSuccess(res.data));
-  } catch (err) {
-    dispatch(
-      BorrowSlice.actions. renewBookFailed(
-        err.response.data.message || "Something went wrong",
-      ),
-    );
-  }
-};
-
+      );
+      dispatch(BorrowSlice.actions.renewBookSuccess(res.data));
+    } catch (err) {
+      dispatch(
+        BorrowSlice.actions.renewBookFailed(
+          err.response.data.message || "Something went wrong",
+        ),
+      );
+    }
+  };
 
 //for user to get his borrowed books
 export const seeBorrowedBook = () => async (dispatch) => {
   try {
     dispatch(BorrowSlice.actions.seeBorrowedBookRequest());
     const res = await axios.get(
-      "http://localhost:3504/api/v1/borrow/seeBorrowedBooks",
+      "https://library-management-backend-n88q.onrender.com/api/v1/borrow/seeBorrowedBooks",
       {
         withCredentials: true,
       },
@@ -218,7 +224,7 @@ export const getAllBorrowedBooks = () => async (dispatch) => {
   try {
     dispatch(BorrowSlice.actions.getAllBorrowedBooksRequest());
     const res = await axios.get(
-      "http://localhost:3504/api/v1/borrow/getAllBorrowedBooks",
+      "https://library-management-backend-n88q.onrender.com/api/v1/borrow/getAllBorrowedBooks",
       {
         withCredentials: true,
       },
@@ -239,7 +245,7 @@ export const getBorrowedBooksByUser = () => async (dispatch) => {
   try {
     dispatch(BorrowSlice.actions.getBorrowedBooksByUserRequest());
     const res = await axios.get(
-      "http://localhost:3504/api/v1/borrow/getBorrowedBooksByUser",
+      "https://library-management-backend-n88q.onrender.com/api/v1/borrow/getBorrowedBooksByUser",
       {
         withCredentials: true,
       },
@@ -257,7 +263,7 @@ export const getBorrowedBooksByUser = () => async (dispatch) => {
   }
 };
 
-export const resetBorrowSlice = () => async(dispatch) => {
+export const resetBorrowSlice = () => async (dispatch) => {
   dispatch(BorrowSlice.actions.resetBorrowSlice());
 };
 
