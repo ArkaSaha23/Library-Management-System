@@ -3,7 +3,7 @@ export const sendEmail = async ({ email, subject, message }) => {
   //This creates a transporter. A transporter is the object that actually connects to the email server and sends mail.
   const transporter = nodeMailer.createTransport({
     host: process.env.SMTP_HOST, //Gmail SMTP server
-    service: process.env.SMTP_SERVICE,//Tells Nodemailer to use Gmail
+    //service: process.env.SMTP_SERVICE,//Tells Nodemailer to use Gmail
     port: process.env.SMTP_PORT,//Secure SMTP port
     secure:true,             
     auth: {
