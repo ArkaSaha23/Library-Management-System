@@ -93,7 +93,7 @@ export const getAllBooks = () => async (dispatch) => {
     dispatch(BookSlice.actions.getBookRequest());
 
     const res = await axios.get(
-      "http://localhost:3504/api/v1/books/getAllBook",
+      "https://library-management-backend-n88q.onrender.com/api/v1/books/getAllBook",
       {
         withCredentials: true,
       },
@@ -115,7 +115,7 @@ export const AddBooks = (bookInformation) => async (dispatch) => {
     dispatch(BookSlice.actions.addBookRequest());
 
     const res = await axios.post(
-      "http://localhost:3504/api/v1/books/admin/addBook",
+      "https://library-management-backend-n88q.onrender.com/api/v1/books/admin/addBook",
       bookInformation,
       {
         withCredentials: true,
@@ -139,7 +139,7 @@ export const updateBooks = (id) => async (dispatch) => {
     dispatch(BookSlice.actions.updateBookRequest());
 
     const res = await axios.patch(
-    `http://localhost:3504/api/v1/books/admin/updateBook/${id}`,
+      `https://library-management-backend-n88q.onrender.com/api/v1/books/admin/updateBook/${id}`,
       bookInformation,
       {
         withCredentials: true,
@@ -150,7 +150,7 @@ export const updateBooks = (id) => async (dispatch) => {
     dispatch(BookSlice.actions.updateBookSuccess(res.data));
   } catch (err) {
     dispatch(
-      BookSlice.actions. updateBookfailed(
+      BookSlice.actions.updateBookfailed(
         err.response.data.message || "SomeThing Gone Wrong",
       ),
     );
@@ -162,7 +162,7 @@ export const deleteBook = (id) => async (dispatch) => {
     dispatch(BookSlice.actions.deleteBookRequest());
 
     const res = await axios.delete(
-      `http://localhost:3504/api/v1/books/admin/deleteBook/${id}`,
+      `https://library-management-backend-n88q.onrender.com/api/v1/books/admin/deleteBook/${id}`,
       bookInformation,
       {
         withCredentials: true,
@@ -180,7 +180,7 @@ export const deleteBook = (id) => async (dispatch) => {
   }
 };
 
-export const resetBookSlice = () => (dispatch) =>{
+export const resetBookSlice = () => (dispatch) => {
   dispatch(BookSlice.actions.resetBookSlice());
 };
 
