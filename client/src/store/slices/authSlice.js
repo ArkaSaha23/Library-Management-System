@@ -174,7 +174,7 @@ export const register = (data) => async (dispatch) => {
 
     // 2. Make API call,res = what backend sends us
     const res = await axios.post(
-      "http://localhost:3504/api/v1/auth/register",
+      "https://library-management-backend-n88q.onrender.com/api/v1/auth/register",
       data,
       {
         withCredentials: true,
@@ -205,7 +205,7 @@ export const OTPverification =
 
       //2. Make API call
       const res = await axios.post(
-        "http://localhost:3504/api/v1/auth/verifyOTP",
+        "https://library-management-backend-n88q.onrender.com/api/v1/auth/verifyOTP",
         {
           email,
           OTP,
@@ -239,7 +239,7 @@ export const login =
 
       //2. api call to login
       const res = await axios.post(
-        "http://localhost:3504/api/v1/auth/login",
+        "https://library-management-backend-n88q.onrender.com/api/v1/auth/login",
         { email, password },
         {
           withCredentials: true,
@@ -248,9 +248,9 @@ export const login =
           },
         },
       );
-      console.log("backend response:",res)
-      console.log("usefull backend response:",res.data)
-      
+      console.log("backend response:", res);
+      console.log("usefull backend response:", res.data);
+
       //3. dispatch the success state with payload
       dispatch(AuthSlice.actions.loginSuccess(res.data));
     } catch (err) {
@@ -268,12 +268,15 @@ export const logout = () => async (dispatch) => {
   //here loading=true,spinner starts
 
   await axios //API call
-    .get("http://localhost:3504/api/v1/auth/logout", {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
+    .get(
+      "https://library-management-backend-n88q.onrender.com/api/v1/auth/logout",
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    })
+    )
     .then((res) => {
       dispatch(AuthSlice.actions.logoutSuccess(res.data));
       dispatch(AuthSlice.actions.resetAuthSlice());
@@ -292,12 +295,15 @@ export const getUser = () => async (dispatch) => {
   //here loading=true,spinner starts
 
   await axios //API call
-    .get("http://localhost:3504/api/v1/auth/me", {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
+    .get(
+      "https://library-management-backend-n88q.onrender.com/api/v1/auth/me",
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    })
+    )
     .then((res) => {
       dispatch(AuthSlice.actions.getUserSuccess(res.data));
     })
@@ -318,7 +324,7 @@ export const forgetPassword =
 
     await axios //API call
       .post(
-        "http://localhost:3504/api/v1/auth/forgotpassword",
+        "https://library-management-backend-n88q.onrender.com/api/v1/auth/forgotpassword",
         { email },
         {
           withCredentials: true,
@@ -344,12 +350,16 @@ export const resetPassword = (data, token) => async (dispatch) => {
   //here loading=true,spinner starts
 
   await axios //API call
-    .put(`http://localhost:3504/api/v1/auth/resetpassword/${token}`, data, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
+    .put(
+      `https://library-management-backend-n88q.onrender.com/api/v1/auth/resetpassword/${token}`,
+      data,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    })
+    )
     .then((res) => {
       dispatch(AuthSlice.actions.resetPasswordSuccess(res.data));
     })
@@ -367,12 +377,16 @@ export const updatePassword = (data) => async (dispatch) => {
   //here loading=true,spinner starts
 
   await axios //API call
-    .put("http://localhost:3504/api/v1/auth/updatepassword", data, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
+    .put(
+      "https://library-management-backend-n88q.onrender.com/api/v1/auth/updatepassword",
+      data,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    })
+    )
     .then((res) => {
       dispatch(AuthSlice.actions.updatePasswordSuccess(res.data));
     })
