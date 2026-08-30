@@ -248,8 +248,6 @@ export const login =
           },
         },
       );
-      console.log("backend response:", res);
-      console.log("usefull backend response:", res.data);
 
       //3. dispatch the success state with payload
       dispatch(AuthSlice.actions.loginSuccess(res.data));
