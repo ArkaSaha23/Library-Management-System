@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import Home from "./pages/Home";
 import LandingPage from "./Home/LandingPage";
@@ -14,22 +14,31 @@ import UpdatePassword from "./pages/UpdatePassword";
 import { ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./store/slices/authSlice";
-import { fetchAllUsers } from "./store/slices/userSlice";
-import { getAllBooks } from "./store/slices/bookSlice";
 
 const App = () => {
-  const {isAuthenticated } = useSelector((state) => state.authReducer);
+  const {isAuthenticated,initialized } = useSelector((state) => state.authReducer);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUser());
-  }, [isAuthenticated]);
+  }, [dispatch]);
+  console.log(isAuthenticated);
+
+   if (!initialized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <p className="text-lg font-medium text-gray-600">
+          Checking Authentication...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route path="/"                       element={isAuthenticated ? <Home /> : <Login />}/>
-          <Route path="/Home"                   element={<Home />} />
+          <Route path="/Home"                   element={isAuthenticated ? <Home /> : <Navigate to="/Login" replace/>} />
           <Route path="/Login"                  element={<Login />} />
           <Route path="/Register"               element={<Register />} />
           <Route path="/ResetPassword/:token"   element={<ResetPassword />} />

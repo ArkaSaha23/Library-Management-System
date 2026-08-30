@@ -11,21 +11,50 @@ import Users from "../components/Users";
 import UserDashboard from "../components/UserDashboard";
 import MyBorrowedBooks from "../components/MyBorrowedBooks";
 import AddNewAdmin from "../components/AddNewAdmin";
+import { Navigate } from "react-router-dom";
 
-const Home = ({
- 
-}) => {
+const Home = () => {
   const [isSideBarOpen, setSidebar] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState("Dashboard");
-
-  const user = useSelector((state) => state.authReducer.user);
-  const isAuthenticated = useSelector(
-    (state) => state.authReducer.isAuthenticated,
-  );
+  const {user,isAuthenticated} = useSelector((state) => state.authReducer);
 
   const toggleSidebar = () => {
     setSidebar((prev) => !prev);
   };
+
+  if (!isAuthenticated) {
+  return <Navigate to="/Login" replace />;
+  }
+
+  const renderComponent = () => {
+    switch (selectedComponent) {
+      case "Dashboard":
+        return user?.role === "Admin" ? (
+          <AdminDashboard selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}/>
+        ) : (
+          <UserDashboard selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}/>
+        );
+
+      case "BooksManagement": return <BooksManagement />;
+
+      case "BorrowedBooks": return <MyBorrowedBooks />;
+
+      case "BorrowingManagement": return user?.role === "Admin" ? ( <BorrowingManagement /> ) : (null);
+
+      case "Users": return user?.role === "Admin" ? (<Users />) : (null);
+
+      case "AddNewAdmin": return user?.role === "Admin" ? (<AddNewAdmin /> ) : ( null );
+
+      default:
+        return user?.role === "Admin" ? (
+          <AdminDashboard selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}/>
+        ) : (
+          <UserDashboard selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}/>
+      );
+    }
+  };
+
+
 
   return (
     <>
@@ -42,23 +71,7 @@ const Home = ({
         setSelectedComponent={setSelectedComponent}
       />
       <div className="relative flex min-h-screen bg-gray-100 pt-16">
-        {(() => {
-          if (selectedComponent === "Dashboard"){
-            if (user?.role === "User")  return <UserDashboard selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}/>; 
-            else return <AdminDashboard selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}/>;
-          }
-          else if (selectedComponent === "BorrowingManagement" && user?.role === "Admin")  return <BorrowingManagement />;
-          else if (selectedComponent === "BorrowedBooks")                   return <MyBorrowedBooks />;
-          else if (selectedComponent === "BooksManagement")                 return <BooksManagement/>
-          else if (selectedComponent === "Users" && user?.role === "Admin") return <Users />;
-          else if(selectedComponent === "AddNewAdmin")                      return <AddNewAdmin/>
-
-          //DEFAULT 
-          else {        
-            if (user?.role === "User") return <UserDashboard />;
-            else return <AdminDashboard />;
-          }
-        })()}
+        {renderComponent()}
       </div>
     </>
   );
