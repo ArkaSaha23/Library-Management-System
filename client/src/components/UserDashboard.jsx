@@ -36,7 +36,6 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
   }, [message, dispatch]);
 
   const currentDate = new Date();
-  console.log(userBorrowedBooks);
 
   const totalBorrowedBooks = userBorrowedBooks.length;
   const currentlyBorrowedBooks = userBorrowedBooks.filter((book) => !book.hasReturned).length;
@@ -45,7 +44,6 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
   const booksOverdue = [];
   const OverDueBooks = userBorrowedBooks?.filter((book) => {
     const dueDate = new Date(book.Duedate);
-    console.log(Math.ceil((dueDate - currentDate) / (1000 * 60 * 60 * 24)));
     if (dueDate <= currentDate) {
       booksOverdue.push({
         bookName: book.BookName,
@@ -61,8 +59,6 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
     const dayCount = Math.ceil((dueDate - currentDate) / (1000 * 60 * 60 * 24));
     return (!book.hasreturned && dayCount >=0 && dayCount <= 3);
   });
-  console.log("Upcoming returns:", upcomingReturns);
-
   const data = {
     labels: ["Currently Borrowed Books", "Returned Books", "Overdue Books"],
     datasets: [
