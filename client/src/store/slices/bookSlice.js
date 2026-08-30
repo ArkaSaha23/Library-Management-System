@@ -98,7 +98,7 @@ export const getAllBooks = () => async (dispatch) => {
         withCredentials: true,
       },
     );
-    console.log(res.data);
+    
     dispatch(BookSlice.actions.getBookSuccess(res.data));
   } catch (err) {
     dispatch(
@@ -122,7 +122,6 @@ export const AddBooks = (bookInformation) => async (dispatch) => {
         header: { "Content-Type": "application/json" },
       },
     );
-    console.log(res.data);
     dispatch(BookSlice.actions.addBookSuccess(res.data));
     dispatch(toggleAddBookPopup());
   } catch (err) {
@@ -146,7 +145,7 @@ export const updateBooks = (id) => async (dispatch) => {
         header: { "Content-Type": "application/json" },
       },
     );
-    console.log(res.data);
+   
     dispatch(BookSlice.actions.updateBookSuccess(res.data));
   } catch (err) {
     dispatch(
@@ -169,7 +168,7 @@ export const deleteBook = (id) => async (dispatch) => {
         header: { "Content-Type": "application/json" },
       },
     );
-    console.log(res.data);
+   
     dispatch(BookSlice.actions.deleteBookSuccess(res.data));
   } catch (err) {
     dispatch(
