@@ -21,7 +21,6 @@ const App = () => {
   useEffect(() => {
     dispatch(getUser());
   }, [dispatch]);
-  console.log(isAuthenticated);
 
    if (!initialized) {
     return (
