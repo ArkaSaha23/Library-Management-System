@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { getAllBooks, resetBookSlice } from "../store/slices/bookSlice";
 import { toggleAddBookPopup, toggleReadBookPopup, toggleRecordBookPopup} from "../store/slices/popUpSlice";
-import { getAllBorrowedBooks,resetBorrowSlice} from "../store/slices/borrowSlice";
+import { resetBorrowSlice} from "../store/slices/borrowSlice";
 
 import AddBookPopup from "../popups/AddBookPopup";
 import ReadBookPopup from "../popups/ReadBookPopup";
