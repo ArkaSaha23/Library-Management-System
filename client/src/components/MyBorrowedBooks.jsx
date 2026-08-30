@@ -39,7 +39,6 @@ const MyBorrowedBooks = () => {
     }
   }, [message, dispatch]);
 
-  console.log("List of books borrowed By user:",userBorrowedBooks);
   const formatDate = (timeStamp) => {
     const date = new Date(timeStamp);
 
@@ -66,11 +65,9 @@ const MyBorrowedBooks = () => {
   const [readBook, setreadBook] = useState({});
   const [hasReturned,setHasReturned] = useState(false);
   const openBookPopUp = (id,hasReturned) => {
-    console.log(hasReturned);
     const book = books.find((book) => book._id === id);
     setreadBook(book);
     setHasReturned(hasReturned);
-    console.log(hasReturned);
     dispatch(toggleReadBookPopup());
   };
 
@@ -80,7 +77,6 @@ const MyBorrowedBooks = () => {
   const returnBookPopUp = (bookId,borrowId) => {
     const book = books.find((book) => book._id === bookId);
     const borrowDetails = userBorrowedBooks.find((borrowDetails) => borrowDetails.borrowId === borrowId);
-    //console.log("The Borrow ID that will be send to return book popup is:",borrowId);
     setReturnBorrowId(borrowDetails);
     setReturnBookId(book);
     dispatch(toggleReturnBookPopup());
