@@ -17,8 +17,6 @@ const BorrowingManagement = () => {
       dispatch(getAllBorrowedBooks());
     }, [dispatch]);
 
-    console.log("List of All the borrowed Books",allBorrowedBooks)
-
 
   const [filter, setFilter] = useState("borrowed");
 
@@ -65,7 +63,6 @@ const BorrowingManagement = () => {
   const [borrowedBookId , setborrowedBookId] = useState("");
 
   const openReturnBookPopUp = (email,bookId) =>{
-    console.log("Return Book id",bookId);
     setEmail(email);
     setborrowedBookId(bookId);
     dispatch(toggleReturnBookPopup());
