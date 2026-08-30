@@ -1,3 +1,40 @@
+import dotenv from "dotenv";
+import { BrevoClient } from "@getbrevo/brevo";
+
+dotenv.config({
+  path: "./config/config.env",
+});
+
+const brevo = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
+});
+
+export const sendEmail = async ({ email, subject, message }) => {
+  try {
+
+    const response = await brevo.transactionalEmails.sendTransacEmail({
+      sender: {
+        email: process.env.BREVO_SENDER_EMAIL,
+        name: process.env.BREVO_SENDER_NAME,
+      },
+
+      to: [
+        {
+          email: email,
+        },
+      ],
+
+      subject: subject,
+      htmlContent: message,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("BREVO EMAIL ERROR:", error);
+    throw error;
+  }
+};
+
 // import nodeMailer from "nodemailer";
 // export const sendEmail = async ({ email, subject, message }) => {
 //   //This creates a transporter. A transporter is the object that actually connects to the email server and sends mail.
@@ -22,25 +59,25 @@
 // };
 // //createtransport() and sendMail() are the inbuilt method/function by NodeMailer
 
-import { Resend } from "resend";
+// import { Resend } from "resend";
 
-export const sendEmail = async ({ email, subject, message }) => {
+// export const sendEmail = async ({ email, subject, message }) => {
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
+//   const resend = new Resend(process.env.RESEND_API_KEY);
 
-  const { data, error } = await resend.emails.send({
-    from: "Library Management System <onboarding@resend.dev>",
-    to: [email],
-    subject,
-    html: message,
-  });
+//   const { data, error } = await resend.emails.send({
+//     from: "Library Management System <onboarding@resend.dev>",
+//     to: [email],
+//     subject,
+//     html: message,
+//   });
 
-  if (error) {
-    console.error("RESEND EMAIL ERROR:", error);
-    throw new Error(error.message);
-  }
+//   if (error) {
+//     console.error("RESEND EMAIL ERROR:", error);
+//     throw new Error(error.message);
+//   }
 
-  console.log("Email sent successfully:", data);
+//   console.log("Email sent successfully:", data);
 
-  return data;
-};
+//   return data;
+// };
