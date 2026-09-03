@@ -107,7 +107,8 @@ const Users = () => {
             </thead>
 
             <tbody>
-              {searchedUsers?.map((user, index) => 
+              {searchedUsers?.filter(user => user?.role === "User")
+              .map((user, index) => 
                 user?.role === "User" ? (
                 <tr
                   key={user._id}
