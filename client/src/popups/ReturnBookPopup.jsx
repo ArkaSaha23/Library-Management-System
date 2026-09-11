@@ -27,12 +27,12 @@ const ReturnBookPopup = ({email,book,borrowId}) => {
 
   const handleReturnBook = (e) =>{
     e.preventDefault();
-    dispatch(returnBook({ email, book }));
+    dispatch(returnBook({ email, bookId: book }));
   }
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-5">
-        <div className="w-11/12 max-h-[100vh] overflow-y-auto rounded-lg bg-white shadow-lg sm:w-1/2">
+        <div className="w-11/12 max-h-screen overflow-y-auto rounded-lg bg-white shadow-lg sm:w-1/2">
           {/* Header */}
           <div className="flex items-center justify-between rounded-t-lg bg-black px-6 py-4 text-white">
             <h2 className="text-lg font-bold">Return Book</h2>
