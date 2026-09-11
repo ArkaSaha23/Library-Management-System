@@ -424,6 +424,8 @@ const AdminDashboard = ({ selectedComponent, setSelectedComponent }) => {
               <thead className="bg-green-50">
                 <tr>
                   <td className="p-2 flex justify-center items-center text-gray-700">SL no.</td>
+                  <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Borrower Name</th>
+                  <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Borrower Email</th>
                   <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Book Id</th>
                   <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Book Name</th>
                   <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Due Date</th>
@@ -435,7 +437,21 @@ const AdminDashboard = ({ selectedComponent, setSelectedComponent }) => {
                     key={index}
                     className="transition hover:bg-red-50/40"
                   >
-                      <td className="p-2 flex justify-center items-center">{index + 1}</td>
+                      <td className="px-4 py-3 sm:px-5">
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-semibold text-gray-700">{index+1}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 sm:px-5">
+                        <div className="flex items-center gap-3">
+                          <span className="whitespace-nowrap text-sm font-semibold text-gray-700">{book.UserName}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 sm:px-5">
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-semibold text-gray-700">{book.UserEmail}</span>
+                        </div>
+                      </td>
                       <td className="px-4 py-3 sm:px-5">
                         <div className="flex items-center gap-3">
                             <span className="text-sm font-semibold text-gray-700">{book.BookId}</span>
@@ -443,13 +459,13 @@ const AdminDashboard = ({ selectedComponent, setSelectedComponent }) => {
                       </td>
                       <td className="px-4 py-3 sm:px-5">
                         <div className="flex items-center gap-3">
-                          <span className="text-sm font-semibold text-gray-700">{book.BookName}</span>
+                          <span className="whitespace-nowrap text-sm font-semibold text-gray-700">{book.BookName}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-600 sm:px-5">{formatDateTime(book.DueDate)}</td>
+                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-600 sm:px-5">{formatDateTime(book.DueDate)}</td>
                     </tr>
                   ))}
-                </tbody>
+              </tbody>
             </table>
           </div>
           ) : (
