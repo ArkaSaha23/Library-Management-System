@@ -57,7 +57,7 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
   const upcomingReturns = userBorrowedBooks?.filter((book) => {
     const dueDate = new Date(book.Duedate);
     const dayCount = Math.ceil((dueDate - currentDate) / (1000 * 60 * 60 * 24));
-    return (!book.hasreturned && dayCount >=0 && dayCount <= 3);
+    return (!book.hasReturned && dayCount >=0 && dayCount <= 3);
   });
   const data = {
     labels: ["Currently Borrowed Books", "Returned Books", "Overdue Books"],
