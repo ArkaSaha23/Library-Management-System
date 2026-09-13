@@ -44,7 +44,7 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
   const booksOverdue = [];
   const OverDueBooks = userBorrowedBooks?.filter((book) => {
     const dueDate = new Date(book.Duedate);
-    if (dueDate <= currentDate) {
+    if (dueDate <= currentDate && !book.hasReturned) {
       booksOverdue.push({
         bookName: book.BookName,
         dueDate: book.Duedate,
@@ -52,12 +52,16 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
     }
     return dueDate <= currentDate;
   });
-  const totalOverDueBooks = OverDueBooks.length;
+  const totalOverDueBooks = booksOverdue.length;
 
   const upcomingReturns = userBorrowedBooks?.filter((book) => {
     const dueDate = new Date(book.Duedate);
-    const dayCount = Math.ceil((dueDate - currentDate) / (1000 * 60 * 60 * 24));
-    return (!book.hasReturned && dayCount >=0 && dayCount <= 3);
+
+    return (
+    !book.hasReturned &&
+    dueDate > currentDate &&
+    dueDate <= new Date(currentDate.getTime() + 3 * 24 * 60 * 60 * 1000)
+  );
   });
   const data = {
     labels: ["Currently Borrowed Books", "Returned Books", "Overdue Books"],
@@ -80,8 +84,9 @@ const UserDashboard = ({ selectedComponent, setSelectedComponent }) => {
     const year = `${String(date.getFullYear())}`;
     const borrowedDate = `${day}-${month}-${year}`;
     const hours = `${String(date.getHours()).padStart(2, 0)}`;
-    const borrowedTime = `${hours}:00:00`;
-    return `${borrowedDate} before ${borrowedTime}`;
+     const mins = `${String(date.getMinutes()).padStart(2, 0)}`;
+    const borrowedTime = `${hours}:${mins}:00`;
+    return `${borrowedDate}, ${borrowedTime}`;
   };
 
  const bookTitles = ["Pride and Prejudice", "1984", "The Great Gatsby", "The Alchemist", "The Hobbit", "Animal Farm", "The Little Prince", "The Book Thief", "Jane Eyre", "Little Women", "The Guide", "Malgudi Days", "Train to Pakistan", "Midnight's Children", "The God of Small Things", "The White Tiger", "A Suitable Boy", "Swami and Friends", "The Namesake", "Gitanjali", "Pather Panchali", "Devdas", "Chokher Bali", "Aranyak", "Gora", "Srikanta", "Durgeshnandini", "Kapalkundala", "Mahesh", "Hajar Churashir Ma", "To Kill a Mockingbird", "The Catcher in the Rye", "The Lord of the Rings", "Harry Potter", "The Kite Runner", "A Thousand Splendid Suns", "The Old Man and the Sea", "Crime and Punishment", "Great Expectations", "Oliver Twist", "Wuthering Heights", "The Picture of Dorian Gray", "The Adventures of Sherlock Holmes", "Moby-Dick", "Don Quixote", "The Odyssey", "The Iliad", "War and Peace", "The Brothers Karamazov", "The Stranger"];
