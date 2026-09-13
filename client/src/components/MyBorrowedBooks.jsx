@@ -57,8 +57,9 @@ const MyBorrowedBooks = () => {
     const year = `${String(date.getFullYear())}`;
     const finalDate = `${day}-${month}-${year}`;
     const hours = `${String(date.getHours()).padStart(2, 0)}`;
-    const finalTime = `${hours}:00:00`;
-    return `${finalDate} before ${finalTime}`;
+    const mins = `${String(date.getMinutes()).padStart(2, 0)}`;
+    const finalTime = `${hours}:${mins}:00`;
+    return `${finalDate}, ${finalTime}`;
   };
 
   //get which book you want to read with ID
