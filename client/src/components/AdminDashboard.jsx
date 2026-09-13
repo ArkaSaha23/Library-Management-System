@@ -85,7 +85,7 @@ const AdminDashboard = ({ selectedComponent, setSelectedComponent }) => {
     const currentDate = new Date(); 
     const dueDate = new Date(book.DueDate);
     const dayCount = Math.ceil((dueDate - currentDate) / (1000 * 60 * 60 * 24));
-    return (book.ReturnDate === null && dayCount >=0 && dayCount <= 3);
+    return (currentDate < dueDate && book.ReturnDate === null && dayCount >=0 && dayCount <= 3);
   });
   console.log("Upcoming returns:", upcomingReturns);
 
@@ -110,8 +110,9 @@ const AdminDashboard = ({ selectedComponent, setSelectedComponent }) => {
     const year = `${String(date.getFullYear())}`;
     const borrowedDate = `${day}-${month}-${year}`;
     const hours = `${String(date.getHours()).padStart(2, 0)}`;
-    const borrowedTime = `${hours}:00:00`;
-    return `${borrowedDate} before ${borrowedTime}`;
+    const mins = `${String(date.getMinutes()).padStart(2, 0)}`;
+    const borrowedTime = `${hours}:${mins}:00`;
+    return `${borrowedDate}, ${borrowedTime}`;
   };
 
 
@@ -373,12 +374,15 @@ const AdminDashboard = ({ selectedComponent, setSelectedComponent }) => {
             <FcOvertime className="text-3xl mb-5 text-red-400" />
           </div>
         <div>
-        {totalDueBooks?.length > 0 ? (
+        {totalDueBooks > 0 ? (
           <div className="w-full overflow-x-auto rounded-xl border border-red-100">
               <table className="w-full min-w-125 text-left">
                 <thead className="bg-red-50">
                   <tr>
                     <th className="p-2 flex justify-center items-center text-gray-700">SL no.</th>
+                    <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Borrower Name</th>
+                    <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Borrower Email</th>
+                    <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Book Id</th>
                     <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Book Name</th>
                     <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 sm:px-5">Due Date Passed</th>
                   </tr>
@@ -391,12 +395,28 @@ const AdminDashboard = ({ selectedComponent, setSelectedComponent }) => {
                       className="transition hover:bg-red-50/40"
                     >
                       <td className="p-2 flex justify-center items-center">{index + 1}</td>
-                      <td className="px-4 py-3 sm:px-5">
+                      
+                       <td className="px-4 py-3 sm:px-5">
                         <div className="flex items-center gap-3">
-                          <span className="text-sm font-semibold text-gray-700">{book.bookName}</span>
+                          <span className="whitespace-nowrap text-sm font-semibold text-gray-700">{book.UserName}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-600 sm:px-5">{formatDateTime(book.DueDate)}</td>
+                      <td className="px-4 py-3 sm:px-5">
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-semibold text-gray-700">{book.UserEmail}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 sm:px-5">
+                        <div className="flex items-center gap-3">
+                            <span className="text-sm font-semibold text-gray-700">{book.BookId}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 sm:px-5">
+                        <div className="flex items-center gap-3">
+                          <span className="whitespace-nowrap text-sm font-semibold text-gray-700">{book.BookName}</span>
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-600 sm:px-5">{formatDateTime(book.DueDate)}</td>
                     </tr>
                   ))}
                 </tbody>
