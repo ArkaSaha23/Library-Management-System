@@ -24,7 +24,7 @@ const Users = () => {
     const seconds = `${String(date.getSeconds()).padStart(2, 0)}`;
     const borrowedTime = `${hours}:${minutes}:${seconds}`;
 
-    return `${borrowedDate} ${borrowedTime}`;
+    return `${borrowedDate}, ${borrowedTime}`;
   };
 
   const [searchedKeyword, setSearchedKeyword] = useState("");
@@ -61,7 +61,7 @@ const Users = () => {
         {/* list of users */}
         <div className="mt-8 w-full px-2 sm:px-5 md:px-7 lg:px-10">
         <div className="w-full overflow-x-auto rounded-lg border border-gray-400 shadow-sm">
-          <table className="md:w-full text-sm border border-gray-400">
+          <table className="whitespace-nowrap md:w-full text-sm border border-gray-400">
             <thead>
               <tr className="bg-gray-700 border">
                 <th className="px-4 py-3 text-center font-semibold text-gray-100 border border-gray-600">
